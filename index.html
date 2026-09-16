@@ -766,9 +766,14 @@ async function walletKarte(btn) {
       location.href = d.url;
       return;
     }
-    sagen("Deine Wallet-Karte wird gerade eingerichtet – du bekommst sie per E-Mail.");
+    // Solange wir einrichten: den echten Grund zeigen, nicht verschleiern
+    if (d.fehler) { sagen("Wallet: " + d.fehler, true); console.error("Wallet:", d); }
+    else if (d.bereit === false) { sagen("Wallet ist noch nicht scharfgeschaltet.", true);
+      console.warn("Wallet nicht aktiv:", d); }
+    else { sagen("Unerwartete Antwort – siehe Konsole.", true); console.error("Wallet:", d); }
   } catch (e) {
-    sagen("Deine Wallet-Karte wird gerade eingerichtet – du bekommst sie per E-Mail.");
+    sagen("Wallet nicht erreichbar: " + (e?.message || e), true);
+    console.error("Wallet-Aufruf gescheitert:", e);
   }
   btn.disabled = false; btn.innerHTML = alt;
 }
