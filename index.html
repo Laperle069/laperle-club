@@ -468,7 +468,7 @@
       <div class="field"><label for="rNach">Nachname</label><input id="rNach" autocomplete="family-name"></div>
       <div class="field"><label for="rMail">E-Mail</label>
         <input id="rMail" type="email" inputmode="email" autocapitalize="none" autocomplete="email"></div>
-      <input id="rHp" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <input id="rHp" class="hp" type="checkbox" tabindex="-1" autocomplete="off" aria-hidden="true">
 
       <div class="mt"><button class="btn btn-gold btn-primary" id="rBtn">
         Dabei sein <span class="arrow">→</span></button></div>
@@ -722,8 +722,14 @@ function hochzaehlen(el, ziel) {
 }
 
 // ---------- Beitreten ----------
+const geladen = Date.now();
 $("rBtn").onclick = async () => {
-  if ($("rHp").value) return;
+  // Spam-Falle: ein Kontrollkästchen, das niemand sieht, und ein Zeitfenster.
+  // Menschen brauchen länger als zwei Sekunden, Ausfüllhilfen haken nichts an.
+  if ($("rHp").checked || Date.now() - geladen < 2000) {
+    sagen("Einen Moment noch – dann klappt es.", true);
+    return;
+  }
   const v = $("rVor").value.trim(), n = $("rNach").value.trim(), m = $("rMail").value.trim();
   if (!v || !n || !m) { sagen("Bitte Vorname, Nachname und E-Mail ausfüllen.", true); return; }
   $("rBtn").disabled = true; $("rBtn").firstChild.textContent = "Einen Moment ";
