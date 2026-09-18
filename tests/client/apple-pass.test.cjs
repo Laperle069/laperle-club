@@ -11,9 +11,19 @@ try{
  run('openssl',['req','-newkey','rsa:2048','-nodes','-keyout','signer.key','-out','signer.csr','-subj','/UID=pass.de.laperlebeauty.club/OU=FPDU6B86GK/CN=Temporary Test Pass']);
  run('openssl',['x509','-req','-in','signer.csr','-CA','ca.pem','-CAkey','ca.key','-CAcreateserial','-out','signer.pem','-days','1']);
  let src=fs.readFileSync(path.resolve(__dirname,'../../wallet-apple/pass.ts'),'utf8').replace(/^import .*;\n/gm,'').replace(/export /g,'');
- const c=vm.createContext({PKPass,Buffer,URL,...require('node:crypto')});
+ const forge=require(path.join(deps,'node-forge'));
+ const c=vm.createContext({PKPass,forge,Buffer,URL,...require('node:crypto')});
  vm.runInContext(stripTypeScriptTypes(src,{mode:'strip'})+'\nglobalThis.make=erstellePass;globalThis.names=assetNamen;',c);
  const e={cert:fs.readFileSync(path.join(temp,'signer.pem'),'utf8'),key:fs.readFileSync(path.join(temp,'signer.key'),'utf8'),wwdr:fs.readFileSync(path.join(temp,'ca.pem'),'utf8'),assets:{}};
+ const certSource=fs.readFileSync(path.resolve(__dirname,'../../wallet-apple/certificates.ts'),'utf8').replace(/^import .*;\n/gm,'').replace(/export /g,'');
+ vm.runInContext(stripTypeScriptTypes(certSource,{mode:'strip'})+'\nglobalThis.certs=oeffentlicheZertifikate;',c);
+ const bundled=c.certs('incomplete PEM',undefined);
+ ok('Apple: öffentliche Zertifikate ersetzen fehlenden oder beschädigten PEM-Import',new (require('node:crypto').X509Certificate)(bundled.cert).verify(new (require('node:crypto').X509Certificate)(bundled.wwdr).publicKey));
+ ok('Apple: gültige konfigurierte Zertifikate haben für Rotation Vorrang',c.certs(e.cert,e.wwdr).cert===e.cert&&c.certs(e.cert,e.wwdr).wwdr===e.wwdr);
+ // Reproduce macOS PBES2/PBKDF2-SHA1 imports that fail in Deno native crypto.
+ const testPassphrase='ephemeral-test-password';
+ e.key=forge.pki.encryptRsaPrivateKey(forge.pki.privateKeyFromPem(e.key),testPassphrase,{algorithm:'aes256',count:2048});
+ e.passphrase=testPassphrase;
  // Tiny PNG fixture exercises signing/package code, not production artwork.
  const png='iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/l9sAAAAASUVORK5CYII=';
  const d={object_id:'laperle_test',pass_type:'pass.de.laperlebeauty.club',team_id:'FPDU6B86GK',rang:'Silber',vorname:'Anna',nachname:'Test',kundennummer:'LP000240',stand:240,naechste:'Noch 10 Perlen',club_url:'https://club.example.org/?t=TEST-NOT-REAL'};
@@ -42,6 +52,8 @@ Deno.writeFileSync(${JSON.stringify(path.join(temp,'Silber.pkpass'))},erstellePa
  for(const [file,hash] of Object.entries(manifest))assert.equal(require('node:crypto').createHash('sha1').update(fs.readFileSync(path.join(temp,'unpacked',file))).digest('hex'),hash);
  ok('Apple: Manifest stimmt mit allen Paketdateien überein',true);
  assert.throws(()=>c.make({...d,team_id:'WRONG'},e));ok('Apple: falsche Team-ID verhindert Ausgabe',true);
+ assert.throws(()=>c.make(d,{...e,passphrase:'wrong'}));ok('Apple: falsches Schlüsselpasswort verhindert Ausgabe',true);
+ assert.throws(()=>c.make(d,{...e,wwdr:e.cert}));ok('Apple: unpassendes Ausstellerzertifikat verhindert Ausgabe',true);
  assert.throws(()=>c.make(d,{...e,key:fs.readFileSync(path.join(temp,'ca.key'),'utf8')}));ok('Apple: fremder privater Schlüssel verhindert Ausgabe',true);
  assert.throws(()=>c.make(d,{...e,assets:{}}));ok('Apple: fehlendes freigegebenes Artwork verhindert Ausgabe',true);
  assert.throws(()=>c.make({...d,club_url:'https://test.invalid/club/'},e));ok('Apple: Platzhalter-Clubadresse verhindert Ausgabe',true);

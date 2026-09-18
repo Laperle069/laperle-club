@@ -1,5 +1,6 @@
 import { Buffer } from "node:buffer";
 import { erstellePass, assetNamen, type Einrichtung } from "./pass.ts";
+import { oeffentlicheZertifikate } from "./certificates.ts";
 
 const DB=Deno.env.get("SUPABASE_URL")??"";
 const KEY=Deno.env.get("PUBLIC_API_KEY")??Deno.env.get("SUPABASE_ANON_KEY")??"";
@@ -40,8 +41,8 @@ Deno.serve(async(req:Request)=>{
     if(!res.ok) return json({fehler:"Die Karte konnte nicht geladen werden. Bitte öffne deinen Club-Link erneut."},res.status>=500?503:401);
     const d=await res.json();
     if(!d.aktiv) return json({bereit:false});
-    const e:Einrichtung={cert:Deno.env.get("APPLE_SIGNER_CERT")??"",key:Deno.env.get("APPLE_SIGNER_KEY")??"",
-      wwdr:Deno.env.get("APPLE_WWDR_CERT")??"",passphrase:Deno.env.get("APPLE_SIGNER_KEY_PASSPHRASE")||undefined,
+    const e:Einrichtung={...oeffentlicheZertifikate(Deno.env.get("APPLE_SIGNER_CERT"),Deno.env.get("APPLE_WWDR_CERT")),key:Deno.env.get("APPLE_SIGNER_KEY")??"",
+      passphrase:Deno.env.get("APPLE_SIGNER_KEY_PASSPHRASE")||undefined,
       assets:{}};
     if(!e.cert||!e.key||!e.wwdr||!Deno.env.get("APPLE_PASS_ASSET_BASE_URL")) return json({bereit:false,fehler:"Apple Wallet wird gerade eingerichtet. Bitte versuche es später erneut."},503);
     e.assets=await ladeBilder(d.rang);

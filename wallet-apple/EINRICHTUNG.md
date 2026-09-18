@@ -11,10 +11,10 @@ Auf dem Mac, auf dem der CSR erstellt wurde, in der Schlüsselbundverwaltung unt
 
 In Supabase `xzxplhvkabgfyglmkcii` unter Edge Functions → Secrets:
 
-- `APPLE_SIGNER_CERT`: Pass-Zertifikat als PEM.
+- `APPLE_SIGNER_CERT`: optionales öffentliches Pass-Zertifikat als PEM für spätere Erneuerung. Das bereitgestellte Zertifikat ist in `certificates.ts` enthalten; ein fehlender oder beschädigter PEM-Eintrag verwendet diesen geprüften öffentlichen Ersatz.
 - `APPLE_SIGNER_KEY`: zugehöriger privater Schlüssel als PEM.
 - `APPLE_SIGNER_KEY_PASSPHRASE`: falls der PEM-Schlüssel verschlüsselt ist.
-- `APPLE_WWDR_CERT`: zur Pass-Zertifikatskette passendes Apple-WWDR-G4-Zertifikat als PEM, aus Apples offizieller Zertifikatsquelle.
+- `APPLE_WWDR_CERT`: optionales öffentliches Apple-WWDR-Zertifikat als PEM. Das passende G4-Zertifikat aus Apples offizieller Quelle ist in `certificates.ts` enthalten.
 - `APPLE_PASS_ASSET_BASE_URL`: HTTPS-Adresse des Verzeichnisses mit nativen Wallet-Bildern.
 
 Private Schlüssel und Passwörter gehören ausschließlich in den Secretmanager. Weder hier noch im Repository speichern. Zertifikatsidentität, Gültigkeit, Schlüsselübereinstimmung und WWDR-Signatur werden vor jeder Pass-Erstellung geprüft.
@@ -30,7 +30,7 @@ Diese Exporte aus dem freigegebenen Metallic-/Perlenschatz-Entwurf fehlen noch. 
 
 ## Bereitstellung
 
-`index.ts`, `pass.ts` und `deno.json` als Funktion `wallet-apple` bereitstellen. Eigene Tokenprüfung über `wallet_apple_kartendaten`, deshalb `verify_jwt=false`. Abhängigkeit `passkit-generator` ist exakt auf 3.6.0 festgelegt. Für lokale Signaturtests `npm ci --ignore-scripts` in diesem Verzeichnis verwenden; der Node-Lock ist beigefügt.
+`index.ts`, `pass.ts`, `certificates.ts` und `deno.json` als Funktion `wallet-apple` bereitstellen. Eigene Tokenprüfung über `wallet_apple_kartendaten`, deshalb `verify_jwt=false`. Abhängigkeiten `passkit-generator` und `node-forge` sind exakt auf 3.6.0 bzw. 1.4.0 festgelegt. Für lokale Signaturtests `npm ci --ignore-scripts` in diesem Verzeichnis verwenden; der Node-Lock ist beigefügt.
 
 Migration `20260918012545_wallet_apple_und_google_ausgabe.sql` ergänzt die Datenbankfunktion und den standardmäßig ausgeschalteten Schalter `apple_wallet_aktiv`. Sie aktiviert keine Wallets. Nach Hinterlegen der Secrets, Bereitstellen der Bilddateien und Eintragen einer echten HTTPS-Adresse unter `club_basis_url` kann die Apple-Ausgabe im Testprojekt eingeschaltet werden. Der gemeinsame Funktionsschalter `wallet` muss ebenfalls aktiv sein.
 
@@ -40,7 +40,11 @@ Die App sendet den persönlichen Club-Token per POST an `/functions/v1/wallet-ap
 
 Fünf Ränge mit temporärer Test-CA signiert, zusätzlich Signierung unter Deno 2.9.6 ausgeführt; CMS-Signatur unabhängig mit OpenSSL geprüft; Manifest-Hashes geprüft; falscher Schlüssel, Team-ID, fehlende Bilder und Platzhalter-Adresse werden abgewiesen. Die Bildfixtures sind ausschließlich technische Tests, keine Designabnahme. Ein temporäres Testzertifikat wird von Apple Wallet nicht als echte Karte akzeptiert.
 
-Noch offen: echte Signierung mit dem bereitgestellten Apple-Zertifikat und passendem Schlüssel, native Bildexporte, iPhone/iPad-Gerätetest, Apple-Webservice/APNs für automatische Updates. Keine Produktivfreigabe.
+Echter Schlüsselabgleich und Signaturtest am 18.09.2026 auf dem Testserver erfolgreich: gespeicherten verschlüsselten Schlüssel im Serverprozess geöffnet, öffentliches Zertifikat und WWDR-Kette geprüft, internes PKPass mit synthetischen Daten signiert. CMS-Signatur zusätzlich unabhängig mit OpenSSL gegen das bereitgestellte Signierzertifikat geprüft; sämtliche Manifest-Hashes korrekt. Kein privater Schlüssel oder Passwort wurde aus Supabase abgerufen. Der temporäre, authentifizierte Prüfpfad wurde anschließend entfernt.
+
+Die gehostete Edge-Laufzeit verarbeitet den vorhandenen verschlüsselten PKCS8-Schlüssel und die nativen X509-Schlüssel-/Signaturprüfungen nicht zuverlässig. `node-forge` entschlüsselt nun ausschließlich im Arbeitsspeicher, gleicht RSA-Modul/Exponent ab, prüft die Ausstellersignatur sowie eine Signaturprobe mit dem privaten Schlüssel. Gültigkeit und Pass-/Team-ID werden weiterhin geprüft. Der für die PKPass-Erstellung entschlüsselte Schlüssel wird weder gespeichert noch protokolliert. Tests decken verschlüsselte Schlüssel unter Node/Deno sowie falsches Passwort, fremden Schlüssel und falschen Aussteller ab.
+
+Noch offen: native Bildexporte, iPhone/iPad-Gerätetest, Apple-Webservice/APNs für automatische Updates. Keine Produktivfreigabe.
 
 Quellen: [Apple Pass Design and Creation](https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/Creating.html), [Apple Zertifikate](https://www.apple.com/certificateauthority/), [Signaturbibliothek](https://github.com/alexandercerutti/passkit-generator), [Supabase Abhängigkeiten](https://supabase.com/docs/guides/functions/dependencies).
 

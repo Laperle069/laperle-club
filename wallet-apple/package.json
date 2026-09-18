@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "node-forge": "1.4.0",
     "passkit-generator": "3.6.0"
   },
   "name": "laperle-wallet-apple",

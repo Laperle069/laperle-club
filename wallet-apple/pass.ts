@@ -1,6 +1,7 @@
 import { PKPass } from "passkit-generator";
 import { Buffer } from "node:buffer";
-import { X509Certificate, createPrivateKey } from "node:crypto";
+import { X509Certificate } from "node:crypto";
+import forge from "node-forge";
 
 // Artwork comes from approved, separately exported pass assets. The concept
 // sheet, its demo QR codes and example names must never become a real pass.
@@ -34,15 +35,28 @@ function bild(assets:Record<string,string>,name:string):Buffer {
   return b;
 }
 
-export function erstellePass(d:PassDaten,e:Einrichtung):Buffer {
-  const cert=new X509Certificate(e.cert),wwdr=new X509Certificate(e.wwdr);
+export function pruefeSignierung(d:Pick<PassDaten,"pass_type"|"team_id">,e:Einrichtung):string {
+  const cert=new X509Certificate(e.cert);
   const jetzt=Date.now();
   if(jetzt<Date.parse(cert.validFrom)||jetzt>=Date.parse(cert.validTo)) throw new Error("Zertifikat abgelaufen oder noch nicht gültig");
   // Deno serializes the attribute as uid=, Node as UID=. Values stay case-sensitive.
   const subject=cert.subject.split("\n").map(line=>line.replace(/^uid=/i,"UID="));
   if(!subject.includes("UID="+d.pass_type)||!subject.includes("OU="+d.team_id)) throw new Error("Zertifikat passt nicht zur Karte");
-  const key=createPrivateKey({key:e.key,passphrase:e.passphrase});
-  if(!cert.checkPrivateKey(key)||!cert.verify(wwdr.publicKey)) throw new Error("Zertifikatskette oder Schlüssel passt nicht");
+  // The hosted Edge runtime cannot reliably decrypt macOS PKCS8 exports or
+  // execute X509 checkPrivateKey/verify. Use the same pinned RSA implementation
+  // as passkit-generator for actual cryptographic checks, not just PEM parsing.
+  const signer=forge.pki.certificateFromPem(e.cert),issuer=forge.pki.certificateFromPem(e.wwdr);
+  const key=forge.pki.decryptRsaPrivateKey(e.key,e.passphrase??"");
+  if(!key) throw new Error("Signierschlüssel konnte nicht geöffnet werden");
+  if(!key.n.equals(signer.publicKey.n)||!key.e.equals(signer.publicKey.e)||!issuer.verify(signer)) throw new Error("Zertifikatskette oder Schlüssel passt nicht");
+  const digest=forge.md.sha256.create().update("La Perle Wallet signing-key validation","utf8");
+  if(!signer.publicKey.verify(digest.digest().getBytes(),key.sign(digest))) throw new Error("Signierschlüssel passt nicht");
+  // Plaintext exists only in memory during signing; never persist or log it.
+  return forge.pki.privateKeyToPem(key);
+}
+
+export function erstellePass(d:PassDaten,e:Einrichtung):Buffer {
+  const signerKey=pruefeSignierung(d,e);
   const club=new URL(d.club_url);
   if(club.protocol!=="https:"||club.hostname.endsWith(".invalid")||club.username||club.password) throw new Error("Club-Adresse fehlt");
   const rang=d.rang ? RANG[d.rang.toLocaleLowerCase("de-DE")] : RANG.bronze;
@@ -54,7 +68,7 @@ export function erstellePass(d:PassDaten,e:Einrichtung):Buffer {
     buffers[`logo${suffix}.png`]=bild(e.assets,`${rang.asset}/logo${suffix}.png`);
     buffers[`strip${suffix}.png`]=bild(e.assets,`${rang.asset}/strip${suffix}.png`);
   }
-  const pass=new PKPass(buffers,{signerCert:e.cert,signerKey:e.key,wwdr:e.wwdr,signerKeyPassphrase:e.passphrase},{
+  const pass=new PKPass(buffers,{signerCert:e.cert,signerKey,wwdr:e.wwdr},{
     formatVersion:1,passTypeIdentifier:d.pass_type,teamIdentifier:d.team_id,serialNumber:d.object_id,
     organizationName:"La Perlé Beauty Boutique",description:"La Perlé Club – deine Kundenkarte",
     backgroundColor:rang.bg,foregroundColor:rang.fg,labelColor:rang.fg,

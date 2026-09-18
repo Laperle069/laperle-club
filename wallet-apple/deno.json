@@ -1,5 +1,6 @@
 {
   "imports": {
+    "node-forge": "npm:node-forge@1.4.0",
     "passkit-generator": "npm:passkit-generator@3.6.0"
   },
   "nodeModulesDir": "auto"
