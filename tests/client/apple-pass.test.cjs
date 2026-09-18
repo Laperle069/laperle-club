@@ -1,0 +1,48 @@
+// Generates an ephemeral test CA/key. No production signing credentials required.
+const fs=require('node:fs'),path=require('node:path'),os=require('node:os'),vm=require('node:vm'),assert=require('node:assert/strict');
+const {stripTypeScriptTypes}=require('node:module'),{execFileSync}=require('node:child_process');
+const deps=process.env.WALLET_TEST_NODE_MODULES||path.resolve(__dirname,'../../wallet-apple/node_modules');
+const {PKPass}=require(path.join(deps,'passkit-generator'));
+const temp=fs.mkdtempSync(path.join(os.tmpdir(),'laperle-pass-test-'));
+const run=(bin,args)=>execFileSync(bin,args,{cwd:temp,stdio:['ignore','pipe','pipe']});
+const ok=(n,c)=>{assert.ok(c,n);console.log('PASS '+n)};
+try{
+ run('openssl',['req','-x509','-newkey','rsa:2048','-nodes','-keyout','ca.key','-out','ca.pem','-days','1','-subj','/CN=Temporary Test CA']);
+ run('openssl',['req','-newkey','rsa:2048','-nodes','-keyout','signer.key','-out','signer.csr','-subj','/UID=pass.de.laperlebeauty.club/OU=FPDU6B86GK/CN=Temporary Test Pass']);
+ run('openssl',['x509','-req','-in','signer.csr','-CA','ca.pem','-CAkey','ca.key','-CAcreateserial','-out','signer.pem','-days','1']);
+ let src=fs.readFileSync(path.resolve(__dirname,'../../wallet-apple/pass.ts'),'utf8').replace(/^import .*;\n/gm,'').replace(/export /g,'');
+ const c=vm.createContext({PKPass,Buffer,URL,...require('node:crypto')});
+ vm.runInContext(stripTypeScriptTypes(src,{mode:'strip'})+'\nglobalThis.make=erstellePass;globalThis.names=assetNamen;',c);
+ const e={cert:fs.readFileSync(path.join(temp,'signer.pem'),'utf8'),key:fs.readFileSync(path.join(temp,'signer.key'),'utf8'),wwdr:fs.readFileSync(path.join(temp,'ca.pem'),'utf8'),assets:{}};
+ // Tiny PNG fixture exercises signing/package code, not production artwork.
+ const png='iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/l9sAAAAASUVORK5CYII=';
+ const d={object_id:'laperle_test',pass_type:'pass.de.laperlebeauty.club',team_id:'FPDU6B86GK',rang:'Silber',vorname:'Anna',nachname:'Test',kundennummer:'LP000240',stand:240,naechste:'Noch 10 Perlen',club_url:'https://club.example.org/?t=TEST-NOT-REAL'};
+ for(const rank of ['Bronze','Silber','Gold','Platin','Diamant']){
+  for(const name of c.names(rank))e.assets[name]=png;
+  const pass=c.make({...d,rang:rank},e);fs.writeFileSync(path.join(temp,rank+'.pkpass'),pass);
+ }
+ if(process.env.WALLET_DENO_TEST==='1'){
+  fs.writeFileSync(path.join(temp,'fixture.json'),JSON.stringify({d,e}));
+  fs.writeFileSync(path.join(temp,'native-test.ts'),`import {erstellePass} from ${JSON.stringify(path.resolve(__dirname,'../../wallet-apple/pass.ts'))};
+const {d,e}=JSON.parse(Deno.readTextFileSync(${JSON.stringify(path.join(temp,'fixture.json'))}));
+Deno.writeFileSync(${JSON.stringify(path.join(temp,'Silber.pkpass'))},erstellePass(d,e));`);
+  execFileSync('npx',['--yes','deno','run','--no-check','--allow-read','--allow-write','--node-modules-dir=manual','--config',path.resolve(__dirname,'../../wallet-apple/deno.json'),path.join(temp,'native-test.ts')],{stdio:['ignore','pipe','pipe']});
+  console.log('PASS Apple: Signierung zusätzlich in Deno-Laufzeit ausgeführt');
+ }
+ run('python3',['-c',"import zipfile; zipfile.ZipFile('Silber.pkpass').extractall('unpacked')"]);
+ const pass=JSON.parse(fs.readFileSync(path.join(temp,'unpacked/pass.json')));
+ ok('Apple: fünf Rangkarten als signierte PKPass-Pakete erzeugt',fs.existsSync(path.join(temp,'Diamant.pkpass')));
+ ok('Apple: Silber mit dunkler Schrift',pass.foregroundColor==='rgb(24, 24, 26)');
+ ok('Apple: native QR-Daten ohne Club-Token',pass.barcodes[0].message==='LP000240'&&!pass.barcodes[0].message.includes('TEST-NOT-REAL'));
+ ok('Apple: stabile Seriennummer und echter Punktestand',pass.serialNumber===d.object_id&&pass.storeCard.headerFields[0].value===240);
+ ok('Apple: keine vorgetäuschte Push-Anbindung',!pass.webServiceURL&&!pass.authenticationToken);
+ run('openssl',['cms','-verify','-inform','DER','-in','unpacked/signature','-content','unpacked/manifest.json','-CAfile','ca.pem','-purpose','any','-binary','-out','verified.json']);
+ ok('Apple: CMS-Signatur mit unabhängiger OpenSSL-Prüfung gültig',true);
+ const manifest=JSON.parse(fs.readFileSync(path.join(temp,'unpacked/manifest.json')));
+ for(const [file,hash] of Object.entries(manifest))assert.equal(require('node:crypto').createHash('sha1').update(fs.readFileSync(path.join(temp,'unpacked',file))).digest('hex'),hash);
+ ok('Apple: Manifest stimmt mit allen Paketdateien überein',true);
+ assert.throws(()=>c.make({...d,team_id:'WRONG'},e));ok('Apple: falsche Team-ID verhindert Ausgabe',true);
+ assert.throws(()=>c.make(d,{...e,key:fs.readFileSync(path.join(temp,'ca.key'),'utf8')}));ok('Apple: fremder privater Schlüssel verhindert Ausgabe',true);
+ assert.throws(()=>c.make(d,{...e,assets:{}}));ok('Apple: fehlendes freigegebenes Artwork verhindert Ausgabe',true);
+ assert.throws(()=>c.make({...d,club_url:'https://test.invalid/club/'},e));ok('Apple: Platzhalter-Clubadresse verhindert Ausgabe',true);
+}finally{fs.rmSync(temp,{recursive:true,force:true});}

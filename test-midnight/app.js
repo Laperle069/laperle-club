@@ -74,22 +74,38 @@ $("fNochmal").onclick = () => mitSperre($("fNochmal"), async () => {
 $("fZurueck").onclick = () => zeig("reg");
 
 // ---------- Wallet ----------
-async function walletKarte(btn) {
+async function walletKarte(btn, plattform = "google") {
   await mitSperre(btn, async () => {
     try {
-      const a = await fetch(SUPABASE_URL + "/functions/v1/wallet/link", { method: "POST",
-        headers: { "Content-Type": "application/json", "apikey": SUPABASE_ANON_KEY, "Authorization": "Bearer " + SUPABASE_ANON_KEY },
-        body: JSON.stringify({ token }) });
+      const apple = plattform === "apple";
+      const a = await fetch(SUPABASE_URL + (apple ? "/functions/v1/wallet-apple/pass" : "/functions/v1/wallet/link"), {
+        method: "POST", headers: { "Content-Type": "application/json", "apikey": SUPABASE_ANON_KEY,
+          ...(SUPABASE_ANON_KEY.startsWith("eyJ") ? {"Authorization":"Bearer " + SUPABASE_ANON_KEY} : {}) },
+        body: JSON.stringify({ token }), signal: AbortSignal.timeout(30000), cache: "no-store" });
+      if (apple && a.ok && a.headers.get("Content-Type")?.includes("application/vnd.apple.pkpass")) {
+        const url = URL.createObjectURL(await a.blob());
+        const link = document.createElement("a"); link.href = url; link.download = "LaPerle-Club.pkpass";
+        document.body.appendChild(link); link.click(); link.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 60000); return;
+      }
       const d = await a.json();
-      if (d.bereit && d.url) { try { await rpc("wallet_gespeichert", { p_token: token }); } catch (e) {} location.href = d.url; return; }
-      if (d.fehler) sagen("Wallet: " + d.fehler, true);
-      else if (d.bereit === false) sagen("Die Wallet-Karte ist noch nicht freigeschaltet.", true);
-      else sagen("Unerwartete Antwort der Wallet-Funktion.", true);
-    } catch (e) { sagen("Wallet nicht erreichbar.", true); }
+      if (!apple && a.ok && d.bereit && d.url) {
+        const ziel = new URL(d.url);
+        if (ziel.origin !== "https://pay.google.com" || !ziel.pathname.startsWith("/gp/v/save/")) throw new Error("Ungültiger Wallet-Link");
+        location.href = ziel.href; return;
+      }
+      if (d.fehler) sagen(d.fehler, true);
+      else if (d.bereit === false) sagen((apple ? "Apple" : "Google") + " Wallet wird gerade für dich vorbereitet.", true);
+      else sagen("Deine Karte konnte gerade nicht geladen werden. Bitte versuche es später erneut.", true);
+    } catch (e) { sagen("Wallet gerade nicht erreichbar. Bitte versuche es gleich noch einmal.", true); }
   });
 }
-$("walletBtn").onclick = () => walletKarte($("walletBtn"));
-$("walletTop").onclick = () => walletKarte($("walletTop"));
+$("walletBtn").onclick = () => walletKarte($("walletBtn"), "google");
+$("appleWalletBtn").onclick = () => walletKarte($("appleWalletBtn"), "apple");
+$("walletTop").onclick = () => {
+  const ziel = $("walletAuswahl"); ziel.scrollIntoView({behavior:sanft()?"auto":"smooth",block:"center"});
+  $("appleWalletBtn").focus({preventScroll:true});
+};
 
 // ---------- Club laden ----------
 let mailAnkerGezeigt = false;

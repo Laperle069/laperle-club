@@ -1,0 +1,6 @@
+{
+  "imports": {
+    "passkit-generator": "npm:passkit-generator@3.6.0"
+  },
+  "nodeModulesDir": "auto"
+}

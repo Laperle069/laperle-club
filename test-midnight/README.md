@@ -25,3 +25,10 @@ Design, Anwendungslogik und Rechtsdatei wurden aus dem geprüften Paket übernom
 ## Freigegebene E-Mail-Texte integriert
 
 Die E-Mail-Migration ist in der getrennten Testdatenbank angewendet. Der Club berücksichtigt jetzt die direkten Ziele aus E-Mails (Prämien, Geschenke, Einstellungen) nach dem Laden. Details, Voraussetzungen und verbleibende Versandtests: [E-Mail-Einbaustand](../mail/README.md).
+
+
+## Wallet-Anbindung, 18.09.2026
+
+Apple und Google haben getrennte Buttons. Die Testdatenbank hat die neue Apple-RPC; beide Wallet-Schalter bleiben aus. Google gibt serverseitig angelegte/aktualisierte Objekte über kurze signierte Speicherlinks aus. Apple erzeugt signierte `.pkpass`-Dateien mit stabiler Seriennummer, zuerst ohne APNs-Hintergrundupdates. Einrichtung und offene Punkte stehen in `wallet/EINRICHTUNG.md` und `wallet-apple/EINRICHTUNG.md`. Vor echter Ausgabe fehlen Schlüsselabgleich, native Exporte des freigegebenen Entwurfs, erreichbare Club-Adresse sowie iPhone-/Android-/iPad-Tests. Keine Karten oder Nachrichten an echte Kundinnen ausgegeben.
+
+Die SQL- und Browsertests setzen das vollständige Stand-04-Projekt einschließlich Migrationen 001–031 und Test-Harness voraus. In diesem Repository werden die geänderten Tests zur Übernahme abgelegt. Die beiden Clienttests für Google und der Apple-Signaturtest sind mit den beschriebenen Laufzeitabhängigkeiten eigenständig ausführbar.
