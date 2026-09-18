@@ -211,9 +211,13 @@ function rangArtwork(rang: string | null): Record<string, unknown> {
     contentDescription:{defaultValue:{language:"de",value:`La Perlé Club – ${rang ?? "Mitglied"}`}}}};
 }
 
+const RANG_HINTERGRUND: Record<string,string> = {
+  bronze: "#8e5534", silber: "#c7cbcd", gold: "#d0b071", platin: "#c0c1bc", diamant: "#d6e5ed",
+};
 function kartenobjekt(d: any) {
   return {
     ...rangArtwork(d.rang),
+    hexBackgroundColor: RANG_HINTERGRUND[(d.rang ?? "Bronze").toLocaleLowerCase("de-DE")] ?? RANG_HINTERGRUND.bronze,
     id: d.object_id,
     classId: d.class_id,
     state: "ACTIVE",
