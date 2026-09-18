@@ -92,6 +92,7 @@ $("walletBtn").onclick = () => walletKarte($("walletBtn"));
 $("walletTop").onclick = () => walletKarte($("walletTop"));
 
 // ---------- Club laden ----------
+let mailAnkerGezeigt = false;
 let ladeGen = 0;                                  // jede Ladung ist ein neuer Snapshot (V26)
 async function laden() {
   const meine = ++ladeGen;
@@ -101,7 +102,18 @@ async function laden() {
     d.einwilligungen = await rpc("kunde_einwilligungen", { p_token: token }).catch(() => ({}));
     if (meine !== ladeGen) return;
     daten = d; zeichnen(); zeig("club");
-    feierEinreihen(d.feier || [], meine);
+    const mailZiel = { "#einwilligungen": "einwilligungen", "#praemienBox": "praemienBox", "#gewinneBox": "gewinneBox" }[location.hash];
+    if (mailZiel && !mailAnkerGezeigt) {
+      mailAnkerGezeigt = true;
+      requestAnimationFrame(() => {
+        const ziel = $(mailZiel);
+        if (ziel && !ziel.classList.contains("hide")) {
+          ziel.setAttribute("tabindex", "-1");
+          ziel.scrollIntoView({ block: "start", behavior: "auto" });
+          ziel.focus({ preventScroll: true });
+        }
+      });
+    } else feierEinreihen(d.feier || [], meine);
   } catch (e) { sagen(e.message, true); zeig("reg"); }
 }
 

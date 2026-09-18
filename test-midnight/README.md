@@ -21,3 +21,7 @@ Der neue Ordner ist für die öffentliche Kundenoberfläche vorgesehen. Die neue
 ## Abgleich
 
 Design, Anwendungslogik und Rechtsdatei wurden aus dem geprüften Paket übernommen. Zusätzlich wurden ausschließlich die Robots-/Referrer-Metatags ergänzt. Bestehende Rechtstexte sind keine neue rechtliche Prüfung.
+
+## Freigegebene E-Mail-Texte integriert
+
+Die E-Mail-Migration ist in der getrennten Testdatenbank angewendet. Der Club berücksichtigt jetzt die direkten Ziele aus E-Mails (Prämien, Geschenke, Einstellungen) nach dem Laden. Details, Voraussetzungen und verbleibende Versandtests: [E-Mail-Einbaustand](../mail/README.md).

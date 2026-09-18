@@ -1,0 +1,101 @@
+{
+  "einladung": {
+    "betreff": "[Vorname], entdecke den La Perlé Club ✨",
+    "vorschau": "Sammle Perlen bei deinen Besuchen und freue dich auf ausgewählte Prämien.",
+    "vorher": "Hallo [Vorname],\n\ndu genießt deine Behandlung – und deine Treue wird belohnt. Im La Perlé Club sammelst du bei deinen Besuchen Perlen, die du gegen ausgewählte Prämien eintauschen kannst.\n\nIn deinem persönlichen Clubbereich hast du deinen Perlenstand, deinen Rang und deine Prämien jederzeit im Blick. So siehst du, welcher kleinen Auszeit du schon ein Stück näher bist.\n\n**Melde dich jetzt an und entdecke deine Clubvorteile.**",
+    "nachher": "Wir freuen uns, dich im Club willkommen zu heißen. 🤍\n\nDein La Perlé Team",
+    "button": "Jetzt Clubmitglied werden",
+    "ziel": "registrierung",
+    "werbung": true
+  },
+  "willkommen": {
+    "betreff": "[Vorname], willkommen im La Perlé Club ✨",
+    "vorschau": "Dein persönlicher Clubbereich ist bereit. Entdecke deine Perlen, deine Karte und deine Prämien.",
+    "vorher": "Hallo [Vorname],\n\nschön, dass du dabei bist. Im La Perlé Club wird aus deiner Treue etwas Besonderes: Du sammelst bei deinen Besuchen Perlen, entdeckst deinen persönlichen Rang und kannst deine Perlen gegen ausgewählte Prämien eintauschen.\n\nDein persönlicher Clubbereich ist jetzt für dich bereit. Dort findest du deinen Perlenstand, deine Kundenkarte und die Prämien, auf die du dich freuen kannst.\n\n**Entdecke jetzt, welche kleine Auszeit deine nächste Prämie werden könnte.**",
+    "nachher": "Bewahre diese E-Mail auf: Über deinen persönlichen Link gelangst du jederzeit wieder in deinen Clubbereich. Bitte teile ihn nicht mit anderen.\n\nWir freuen uns darauf, dich bald wieder bei uns zu verwöhnen. 🤍\n\nDein La Perlé Team",
+    "button": "Meinen Club entdecken",
+    "ziel": "club",
+    "werbung": false
+  },
+  "praemie_nah": {
+    "betreff": "Nur noch [Anzahl] Perlen bis zu deiner Prämie ✨",
+    "vorschau": "[Prämie] ist in Reichweite – schau dir an, worauf du dich freuen kannst.",
+    "vorher": "Hallo [Vorname],\n\ndu bist deiner nächsten Prämie schon ganz nah: Für **[Prämie]** fehlen dir noch **[Anzahl] Perlen**.\n\nBei deinen nächsten Besuchen sammelst du weiter. In deinem Clubbereich kannst du dir die Prämie genauer ansehen und deinen aktuellen Perlenstand prüfen.\n\n**Entdecke jetzt, worauf du dich freuen kannst.**",
+    "nachher": "Wir freuen uns auf deine nächste Auszeit bei uns. 🤍\n\nDein La Perlé Team",
+    "button": "Meine nächste Prämie ansehen",
+    "ziel": "praemien",
+    "werbung": true
+  },
+  "geburtstag": {
+    "betreff": "Alles Liebe zum Geburtstag, [Vorname] 🤍",
+    "vorschau": "Ein kleines Geburtstagsgeschenk wartet in deinem Clubbereich auf dich.",
+    "vorher": "Hallo [Vorname],\n\nheute darfst du dich feiern lassen. Wir wünschen dir einen wunderschönen Geburtstag und viele kleine Momente, die dir guttun. ✨\n\nAuch wir möchten dir eine Freude machen: In deinem Clubbereich haben wir **[Geburtstagsgeschenk]** für dich hinterlegt.\n\nDein Geschenk ist bis zum **[Datum]** einlösbar. Öffne deinen Clubbereich, schau dir die Details an und zeige dein Geschenk bei deinem Besuch am Empfang vor.",
+    "nachher": "Lass es dir heute besonders gut gehen.\n\nDein La Perlé Team",
+    "button": "Mein Geburtstagsgeschenk ansehen",
+    "ziel": "geschenke",
+    "werbung": true
+  },
+  "rueckkehr1": {
+    "betreff": "[Vorname], Zeit für deine nächste Beauty-Auszeit? ✨",
+    "vorschau": "Finde einen Termin, der zu dir passt – wir freuen uns auf dich.",
+    "vorher": "Hallo [Vorname],\n\nwie wäre es, dir wieder etwas Zeit für dich zu nehmen?\n\nOb du deine gewohnte Behandlung fortsetzen oder etwas Neues entdecken möchtest: Wir freuen uns darauf, dich bei La Perlé zu begrüßen.\n\n**Such dir jetzt deine Behandlung und einen passenden Termin aus.**",
+    "nachher": "Du bist noch unsicher, welche Behandlung zu dir passt? Antworte einfach auf diese E-Mail – wir beraten dich gerne.\n\nBis bald bei uns. 🤍\n\nDein La Perlé Team",
+    "button": "Meine Auszeit buchen",
+    "ziel": "buchung",
+    "werbung": true
+  },
+  "rueckkehr2": {
+    "betreff": "[Vorname], schön, dich wiederzusehen 🤍",
+    "vorschau": "Deine nächste Auszeit bei La Perlé beginnt mit einem passenden Termin.",
+    "vorher": "Hallo [Vorname],\n\ndein letzter Besuch liegt schon etwas zurück. Vielleicht ist jetzt ein schöner Moment, wieder etwas Zeit für dich einzuplanen.\n\nWir freuen uns darauf, dich wieder bei uns zu begrüßen und gemeinsam zu schauen, was du dir für deine nächste Behandlung wünschst.\n\n**Entdecke unsere Behandlungen und finde deinen Wunschtermin.**",
+    "nachher": "Du möchtest vorher etwas fragen oder uns Rückmeldung zu deinem letzten Besuch geben? Antworte uns einfach auf diese E-Mail. Wir nehmen uns gerne Zeit für dich.\n\nDein La Perlé Team",
+    "button": "Meinen nächsten Besuch planen",
+    "ziel": "buchung",
+    "werbung": true
+  },
+  "bewertung": {
+    "betreff": "[Vorname], wie hat dir dein Besuch gefallen? 🤍",
+    "vorschau": "Teile deine ehrliche Erfahrung und hilf anderen, La Perlé kennenzulernen.",
+    "vorher": "Hallo [Vorname],\n\ndanke, dass du bei uns warst. Wie hast du deine Behandlung und die Zeit bei La Perlé erlebt?\n\nMit deiner ehrlichen Bewertung bei Google hilfst du anderen, sich ein Bild von unserem Studio zu machen. Gleichzeitig zeigst du uns, was dir gefallen hat und wo wir noch besser werden können.\n\n**Teile jetzt deine Erfahrung – wir freuen uns über deine Rückmeldung.**",
+    "nachher": "Wenn du uns etwas persönlich mitteilen möchtest, kannst du auch direkt auf diese E-Mail antworten.\n\nDanke für deine Zeit.\n\nDein La Perlé Team",
+    "button": "Meine Erfahrung bei Google teilen",
+    "ziel": "bewertung",
+    "werbung": true
+  },
+  "verfall_warnung": {
+    "betreff": "Deine [Anzahl] Perlen sind bis zum [Datum] gültig",
+    "vorschau": "Hier findest du deinen aktuellen Perlenstand und die Informationen zur Gültigkeit.",
+    "vorher": "Hallo [Vorname],\n\nauf deinem Clubkonto befinden sich **[Anzahl] Perlen**. Nach den geltenden Clubregeln sind sie noch bis zum **[Datum]** gültig und verfallen anschließend, wenn bis dahin kein weiterer Besuch erfolgt.\n\nEin weiterer Besuch bei uns vor Ablauf setzt die Gültigkeitsfrist zurück. Deinen Perlenstand und die verfügbaren Prämien findest du in deinem persönlichen Clubbereich.",
+    "nachher": "Du hast Fragen zu deinen Perlen oder zur Gültigkeit? Antworte einfach auf diese E-Mail – wir helfen dir gerne weiter.\n\nDein La Perlé Team",
+    "button": "Meinen Perlenstand prüfen",
+    "ziel": "club",
+    "werbung": false
+  },
+  "zugang": {
+    "betreff": "[Vorname], hier ist dein Zugang zum La Perlé Club",
+    "vorschau": "Öffne deinen persönlichen Clubbereich und sieh deinen aktuellen Perlenstand.",
+    "vorher": "Hallo [Vorname],\n\nhier ist dein persönlicher Zugang zum La Perlé Club. Über den Button gelangst du direkt zu deinem Perlenstand, deiner Kundenkarte und deinen Prämien.",
+    "nachher": "Bewahre diese E-Mail auf und teile deinen persönlichen Zugangslink nicht mit anderen.\n\nFalls du keinen Zugang angefordert hast, musst du nichts unternehmen. Bei Fragen kannst du direkt auf diese E-Mail antworten.\n\nDein La Perlé Team",
+    "button": "Meinen Club öffnen",
+    "ziel": "club",
+    "werbung": false
+  },
+  "zugang_hilfe": {
+    "betreff": "Dein persönlicher Zugang zum La Perlé Club",
+    "vorschau": "Hier findest du deinen Clubbereich wieder. Deine Perlen bleiben erhalten.",
+    "vorher": "Hallo [Vorname],\n\nwir senden dir deinen persönlichen Clubzugang noch einmal zu. Dein bestehendes Konto und deine gesammelten Perlen bleiben unverändert.\n\n**Öffne deinen Clubbereich einfach über diesen Button.**",
+    "nachher": "Bewahre diese E-Mail auf und teile deinen persönlichen Zugangslink nicht mit anderen. Wenn du weitere Hilfe brauchst, antworte uns einfach auf diese E-Mail.\n\nDein La Perlé Team",
+    "button": "Meinen Club öffnen",
+    "ziel": "club",
+    "werbung": false
+  },
+  "altlink": {
+    "betreff": "Dein neuer Zugangslink zum La Perlé Club",
+    "vorschau": "Bitte nutze künftig diesen Link. Dein Clubkonto und deine Perlen bleiben unverändert.",
+    "vorher": "Hallo [Vorname],\n\nwir haben deinen persönlichen Zugangslink zum La Perlé Club erneuert. Dein bisheriger Link ist nicht mehr gültig. Dein Clubkonto und deine gesammelten Perlen bleiben unverändert.\n\n**Nutze ab jetzt den Button in dieser E-Mail, um deinen Clubbereich zu öffnen.**",
+    "nachher": "Bewahre diese E-Mail auf und ersetze gegebenenfalls dein bisheriges Lesezeichen. Bitte teile deinen persönlichen Zugangslink nicht mit anderen.\n\nBei Fragen antworte einfach auf diese E-Mail – wir helfen dir gerne weiter.\n\nDein La Perlé Team",
+    "button": "Meinen Club mit neuem Link öffnen",
+    "ziel": "club",
+    "werbung": false
+  }
+}
