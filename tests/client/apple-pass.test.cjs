@@ -28,7 +28,7 @@ try{
  const png='iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+/l9sAAAAASUVORK5CYII=';
  const d={object_id:'laperle_test',pass_type:'pass.de.laperlebeauty.club',team_id:'FPDU6B86GK',rang:'Silber',vorname:'Anna',nachname:'Test',kundennummer:'LP000240',stand:240,naechste:'Noch 10 Perlen',club_url:'https://club.example.org/?t=TEST-NOT-REAL'};
  for(const rank of ['Bronze','Silber','Gold','Platin','Diamant']){
-  for(const name of c.names(rank))e.assets[name]=png;
+  for(const name of c.names(rank))e.assets[name]=process.env.WALLET_ARTWORK_DIR?fs.readFileSync(path.join(process.env.WALLET_ARTWORK_DIR,name)).toString("base64"):png;
   const pass=c.make({...d,rang:rank},e);fs.writeFileSync(path.join(temp,rank+'.pkpass'),pass);
  }
  if(process.env.WALLET_DENO_TEST==='1'){
@@ -42,7 +42,7 @@ Deno.writeFileSync(${JSON.stringify(path.join(temp,'Silber.pkpass'))},erstellePa
  run('python3',['-c',"import zipfile; zipfile.ZipFile('Silber.pkpass').extractall('unpacked')"]);
  const pass=JSON.parse(fs.readFileSync(path.join(temp,'unpacked/pass.json')));
  ok('Apple: fünf Rangkarten als signierte PKPass-Pakete erzeugt',fs.existsSync(path.join(temp,'Diamant.pkpass')));
- ok('Apple: Silber mit dunkler Schrift',pass.foregroundColor==='rgb(24, 24, 26)');
+ ok('Apple: Silber mit dunkler Schrift',pass.foregroundColor==='rgb(36, 37, 42)');
  ok('Apple: native QR-Daten ohne Club-Token',pass.barcodes[0].message==='LP000240'&&!pass.barcodes[0].message.includes('TEST-NOT-REAL'));
  ok('Apple: stabile Seriennummer und echter Punktestand',pass.serialNumber===d.object_id&&pass.storeCard.headerFields[0].value===240);
  ok('Apple: keine vorgetäuschte Push-Anbindung',!pass.webServiceURL&&!pass.authenticationToken);
