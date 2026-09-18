@@ -6,11 +6,11 @@ import forge from "node-forge";
 // Artwork comes from approved, separately exported pass assets. The concept
 // sheet, its demo QR codes and example names must never become a real pass.
 const RANG: Record<string, {name:string; bg:string; fg:string; asset:string}> = {
-  bronze: {name:"Bronze",bg:"rgb(70, 40, 24)",fg:"rgb(255, 241, 218)",asset:"bronze"},
-  silber: {name:"Silber",bg:"rgb(207, 209, 211)",fg:"rgb(24, 24, 26)",asset:"silber"},
-  gold: {name:"Gold",bg:"rgb(214, 186, 127)",fg:"rgb(30, 23, 13)",asset:"gold"},
-  platin: {name:"Platin",bg:"rgb(45, 46, 47)",fg:"rgb(249, 247, 239)",asset:"platin"},
-  diamant: {name:"Diamant",bg:"rgb(45, 31, 41)",fg:"rgb(251, 244, 249)",asset:"diamant"},
+  bronze: {name:"Bronze",bg:"rgb(142, 85, 52)",fg:"rgb(255, 240, 218)",asset:"bronze"},
+  silber: {name:"Silber",bg:"rgb(199, 203, 205)",fg:"rgb(36, 37, 42)",asset:"silber"},
+  gold: {name:"Gold",bg:"rgb(208, 176, 113)",fg:"rgb(50, 37, 25)",asset:"gold"},
+  platin: {name:"Platin",bg:"rgb(192, 193, 188)",fg:"rgb(48, 49, 47)",asset:"platin"},
+  diamant: {name:"Diamant",bg:"rgb(214, 229, 237)",fg:"rgb(32, 51, 66)",asset:"diamant"},
 };
 export function assetNamen(rang:string|null):string[] {
   const r=rang?RANG[rang.toLocaleLowerCase("de-DE")]:RANG.bronze;
