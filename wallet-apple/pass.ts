@@ -20,7 +20,7 @@ export function assetNamen(rang:string|null):string[] {
 export type PassDaten = {
   object_id:string; pass_type:string; team_id:string; rang:string|null;
   vorname:string; nachname:string; kundennummer:string; stand:number;
-  naechste:string; club_url:string;
+  naechste:string; club_url:string; auth_token?:string; web_service_url?:string;
 };
 export type Einrichtung = {
   cert:string; key:string; wwdr:string; passphrase?:string;
@@ -73,6 +73,7 @@ export function erstellePass(d:PassDaten,e:Einrichtung):Buffer {
     organizationName:"La Perlé Beauty Boutique",description:"La Perlé Club – deine Kundenkarte",
     backgroundColor:rang.bg,foregroundColor:rang.fg,labelColor:rang.fg,
     sharingProhibited:true,
+    ...(d.web_service_url && d.auth_token ? {webServiceURL:d.web_service_url,authenticationToken:d.auth_token} : {}),
   });
   pass.type="storeCard";
   pass.headerFields.push({key:"perlen",label:"PERLEN",value:d.stand});
@@ -82,10 +83,9 @@ export function erstellePass(d:PassDaten,e:Einrichtung):Buffer {
   pass.backFields.push(
     {key:"club",label:"Dein Club und aktueller Punktestand",value:club.href},
     {key:"naechste",label:"Bis zur nächsten Prämie",value:d.naechste},
-    {key:"aktualisierung",label:"Karte aktualisieren",value:"Öffne deinen Club und füge die Karte erneut hinzu, um deinen aktuellen Stand zu übernehmen."},
+    {key:"aktualisierung",label:"Karte aktualisieren",value:d.web_service_url?"Dein Perlenstand und Rang werden automatisch aktualisiert. Aktiviere dafür automatische Updates in den Karteneinstellungen.":"Öffne deinen Club und füge die Karte erneut hinzu, um deinen aktuellen Stand zu übernehmen."},
   );
   pass.setBarcodes({format:"PKBarcodeFormatQR",message:d.kundennummer,messageEncoding:"iso-8859-1",altText:d.kundennummer});
-  // Stable serial number replaces an existing pass on re-download. Push updates
-  // need a separate registered web service and APNs; don't advertise one here.
+  // Stable serial number replaces the same card on re-download or service update.
   return pass.getAsBuffer();
 }

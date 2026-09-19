@@ -15,9 +15,9 @@ async function run(cards=[],options={}){
  return {response,calls,ack};
 }
 (async()=>{
- const card={object_id:'issuer.customer',version:7,lease_id:'lease-a',lease_bis:new Date(Date.now()+180000).toISOString(),club_url:'https://club.example.test/?t=new',stand:50,rang:'Gold',naechste:'Noch 20'};
+ const card={object_id:'issuer.customer',version:7,lease_id:'lease-a',lease_bis:new Date(Date.now()+180000).toISOString(),club_url:'https://club.example.test/?t=new',stand:50,rang:'Gold',vorname:'Anna',nachname:'Neu',naechste:'Noch 20'};
  let r=await run([card]);assert.equal(r.response.status,200);assert.equal(r.ack[0].lease_id,'lease-a');
- const patch=r.calls.find(x=>x.init.method==='PATCH');assert.equal(JSON.parse(patch.init.body).linksModuleData.uris[0].uri,card.club_url);assert.ok(patch.init.signal);console.log('PASS Wallet Worker überträgt Club-Link, Timeout und Besitzkennung');
+ const patch=r.calls.find(x=>x.init.method==='PATCH');assert.equal(JSON.parse(patch.init.body).linksModuleData.uris[0].uri,card.club_url);assert.ok(patch.init.signal);assert.equal(JSON.parse(patch.init.body).accountName,'Anna Neu');assert.ok(!('hexBackgroundColor' in JSON.parse(patch.init.body)));console.log('PASS Wallet Worker überträgt Club-Link, Timeout und Besitzkennung');
  assert.ok(!r.calls[0].init.headers.Authorization);console.log('PASS Neuer Supabase-API-Key wird nicht als JWT missbraucht');
  r=await run([{...card,lease_bis:new Date(Date.now()+5000).toISOString()}]);assert.ok(!r.calls.some(x=>x.init.method==='PATCH'));console.log('PASS Kein neuer PATCH kurz vor Lease-Ende');
  r=await run([card],{timeout:true});assert.equal(r.ack[0].ok,false);assert.equal(r.ack[0].lease_id,'lease-a');console.log('PASS Transportfehler quittiert mit korrekter Besitzkennung');

@@ -1,0 +1,2 @@
+const {create}=require('./engine.cjs'),fs=require('node:fs'),path=require('node:path');
+(async()=>{const e=await create();try{await e.query("select set_config('lp.qa_studio','FFM-01',false)");await e.query(fs.readFileSync(path.join(__dirname,'../sql/wallet-automatic-updates.sql'),'utf8'));console.log('PASS Wallet automatic updates SQL assertions');}finally{await e.end();}})().catch(e=>{console.error(e.message);process.exitCode=1});

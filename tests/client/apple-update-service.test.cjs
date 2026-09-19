@@ -1,0 +1,25 @@
+const {stripTypeScriptTypes}=require('node:module'),vm=require('node:vm'),fs=require('node:fs'),assert=require('node:assert/strict');
+const source=stripTypeScriptTypes(fs.readFileSync(require('node:path').join(__dirname,'../../wallet-apple/service.ts'),'utf8'),{mode:'strip'}).replace('export async function','async function');
+const c=vm.createContext({Request,Response,URL,Date,JSON,decodeURIComponent});vm.runInContext(source,c);
+(async()=>{
+ let result=null,calls=[],ack=[];
+ const deps={rpc:async(n,a)=>{calls.push(a);if(n==='wallet_quittieren'){ack.push(...a.p_quittungen);return {};}return result;},render:async()=>new Uint8Array([1,2]),authorized:async s=>s==='secret',push:async()=>({status:200})};
+ const req=(p,m='GET',b,auth='ApplePass abc')=>new Request('https://test/functions/v1/wallet-apple'+p,{method:m,headers:{authorization:auth},...(b?{body:JSON.stringify(b)}:{})});
+ const reg='/v1/devices/d/registrations/pass.test/s';
+ assert.equal((await c.walletService(req(reg,'POST',{pushToken:'p'},''),deps)).status,401);assert.equal(calls.length,0);
+ result={created:true};assert.equal((await c.walletService(req(reg,'POST',{pushToken:'p'}),deps)).status,201);
+ result={created:false};assert.equal((await c.walletService(req(reg,'POST',{pushToken:'p'}),deps)).status,200);
+ result=null;assert.equal((await c.walletService(req('/v1/passes/pass.test/s'),deps)).status,401);
+ assert.equal((await c.walletService(req('/v1/devices/d/registrations/pass.test'),deps)).status,204);
+ assert.equal((await c.walletService(req('/v1/devices/d/registrations/pass.test?passesUpdatedSince=x'),deps)).status,400);
+ result={updated_at:'2026-09-18T10:00:00.500Z'};let r=req('/v1/passes/pass.test/s');r.headers.set('if-modified-since','Fri, 18 Sep 2026 10:00:00 GMT');assert.equal((await c.walletService(r,deps)).status,200);
+ r.headers.set('if-modified-since','Fri, 18 Sep 2026 10:00:01 GMT');assert.equal((await c.walletService(r,deps)).status,304);
+ assert.equal((await c.walletService(req('/sync','POST'),deps)).status,401);
+ const sync=req('/sync','POST');sync.headers.set('x-sync-geheimnis','secret');
+ result=[{object_id:'s',version:2,lease_id:'lease',lease_bis:new Date(Date.now()+180000).toISOString(),pass_type:'pass.test',devices:[{device_id:'d',push_token:'p'}]}];
+ await c.walletService(sync,deps);assert.equal(ack.pop().ok,true);
+ deps.push=async()=>({status:503});await c.walletService(sync,deps);assert.equal(ack.pop().ok,false);
+ deps.push=async()=>({status:410,reason:'Unregistered'});calls=[];await c.walletService(sync,deps);assert.ok(calls.some(a=>a.p_action==='invalid_device'));assert.equal(ack.pop().ok,true);
+ deps.push=async()=>({status:400,reason:'DeviceTokenNotForTopic'});calls=[];await c.walletService(sync,deps);assert.ok(!calls.some(a=>a.p_action==='invalid_device'));assert.equal(ack.pop().ok,false);
+ console.log('PASS Apple protocol: authorization, registration, caching, retry, invalid-device cleanup');
+})().catch(e=>{console.error(e);process.exitCode=1});

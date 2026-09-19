@@ -46,6 +46,12 @@ Deno.writeFileSync(${JSON.stringify(path.join(temp,'Silber.pkpass'))},erstellePa
  ok('Apple: native QR-Daten ohne Club-Token',pass.barcodes[0].message==='LP000240'&&!pass.barcodes[0].message.includes('TEST-NOT-REAL'));
  ok('Apple: stabile Seriennummer und echter Punktestand',pass.serialNumber===d.object_id&&pass.storeCard.headerFields[0].value===240);
  ok('Apple: keine vorgetäuschte Push-Anbindung',!pass.webServiceURL&&!pass.authenticationToken);
+ const updateData={...d,web_service_url:'https://wallet.example.org/service',auth_token:'a'.repeat(32)};
+ fs.writeFileSync(path.join(temp,'updates.pkpass'),c.make(updateData,e));
+ run('python3',['-c',"import zipfile; zipfile.ZipFile('updates.pkpass').extractall('updates')"]);
+ const up=JSON.parse(fs.readFileSync(path.join(temp,'updates/pass.json')));
+ ok('Apple: Update-Pass enthält HTTPS-Dienst und separaten stabilen Token',up.webServiceURL===updateData.web_service_url&&up.authenticationToken===updateData.auth_token);
+
  run('openssl',['cms','-verify','-inform','DER','-in','unpacked/signature','-content','unpacked/manifest.json','-CAfile','ca.pem','-purpose','any','-binary','-out','verified.json']);
  ok('Apple: CMS-Signatur mit unabhängiger OpenSSL-Prüfung gültig',true);
  const manifest=JSON.parse(fs.readFileSync(path.join(temp,'unpacked/manifest.json')));

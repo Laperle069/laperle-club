@@ -211,13 +211,9 @@ function rangArtwork(rang: string | null): Record<string, unknown> {
     contentDescription:{defaultValue:{language:"de",value:`La Perlé Club – ${rang ?? "Mitglied"}`}}}};
 }
 
-const RANG_HINTERGRUND: Record<string,string> = {
-  bronze: "#8e5534", silber: "#c7cbcd", gold: "#d0b071", platin: "#c0c1bc", diamant: "#d6e5ed",
-};
 function kartenobjekt(d: any) {
   return {
     ...rangArtwork(d.rang),
-    hexBackgroundColor: RANG_HINTERGRUND[(d.rang ?? "Bronze").toLocaleLowerCase("de-DE")] ?? RANG_HINTERGRUND.bronze,
     id: d.object_id,
     classId: d.class_id,
     state: "ACTIVE",
@@ -229,7 +225,7 @@ function kartenobjekt(d: any) {
     },
     secondaryLoyaltyPoints: {
       label: "Rang",
-      balance: { string: d.rang ?? "Bronze" },
+      balance: { string: d.rang ?? "Mitglied" },
     },
     barcode: {
       type: "QR_CODE",
@@ -268,6 +264,29 @@ Deno.serve(async (anfrage) => {
 
   try {
     const pfad = new URL(anfrage.url).pathname.split("/").pop();
+
+    // Read-only readiness check. No passes created and no customer data returned.
+    if (pfad === "check") {
+      const secret = anfrage.headers.get("x-sync-geheimnis") ?? "";
+      if (!DIENST || secret.length < 32 || secret.length > 512 || await rpc("wallet_worker_authorized", {p_secret:secret}, DIENST) !== true)
+        return new Response(JSON.stringify({fehler:"Nicht berechtigt"}),{status:401,headers:kopfzeilen});
+      if (!KONTO.client_email || !KONTO.private_key)
+        return new Response(JSON.stringify({ready:false,reason:"GOOGLE_SERVICE_ACCOUNT fehlt"}),{status:503,headers:kopfzeilen});
+      const settingsResponse = await zeitFetch(DB_URL + "/rest/v1/einstellung?select=schluessel,wert&schluessel=in.(google_issuer_id,google_class_id,club_basis_url)", {
+        headers:{apikey:DIENST,...(DIENST.startsWith("eyJ")?{Authorization:`Bearer ${DIENST}`}:{})},
+      });
+      if (!settingsResponse.ok) throw new Error("Einstellungen nicht erreichbar");
+      const settings = Object.fromEntries((await settingsResponse.json()).map((x:any)=>[x.schluessel,x.wert]));
+      if (!/^\d+\.[A-Za-z0-9._-]+$/.test(settings.google_class_id) || !settings.google_class_id.startsWith(settings.google_issuer_id+".")) throw new Error("Klassen-ID fehlt");
+      const at = await zugriffstoken();
+      const result = await zeitFetch("https://walletobjects.googleapis.com/walletobjects/v1/loyaltyClass/"+encodeURIComponent(settings.google_class_id),{headers:{Authorization:`Bearer ${at}`}});
+      const data = result.ok ? await result.json() : {};
+      const club = new URL(settings.club_basis_url);
+      const clubReady = club.protocol==="https:" && !club.hostname.endsWith(".invalid") && !club.username && !club.password;
+      return new Response(JSON.stringify({ready:result.ok&&String(data.reviewStatus).toUpperCase()==="APPROVED"&&clubReady,
+        apiStatus:result.status,classReviewStatus:data.reviewStatus??null,clubReady,
+        publishingAccess:"In Google Wallet Console bzw. beim Gerätetest prüfen"}),{headers:kopfzeilen});
+    }
 
     // --- Link zum Speichern erzeugen -------------------------------
     if (pfad === "link") {
@@ -319,7 +338,7 @@ Deno.serve(async (anfrage) => {
       // Berechtigung: eigenes Geheimnis im Header, exakt verglichen.
       // Ohne gesetztes Geheimnis oder ohne Dienstschlüssel: immer ablehnen.
       const kopf = anfrage.headers.get("x-sync-geheimnis") ?? "";
-      if (!SYNC_GEHEIMNIS || !DIENST || !gleich(kopf, SYNC_GEHEIMNIS)) {
+      if (!DIENST || !(SYNC_GEHEIMNIS && gleich(kopf, SYNC_GEHEIMNIS)) && !(kopf.length >= 32 && kopf.length <= 512 && await rpc("wallet_worker_authorized", {p_secret:kopf}, DIENST) === true)) {
         return new Response(JSON.stringify({ fehler: "Nicht berechtigt" }),
           { status: 401, headers: kopfzeilen });
       }
@@ -345,10 +364,11 @@ Deno.serve(async (anfrage) => {
               headers: { "Authorization": `Bearer ${at}`, "Content-Type": "application/json" },
               body: JSON.stringify({
                 ...rangArtwork(k.rang),
+                accountName: [k.vorname,k.nachname].filter(Boolean).join(" "),
                 linksModuleData: { uris: [{ uri:k.club_url, description:"Mein Punktestand", id:"club" },
                   {uri:"https://beautinda.de/salon/51EsvFBHxDRcmZqOg3rC",description:"Termin buchen",id:"termin"}] },
                 loyaltyPoints: { label: "Perlen", balance: { int: k.stand } },
-                secondaryLoyaltyPoints: { label: "Rang", balance: { string: k.rang } },
+                secondaryLoyaltyPoints: { label: "Rang", balance: { string: k.rang ?? "Mitglied" } },
                 textModulesData: [
                   { header: "Bis zur nächsten Prämie", body: k.naechste, id: "naechste" },
                 ],

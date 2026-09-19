@@ -1,5 +1,7 @@
+import { walletService } from "./service.ts";
+import { X509Certificate } from "node:crypto";
 import { Buffer } from "node:buffer";
-import { erstellePass, assetNamen, type Einrichtung } from "./pass.ts";
+import { erstellePass, assetNamen, pruefeSignierung, type Einrichtung } from "./pass.ts";
 import { oeffentlicheZertifikate } from "./certificates.ts";
 
 const DB=Deno.env.get("SUPABASE_URL")??"";
@@ -28,7 +30,44 @@ async function ladeBilder(rang:string|null):Promise<Record<string,string>> {
   bildCache.set(cacheKey,{bis:Date.now()+3600_000,assets});return assets;
 }
 
+const SERVICE=Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")??"";
+async function serviceRpc(name:string,args:Record<string,unknown>) {
+ const res=await fetch(DB+"/rest/v1/rpc/"+name,{method:"POST",headers:{apikey:SERVICE,...(SERVICE.startsWith("eyJ")?{Authorization:`Bearer ${SERVICE}`}:{ }),"Content-Type":"application/json"},body:JSON.stringify(args),signal:AbortSignal.timeout(10_000)});
+ if(!res.ok) throw new Error("Wallet service unavailable");
+ return res.json();
+}
+function signing():Einrichtung { return {...oeffentlicheZertifikate(Deno.env.get("APPLE_SIGNER_CERT"),Deno.env.get("APPLE_WWDR_CERT")),key:Deno.env.get("APPLE_SIGNER_KEY")??"",passphrase:Deno.env.get("APPLE_SIGNER_KEY_PASSPHRASE")||undefined,assets:{}}; }
+async function render(data:any) {
+ const e=signing();e.assets=await ladeBilder(data.rang);
+ return new Uint8Array(erstellePass({...data,web_service_url:DB+"/functions/v1/wallet-apple"},e));
+}
+async function authorized(secret:string) {
+ if(!SERVICE||secret.length<32||secret.length>512) return false;
+ return await serviceRpc("wallet_worker_authorized",{p_secret:secret})===true;
+}
+let apnsClient:ReturnType<typeof Deno.createHttpClient>|undefined;
+async function push(token:string,topic:string) {
+ if(!apnsClient) {
+  const e=signing(),key=pruefeSignierung({pass_type:topic,team_id:"FPDU6B86GK"},e);
+  apnsClient=Deno.createHttpClient({cert:e.cert,key,http2:true,http1:false});
+ }
+ const result=await fetch("https://api.push.apple.com/3/device/"+encodeURIComponent(token),{
+  method:"POST",client:apnsClient,headers:{"apns-topic":topic,"apns-priority":"5","Content-Type":"application/json"},body:"{}",signal:AbortSignal.timeout(10_000)});
+ let reason;try {reason=(await result.json()).reason;}catch{}
+ return {status:result.status,reason};
+}
+async function check() {
+ const sizes:Record<string,number>={};
+ for(const rang of ["Bronze","Silber","Gold","Platin","Diamant"]) {
+  const bytes=await render({object_id:"laperle_readiness_probe",pass_type:"pass.de.laperlebeauty.club",team_id:"FPDU6B86GK",
+   rang,vorname:"Wallet",nachname:"Prüfung",kundennummer:"LP000000",stand:0,naechste:"Technische Prüfung",
+   club_url:"https://laperle-beauty.de",auth_token:"readiness-only-not-a-customer-token"});
+  sizes[rang]=bytes.length;
+ }
+ return {signingReady:true,rankPassBytes:sizes,certificateValidTo:new X509Certificate(signing().cert).validTo};
+}
 Deno.serve(async(req:Request)=>{
+  try { const result=await walletService(req,{rpc:serviceRpc,render,push,authorized,check});if(result) return result; } catch {return json({fehler:"Wallet-Aktualisierung vorübergehend nicht verfügbar."},503);}
   if(req.method==="OPTIONS") return new Response("ok",{headers});
   if(req.method!=="POST") return json({fehler:"Methode nicht erlaubt."},405);
   if(new URL(req.url).pathname.split("/").pop()!=="pass") return json({fehler:"Unbekannter Pfad."},404);
@@ -48,7 +87,7 @@ Deno.serve(async(req:Request)=>{
       assets:{}};
     if(!e.cert||!e.key||!e.wwdr||!ASSET_BASE) return json({bereit:false,fehler:"Apple Wallet wird gerade eingerichtet. Bitte versuche es später erneut."},503);
     e.assets=await ladeBilder(d.rang);
-    const pass=erstellePass(d,e);
+    const pass=erstellePass({...d,web_service_url:DB+"/functions/v1/wallet-apple"},e);
     return new Response(new Uint8Array(pass),{headers:{...headers,
       "Content-Type":"application/vnd.apple.pkpass","Content-Disposition":'attachment; filename="LaPerle-Club.pkpass"'}});
   } catch {
