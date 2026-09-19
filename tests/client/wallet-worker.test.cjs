@@ -15,11 +15,15 @@ async function run(cards=[],options={}){
  return {response,calls,ack};
 }
 (async()=>{
- const card={object_id:'issuer.customer',version:7,lease_id:'lease-a',lease_bis:new Date(Date.now()+180000).toISOString(),club_url:'https://club.example.test/?t=new',stand:50,mitglied_seit:'20.09.2026',rang:'Gold',vorname:'Anna',nachname:'Neu',naechste:'Noch 20'};
+ const card={object_id:'issuer.customer',version:7,lease_id:'lease-a',lease_bis:new Date(Date.now()+180000).toISOString(),club_url:'https://club.example.test/?t=new',stand:50,rangfortschritt:{name:'Platin',fehlen:120},mitglied_seit:'20.09.2026',rang:'Gold',vorname:'Anna',nachname:'Neu',naechste:'Noch 20'};
  let r=await run([card]);assert.equal(r.response.status,200);assert.equal(r.ack[0].lease_id,'lease-a');
  const patch=r.calls.find(x=>x.init.method==='PATCH');assert.equal(JSON.parse(patch.init.body).linksModuleData.uris[0].uri,card.club_url);assert.ok(patch.init.signal);assert.equal(JSON.parse(patch.init.body).accountName,'Anna Neu');assert.ok(!('hexBackgroundColor' in JSON.parse(patch.init.body)));console.log('PASS Wallet Worker überträgt Club-Link, Timeout und Besitzkennung');
  assert.equal(JSON.parse(patch.init.body).textModulesData.find(f=>f.id==='mitglied_seit').body,'20.09.2026');
  r=await run([{...card,stand:999,rang:'Diamant'}]);assert.equal(JSON.parse(r.calls.find(x=>x.init.method==='PATCH').init.body).textModulesData.find(f=>f.id==='mitglied_seit').body,'20.09.2026');console.log('PASS Eintrittsdatum bleibt bei Punkte- und Rangänderungen erhalten');
+ assert.equal(JSON.parse(patch.init.body).secondaryLoyaltyPoints.balance.string,'Noch 120 Perlen');
+ r=await run([{...card,rang:'Diamant',rangfortschritt:null}]);assert.equal(JSON.parse(r.calls.find(x=>x.init.method==='PATCH').init.body).secondaryLoyaltyPoints.balance.string,'Höchster Rang erreicht');
+ r=await run([{...card,rangfortschritt:{name:'Platin',fehlen:1}}]);assert.equal(JSON.parse(r.calls.find(x=>x.init.method==='PATCH').init.body).secondaryLoyaltyPoints.balance.string,'Noch 1 Perle');
+ console.log('PASS Rangfortschritt, höchster Rang und Singular');
  assert.ok(!r.calls[0].init.headers.Authorization);console.log('PASS Neuer Supabase-API-Key wird nicht als JWT missbraucht');
  r=await run([{...card,lease_bis:new Date(Date.now()+5000).toISOString()}]);assert.ok(!r.calls.some(x=>x.init.method==='PATCH'));console.log('PASS Kein neuer PATCH kurz vor Lease-Ende');
  r=await run([card],{timeout:true});assert.equal(r.ack[0].ok,false);assert.equal(r.ack[0].lease_id,'lease-a');console.log('PASS Transportfehler quittiert mit korrekter Besitzkennung');

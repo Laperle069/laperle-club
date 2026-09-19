@@ -211,6 +211,14 @@ function rangArtwork(rang: string | null): Record<string, unknown> {
     contentDescription:{defaultValue:{language:"de",value:`La Perlé Club – ${rang ?? "Mitglied"}`}}}};
 }
 
+function rangFortschritt(d: any) {
+  if(!d.rang) return {label:"Rang",balance:{string:"Mitglied"}};
+  const next=d.rangfortschritt;
+  return next
+    ? {label:`${d.rang} → ${next.name}`,balance:{string:`Noch ${next.fehlen.toLocaleString("de-DE")} ${next.fehlen===1?"Perle":"Perlen"}`}}
+    : {label:d.rang,balance:{string:"Höchster Rang erreicht"}};
+}
+
 function kartenobjekt(d: any) {
   return {
     ...rangArtwork(d.rang),
@@ -223,10 +231,7 @@ function kartenobjekt(d: any) {
       label: "Perlen",
       balance: { int: d.stand },
     },
-    secondaryLoyaltyPoints: {
-      label: "Rang",
-      balance: { string: d.rang ?? "Mitglied" },
-    },
+    secondaryLoyaltyPoints: rangFortschritt(d),
     barcode: {
       type: "QR_CODE",
       value: d.kundennummer,
@@ -369,7 +374,7 @@ Deno.serve(async (anfrage) => {
                 linksModuleData: { uris: [{ uri:k.club_url, description:"Mein Punktestand", id:"club" },
                   {uri:"https://beautinda.de/salon/51EsvFBHxDRcmZqOg3rC",description:"Termin buchen",id:"termin"}] },
                 loyaltyPoints: { label: "Perlen", balance: { int: k.stand } },
-                secondaryLoyaltyPoints: { label: "Rang", balance: { string: k.rang ?? "Mitglied" } },
+                secondaryLoyaltyPoints: rangFortschritt(k),
                 textModulesData: [
                   { header: "Bis zur nächsten Prämie", body: k.naechste, id: "naechste" },
                   ...(k.mitglied_seit ? [{header:"Mitglied seit",body:k.mitglied_seit,id:"mitglied_seit"}] : []),

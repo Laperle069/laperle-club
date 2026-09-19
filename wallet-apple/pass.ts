@@ -20,7 +20,7 @@ export function assetNamen(rang:string|null):string[] {
 export type PassDaten = {
   object_id:string; pass_type:string; team_id:string; rang:string|null;
   vorname:string; nachname:string; kundennummer:string; stand:number;
-  naechste:string; club_url:string; mitglied_seit?:string; auth_token?:string; web_service_url?:string;
+  naechste:string; club_url:string; mitglied_seit?:string; rangfortschritt?:{name:string; fehlen:number}|null; auth_token?:string; web_service_url?:string;
 };
 export type Einrichtung = {
   cert:string; key:string; wwdr:string; passphrase?:string;
@@ -79,6 +79,11 @@ export function erstellePass(d:PassDaten,e:Einrichtung):Buffer {
   pass.headerFields.push({key:"perlen",label:"PERLEN",value:d.stand});
   pass.primaryFields.push({key:"rang",label:"LA PERLÉ CLUB",value:d.rang?rang.name.toUpperCase():"MITGLIED"});
   pass.secondaryFields.push({key:"mitglied",label:"MITGLIED",value:[d.vorname,d.nachname].filter(Boolean).join(" ")});
+  if(d.rang) {
+    const next=d.rangfortschritt;
+    pass.secondaryFields.push({key:"rangfortschritt",label:next?`BIS ${next.name.toLocaleUpperCase("de-DE")}`:"DEIN STATUS",
+      value:next?`Noch ${next.fehlen.toLocaleString("de-DE")} ${next.fehlen===1?"Perle":"Perlen"}`:"Höchster Rang erreicht"});
+  }
   pass.auxiliaryFields.push({key:"kundennummer",label:"KUNDENNUMMER",value:d.kundennummer});
   if(d.mitglied_seit) pass.auxiliaryFields.push({key:"mitglied_seit",label:"MITGLIED SEIT",value:d.mitglied_seit});
   pass.backFields.push(
