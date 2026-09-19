@@ -694,10 +694,12 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
     <div class="field"><label for="rMail">E-Mail</label>
       <input id="rMail" type="email" inputmode="email" autocapitalize="none" autocomplete="email" required></div>
     <input id="rHp" class="hp" type="checkbox" tabindex="-1" autocomplete="off" aria-hidden="true">
+    <div class="field"><label for="rAlter">Teilnahmealter</label><select id="rAlter" required><option value="">Bitte auswählen</option><option value="volljaehrig">Ich bin mindestens 18 Jahre alt.</option><option value="vertretung_bestaetigt">Ich bin 16 oder 17; meine gesetzliche Vertretung hat zugestimmt.</option></select></div>
+    <label class="small" style="display:block;margin:16px 0"><input id="rRecht" type="checkbox" required> Ich akzeptiere die <a href="recht-2026-09-19-3.html#teilnahme" target="_blank" rel="noopener">Teilnahmebedingungen</a> (Version 2026-09-19.3). Die <a href="recht.html#datenschutz" target="_blank" rel="noopener">Datenschutzerklärung</a> habe ich zur Kenntnis genommen.</label>
     <button class="main-action" id="rBtn" type="submit">Dabei sein <svg class="ic"><use href="#i-arrow"/></svg></button>
   </form>
   <p class="small" style="margin-top:16px">Wir speichern Name und E-Mail, um dein Punktekonto zu führen. Deinen Zugang schicken wir an diese Adresse.
-    Nachrichten bekommst du nur, wenn du sie später im Club erlaubst. Es gelten die
+    Notwendige Kontomitteilungen senden wir dir für die Clubteilnahme. Werbliche Nachrichten erhältst du nur nach deiner gesonderten Einwilligung. Es gelten die
     <a href="recht.html#teilnahme">Teilnahmebedingungen</a>, Näheres in der <a href="recht.html#datenschutz">Datenschutzerklärung</a>.</p>
   <p class="small" style="margin-top:16px;text-align:center">Schon dabei? Öffne den Link aus deiner Willkommensmail –
     oder trag deine Adresse oben ein, dann schicken wir ihn dir erneut.</p>
@@ -711,7 +713,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
     <span class="dialog-pearl" aria-hidden="true"></span>
     <span class="eyebrow">Fast geschafft</span>
     <h1 style="margin:12px 0" id="fName">Schau in dein Postfach.</h1>
-    <p class="lead" id="fText">Wir haben dir eine E-Mail mit deinem persönlichen Zugang geschickt. Öffne den Link darin – erst dann ist dein Konto aktiv.</p>
+    <p class="lead" id="fText">Wir haben dir eine E-Mail mit deinem persönlichen Zugang geschickt. Öffne den Link darin – damit bestätigst du deine E-Mail-Adresse und öffnest dein Konto.</p>
     <p class="small" style="margin-top:16px">Nichts angekommen? Schau im Spam-Ordner nach oder fordere den Link unten neu an. Aus Sicherheitsgründen zeigen wir deinen Zugang nur im Postfach, nie hier.</p>
     <div class="aktionen" style="justify-content:center;margin-top:24px">
       <button class="secondary" id="fNochmal" type="button">Link erneut senden</button>
@@ -871,6 +873,18 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
     </div>
     <p class="lead" style="margin-bottom:6px">Nachrichten – dein Punktekonto läuft unabhängig davon weiter.</p>
     <div id="einwilligungen"></div>
+    <p class="small">Alle Werbeeinwilligungen sind freiwillig. Du kannst sie hier jederzeit ausschalten. Deine Perlen und automatische Punktestandsaktualisierungen bleiben davon unabhängig.</p>
+    <section id="rechtsBestaetigung" hidden><h3>Aktualisierte Teilnahmebedingungen</h3>
+      <p class="small">Bitte lies die <a href="recht-2026-09-19-3.html#teilnahme" target="_blank" rel="noopener">Bedingungen, Version 2026-09-19.3</a>. Du kannst deinen bisherigen Clubstand auch ohne Zustimmung weiterhin ansehen. Schweigen gilt nicht als Zustimmung.</p>
+      <div class="field"><label for="profilAlter">Teilnahmealter</label><select id="profilAlter"><option value="">Bitte auswählen</option><option value="volljaehrig">Ich bin mindestens 18 Jahre alt.</option><option value="vertretung_bestaetigt">Ich bin 16 oder 17; meine gesetzliche Vertretung hat zugestimmt.</option></select></div>
+      <button type="button" class="secondary" id="rechtAnnehmen">Bedingungen ausdrücklich annehmen</button>
+    </section>
+    <details style="margin-top:20px"><summary>Konto und Datenschutz</summary>
+      <p class="small">Auskunft, Berichtigung oder Widerspruch: <a href="mailto:info@laperle-beauty.de">info@laperle-beauty.de</a>.</p>
+      <p class="small">Bei Kontoschließung enden deine Teilnahme und der Zugang; verbleibende Perlen verfallen. Gesetzlich erforderliche Nachweise bleiben getrennt und befristet gespeichert. Die Karte auf deinem Gerät entfernst du bitte selbst.</p>
+      <label class="small"><input id="loeschBestaetigt" type="checkbox"> Ich möchte mein Clubkonto schließen und die Löschung veranlassen.</label>
+      <button type="button" class="secondary" id="kontoSchliessen">Konto schließen</button>
+    </details>
     <p class="small" style="margin-top:12px">Deine Kundennummer: <b id="kNr" style="font-weight:500;color:var(--mp-text)"></b> – die nennst du am Empfang.</p>
   </section>
 
@@ -975,12 +989,12 @@ async function registrieren() {
   await mitSperre($("rBtn"), async () => {
     try {
       const r = await rpc("selbst_registrieren", { p_vorname: v, p_nachname: n, p_email: m,
-        p_studio_kennung: STUDIO, p_sprache: (navigator.language || "de").slice(0, 2), p_werberin: P.get("ref") || null });
+        p_studio_kennung: STUDIO, p_sprache: (navigator.language || "de").slice(0, 2), p_werberin: P.get("ref") || null, p_rechtsversion: "2026-09-19.3", p_altersfreigabe: $("rAlter").value });
       // Vertrag 030: {status:'bestaetigen', vorname} – nie ein Token
       if (r?.status !== "bestaetigen") throw new Error("Deine Anmeldung wurde nicht bestätigt. Bitte versuche es erneut.");
       letzteMail = m;
       $("fName").textContent = (r && r.vorname ? r.vorname + ", schau" : "Schau") + " in dein Postfach.";
-      $("fText").textContent = `Deine Anfrage ist eingegangen. Sobald die E-Mail an ${m} ankommt, öffne den Link darin – erst dann ist dein Konto aktiv. Bitte prüfe auch deinen Spam-Ordner.`;
+      $("fText").textContent = `Deine Anfrage ist eingegangen. Sobald die E-Mail an ${m} ankommt, öffne den Link darin – damit bestätigst du deine E-Mail-Adresse und öffnest dein Konto. Bitte prüfe auch deinen Spam-Ordner.`;
       if (window.LP_TESTBETRIEB) {
         $("fName").textContent = "Deine Testanmeldung ist erfasst.";
         $("fText").textContent = "In dieser privaten Testumgebung ist der E-Mail-Versand ausgeschaltet. Es wurde keine E-Mail versendet. Zum Umschauen nutze den persönlichen Link der Testkundin aus deinen Testzugängen.";
@@ -992,12 +1006,19 @@ async function registrieren() {
 $("fNochmal").onclick = () => mitSperre($("fNochmal"), async () => {
   if (window.LP_TESTBETRIEB) { sagen("Der E-Mail-Versand bleibt im Test ausgeschaltet.", true); return; }
   try { await rpc("selbst_registrieren", { p_vorname: $("rVor").value.trim() || "–", p_nachname: $("rNach").value.trim() || "–",
-      p_email: letzteMail, p_studio_kennung: STUDIO, p_sprache: "de", p_werberin: null });
+      p_email: letzteMail, p_studio_kennung: STUDIO, p_sprache: "de", p_werberin: null, p_rechtsversion: "2026-09-19.3", p_altersfreigabe: $("rAlter").value });
     sagen("Wenn es ein Konto zu dieser Adresse gibt, ist der Link unterwegs."); }
   catch (e) { sagen(e.message, true); }
 });
 $("fZurueck").onclick = () => zeig("reg");
 
+$("rechtAnnehmen").onclick = () => mitSperre($("rechtAnnehmen"), async () => {
+  try { await rpc("kunde_rechtsnachweis", {p_token:token,p_version:"2026-09-19.3",p_altersfreigabe:$("profilAlter").value}); $("rechtsBestaetigung").hidden=true; sagen("Deine Zustimmung wurde gespeichert."); } catch(e) { sagen(e.message,true); }
+});
+$("kontoSchliessen").onclick = () => mitSperre($("kontoSchliessen"), async () => {
+  if (!$("loeschBestaetigt").checked) { sagen("Bitte bestätige zuerst die Kontoschließung.",true); return; }
+  try { await rpc("kunde_loeschung_anfordern", {p_token:token,p_bestaetigt:true}); location.replace(location.pathname); } catch(e) { sagen(e.message,true); }
+});
 // ---------- Wallet ----------
 async function walletKarte(btn, plattform = "google") {
   if (window.LP_TESTBETRIEB && plattform !== "apple") { sagen("Google Wallet ist für den Gerätetest noch nicht freigeschaltet.", true); return; }
@@ -1046,6 +1067,7 @@ async function laden() {
     if (meine !== ladeGen) return;
     if ($("ladeFehler")) $("ladeFehler").hidden = true;
     daten = d; zeichnen(); zeig("club");
+    rpc("kunde_datenschutzstatus", {p_token:token}).then(r => { $("rechtsBestaetigung").hidden=!!r.angenommen; }).catch(() => { $("rechtsBestaetigung").hidden=false; });
     const mailZiel = { "#einwilligungen": "einwilligungen", "#praemienBox": "praemienBox", "#gewinneBox": "gewinneBox" }[location.hash];
     if (mailZiel && !mailAnkerGezeigt) {
       mailAnkerGezeigt = true;
@@ -1212,9 +1234,7 @@ function zeichnen() {
   boardLaden(); zusatzLaden(); zielLaden();
 
   const ew = d.einwilligungen || {};
-  const texte = { email_werbung: ["E-Mails von uns", "wenn der nächste Schritt ansteht oder es etwas Neues gibt"],
-    push: ["Hinweise auf der Karte", "kurze Notiz, wenn sich etwas an deinem Stand ändert"],
-    geburtstag: ["Geburtstagsgruß", "eine Kleinigkeit an deinem Tag"] };
+  const texte = {"email_werbung": ["E-Mail-Angebote", "Ich möchte Angebote, Neuigkeiten sowie auf meinen Besuchen und Perlen beruhende Erinnerungen von La Perlé Beauty Boutique per E-Mail erhalten. Freiwillig und jederzeit im Club oder per E-Mail widerrufbar."], "push": ["Wallet-Angebote", "Ich möchte Angebote und auf meinen Besuchen und Perlen beruhende Hinweise von La Perlé Beauty Boutique auf meiner Wallet-Karte erhalten. Freiwillig und jederzeit im Club oder per E-Mail widerrufbar. Punktestandsaktualisierungen funktionieren auch ohne Werbung."], "geburtstag": ["Geburtstagsaktion", "Ich möchte, dass La Perlé Beauty Boutique mein freiwillig angegebenes Geburtsdatum für einen jährlichen Geburtstagsgruß mit Angebot per E-Mail verwendet. Jederzeit im Club oder per E-Mail widerrufbar."]};
   const ewBox = $("einwilligungen"); ewBox.innerHTML = "";
   if (!d.einwilligungen) {
     ewBox.append(el("p", "Deine Nachrichteneinstellungen konnten nicht geladen werden. Dein bisheriger Stand bleibt unverändert.", {class:"small",role:"status"}));
