@@ -1,3 +1,4 @@
+import { logoAssets } from "./logos.ts";
 import { walletService } from "./service.ts";
 import { X509Certificate } from "node:crypto";
 import { Buffer } from "node:buffer";
@@ -19,6 +20,7 @@ async function ladeBilder(rang:string|null):Promise<Record<string,string>> {
   const cacheKey=base.href+":"+(rang??"bronze");
   const cached=bildCache.get(cacheKey);if(cached&&cached.bis>Date.now()) return cached.assets;
   const entries=await Promise.all(assetNamen(rang).map(async name=>{
+    if (logoAssets[name]) return [name,logoAssets[name]];
     const res=await fetch(new URL(name,base),{signal:AbortSignal.timeout(10_000),redirect:"error"});
     if(!res.ok||Number(res.headers.get("content-length")??0)>3_000_000) throw new Error("Passbild nicht verfügbar");
     const bytes=new Uint8Array(await res.arrayBuffer());
