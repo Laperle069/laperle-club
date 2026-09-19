@@ -19,7 +19,7 @@
 
 1. Nutzer bestätigt: USt-ID noch nicht erhalten. Leerer Umsatzsteuerabschnitt entfernt, ohne Kleinunternehmerstatus zu behaupten. Bei Erhalt nachtragen. Datenschutz-/Teilnahmetexte sind Arbeitsfassung, keine rechtliche Freigabe.
 2. Backup mit Wiederherstellungsnachweis vor dauerhaftem Bestandsupgrade. Probe alleine ersetzt kein Backup. Kein Upgrade ausgeführt.
-3. Apple-Schlüssel und Passphrase befinden sich nachweislich im TEST-Projekt. Einrichtung im Produktivprojekt ist noch nicht nachgewiesen. Keine Schlüssel exportiert, kopiert oder offengelegt. Dort ist bisher nur die alte Google-Wallet-Funktion vorhanden. Aktuelle Edge Functions und freigegebene Assets müssen dort nach dem Upgrade bereitgestellt und geprüft werden.
+3. Apple-Schlüssel und Passphrase befinden sich nachweislich im TEST-Projekt. Einrichtung im Produktivprojekt ist noch nicht nachgewiesen. Keine Schlüssel exportiert, kopiert oder offengelegt. Apple Edge Function ist inzwischen bereitgestellt, aber noch nicht betriebsbereit. Google läuft noch auf der alten Version 10; dessen Upgrade erfolgt zusammen mit dem Datenbankupgrade.
 4. Kontrollierter Mailzustelltest und Google-Gerätetest/Veröffentlichungsstatus ausstehend. API-Absender aktiv und Kartenklasse approved sind keine Endgeräteabnahme.
 5. Nutzer hat die öffentliche Speicherung des Quellcodes ausdrücklich freigegeben. Repository-Inhaberschaft und Schreibrechte sind geprüft. Quellstand wird über die authentifizierte GitHub-Verbindung auf einem eigenen Branch gesichert; keine Veröffentlichung der Kundenfassung und keine Änderung des Produktionsbranchs.
 

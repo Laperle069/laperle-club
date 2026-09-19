@@ -9,8 +9,8 @@ const KEY=Deno.env.get("PUBLIC_API_KEY")??Deno.env.get("SUPABASE_ANON_KEY")??"";
 const headers={"Access-Control-Allow-Origin":"*","Access-Control-Allow-Headers":"content-type, apikey, authorization",
   "Access-Control-Allow-Methods":"POST, OPTIONS","Cache-Control":"no-store","Content-Type":"application/json"};
 const json=(body:unknown,status=200)=>new Response(JSON.stringify(body),{status,headers});
-// Non-secret approved artwork default is restricted to this TEST project.
-const ASSET_BASE=Deno.env.get("APPLE_PASS_ASSET_BASE_URL") || (DB==="https://xzxplhvkabgfyglmkcii.supabase.co" ? "https://xzxplhvkabgfyglmkcii.supabase.co/storage/v1/object/public/wallet-artwork/metallic-facets-v2/apple/" : "");
+// Public approved artwork stays in its own environment; unknown projects require an override.
+const ASSET_BASE=Deno.env.get("APPLE_PASS_ASSET_BASE_URL") || (DB==="https://xzxplhvkabgfyglmkcii.supabase.co" ? "https://xzxplhvkabgfyglmkcii.supabase.co/storage/v1/object/public/wallet-artwork/metallic-facets-v2/apple/" : DB==="https://byiocfdghgbxxdcmaqoh.supabase.co" ? "https://byiocfdghgbxxdcmaqoh.supabase.co/storage/v1/object/public/oeffentlich/club-wallet/metallic-facets-v2/apple/" : "");
 const bildCache=new Map<string,{bis:number,assets:Record<string,string>}>();
 async function ladeBilder(rang:string|null):Promise<Record<string,string>> {
   const base=new URL(ASSET_BASE);

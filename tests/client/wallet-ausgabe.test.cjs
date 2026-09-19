@@ -5,7 +5,7 @@ const card={aktiv:true,issuer_id:'3388000000023188314',class_id:'338800000002318
  kundennummer:'LP000240',vorname:'Anna',nachname:'Test',stand:240,rang:'Silber',club_url:'https://club.example.org/?t=PRIVATE-TEST-LINK',naechste:'Noch 10 Perlen'};
 async function run(options={}){
  let handler;const calls=[];
- const env={SUPABASE_URL:'https://db.example.test',PUBLIC_API_KEY:'sb_publishable_test',DIENST_KEY:'sb_secret_test',GOOGLE_SERVICE_ACCOUNT:JSON.stringify({client_email:'test@example.iam.gserviceaccount.com',private_key:key})};
+ const env={SUPABASE_URL:options.project||'https://db.example.test',PUBLIC_API_KEY:'sb_publishable_test',DIENST_KEY:'sb_secret_test',GOOGLE_SERVICE_ACCOUNT:JSON.stringify({client_email:'test@example.iam.gserviceaccount.com',private_key:key})};
  if(options.noKey)env.GOOGLE_SERVICE_ACCOUNT='{}';
  const c=vm.createContext({Deno:{env:{get:k=>env[k]},serve:fn=>handler=fn},Request,Response,URL,URLSearchParams,AbortSignal,TextEncoder,Uint8Array,atob,btoa,crypto:crypto.webcrypto,console,fetch:async(url,init)=>{
   calls.push({url,init});
@@ -29,6 +29,10 @@ async function run(options={}){
  check=await run({check:true,unauthorized:true});assert.equal(check.response.status,401);assert.equal(check.calls.length,1);
  check=await run({check:true,noKey:true});assert.equal(check.response.status,503);assert.equal(check.calls.length,1);
  console.log('PASS Readiness: authorization, lowercase approval status, missing credentials, no card writes');
+ let prod=await run({project:'https://byiocfdghgbxxdcmaqoh.supabase.co'});
+ const prodObject=JSON.parse(prod.calls.find(x=>x.url.endsWith('/loyaltyObject')).init.body);
+ assert.equal(prodObject.heroImage.sourceUri.uri,'https://byiocfdghgbxxdcmaqoh.supabase.co/storage/v1/object/public/oeffentlich/club-wallet/metallic-facets-v2/google/silber/hero.png');
+ console.log('PASS Production Google artwork uses independent production storage');
  let r=await run();assert.equal(r.response.status,200);
  const jwt=r.body.url.split('/').pop(),payload=JSON.parse(Buffer.from(jwt.split('.')[1],'base64url'));
  assert.ok(jwt.length<1800);assert.deepEqual(payload.payload.loyaltyObjects,[{id:card.object_id}]);assert.ok(!JSON.stringify(payload).includes('PRIVATE-TEST-LINK'));

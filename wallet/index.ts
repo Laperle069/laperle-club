@@ -201,7 +201,7 @@ async function klasseSicherstellen(d: any) {
 // ---------------------------------------------------------------------
 
 function rangArtwork(rang: string | null): Record<string, unknown> {
-  const base = Deno.env.get("GOOGLE_PASS_ASSET_BASE_URL") || (DB_URL === "https://xzxplhvkabgfyglmkcii.supabase.co" ? "https://xzxplhvkabgfyglmkcii.supabase.co/storage/v1/object/public/wallet-artwork/metallic-facets-v2/google/" : "");
+  const base = Deno.env.get("GOOGLE_PASS_ASSET_BASE_URL") || (DB_URL === "https://xzxplhvkabgfyglmkcii.supabase.co" ? "https://xzxplhvkabgfyglmkcii.supabase.co/storage/v1/object/public/wallet-artwork/metallic-facets-v2/google/" : DB_URL === "https://byiocfdghgbxxdcmaqoh.supabase.co" ? "https://byiocfdghgbxxdcmaqoh.supabase.co/storage/v1/object/public/oeffentlich/club-wallet/metallic-facets-v2/google/" : "");
   if (!base) return {};
   const slug = (rang ?? "Bronze").toLocaleLowerCase("de-DE");
   if (!["bronze","silber","gold","platin","diamant"].includes(slug)) throw new Error("Rangdesign fehlt");
