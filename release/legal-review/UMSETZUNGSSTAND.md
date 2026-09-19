@@ -75,3 +75,7 @@ Isolierte Wiederherstellung: SQL-Kompilierung; fehlende Annahme abgewiesen; Rech
 - Externe Kopien bei Brevo/Google werden nicht durch die Datenbanklöschung beseitigt. Aufträge in `club_private.dienstleister_loeschung` müssen gesondert durch die berechtigte Verwaltung bearbeitet und mit Nachweis abgeschlossen werden. Manuelle Backups und eine Wiederherstellung benötigen ebenfalls Berücksichtigung erfolgter Löschungen.
 - Die Altersauswahl ist eine Selbsterklärung, keine technische Prüfung der gesetzlichen Vertretung.
 - Sicherheitsadvisors: private RLS-Tabellen ohne Freigabepolicies sind bewusst gesperrt. Hinweise auf öffentlich ausführbare SECURITY-DEFINER-RPCs bestehen aufgrund des tokenbasierten Zugangs; die neuen Kundenfunktionen prüfen ihren Zugangstoken. Kein pauschales Urteil „alle Sicherheitswarnungen behoben“.
+
+## Google-Wallet-Gerätetest bestätigt
+
+Der Nutzer hat bestätigt, dass die Google-Wallet-Karte erfolgreich auf einem Android-Gerät hinzugefügt wurde. Dieser Installationstest ist erledigt. Eine automatische Kartenaktualisierung nach einer neuen Perlenbuchung auf diesem Android-Gerät wurde damit noch nicht bestätigt.
