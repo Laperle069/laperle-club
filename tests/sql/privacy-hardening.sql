@@ -11,7 +11,7 @@ begin
  exception when others then denied:=true;
  end;
  if not denied then raise exception 'Missing acceptance was accepted'; end if;
- perform selbst_registrieren('QA','Privacy','privacy-test@example.invalid',st.kennung,'de',null,'2026-09-19.3','volljaehrig');
+ perform selbst_registrieren('QA','Privacy','privacy-test@example.invalid',st.kennung,'de',null,'2026-09-19.4','volljaehrig');
  select * into k from kundin where email='privacy-test@example.invalid';
  if not exists(select 1 from club_private.rechtsnachweis where kundin_id=k.id) then raise exception 'Missing evidence'; end if;
  denied:=false;

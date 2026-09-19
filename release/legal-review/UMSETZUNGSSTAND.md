@@ -79,3 +79,9 @@ Isolierte Wiederherstellung: SQL-Kompilierung; fehlende Annahme abgewiesen; Rech
 ## Google-Wallet-Gerätetest bestätigt
 
 Der Nutzer hat bestätigt, dass die Google-Wallet-Karte erfolgreich auf einem Android-Gerät hinzugefügt wurde. Dieser Installationstest ist erledigt. Eine automatische Kartenaktualisierung nach einer neuen Perlenbuchung auf diesem Android-Gerät wurde damit noch nicht bestätigt.
+
+## Folgeänderung: zehn Sekunden und Teilnahme ab 18
+
+Auf ausdrücklichen Nutzerwunsch läuft `laperle_mail` dauerhaft mit `10 seconds`; erfolgreiche Läufe im Abstand von zehn Sekunden wurden beobachtet. Installationsskripte und kanonische Intervall-Datei sind angepasst, eine CI-Prüfung erkennt abweichende SQL-Zeitpläne.
+
+Teilnahme und Annahme der neuen Rechtsfassung 2026-09-19.4 sind ausschließlich ab 18 Jahren möglich. Die Auswahl für 16-/17-Jährige entfällt in Oberfläche und serverseitiger Validierung. Die Altersbestätigung ist eine Selbsterklärung, keine Identitätsprüfung. Ausgewählte Bestätigungsfelder zeigen einen hervorgehobenen Zustand; nach erfolgreicher Speicherung bleibt eine ausdrückliche Erfolgsanzeige bestehen. Frühere Rechtsfassungen bleiben als historische Nachweise erreichbar.

@@ -649,6 +649,24 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .mp-feier.mp-gsap,.mp-feier.mp-gsap *,.mp-feier.mp-gsap *::after{animation:none!important;transition:none!important;}
 .mp-feier.mp-gsap .mp-reward::after{display:none;}
 .mp-gsap-shine{position:absolute;inset:-40%;pointer-events:none;background:linear-gradient(115deg,transparent 35%,#F4DFB933 50%,transparent 65%);}
+
+/* Consent controls: visible unchecked, selected, saving and saved states. */
+.consent-card{display:flex;align-items:flex-start;gap:14px;padding:18px;margin:14px 0;border:2px solid #927875;border-radius:16px;background:#2b2224;color:#f7eee7;cursor:pointer;line-height:1.5}
+.consent-card input[type=checkbox]{appearance:auto;-webkit-appearance:checkbox;flex:0 0 26px;width:26px;height:26px;min-height:26px;padding:0;margin:2px 0 0;accent-color:#dfbe95;cursor:pointer}
+.consent-card:has(input:checked){border-color:#dfbe95;background:#49382d;box-shadow:0 0 0 1px #dfbe95}
+.consent-card[hidden]{display:none}
+.consent-card:focus-within{outline:3px solid #f5ddbc;outline-offset:3px}
+.consent-card a{color:#f5ddbc;text-decoration:underline}
+.consent-state{display:block;font-size:13px;font-weight:600;margin-top:5px;color:#d7c5bd}
+.consent-state::after{content:"Zum Bestätigen anklicken"}
+.consent-card:has(input:checked) .consent-state::after{content:"✓ Bestätigt";color:#ffe3b8}
+#rechtsBestaetigung{padding:22px;border:1px solid #927875;border-radius:18px;margin-top:24px}
+#rechtsBestaetigung.bestaetigt{border-color:#dfbe95;background:#302820}
+#rechtsBestaetigung.bestaetigt>p.small{display:none}
+#rechtAnnehmen{min-height:52px;width:100%;margin-top:12px}
+#rechtAnnehmen:disabled{opacity:1;background:#dfbe95;color:#21191a;border:2px solid #f5ddbc;cursor:default}
+#rechtAnnehmen[aria-busy=true]{background:#49382d;color:#ffe3b8}
+#rechtStatus{color:#ffe3b8;font-weight:600;margin:12px 0 0}
 </style>
 <script defer src="/laperle-club/club/assets/vendor/gsap.min.js"></script>
 <script defer src="/laperle-club/club/assets/vendor/ScrollTrigger.min.js"></script>
@@ -694,8 +712,8 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
     <div class="field"><label for="rMail">E-Mail</label>
       <input id="rMail" type="email" inputmode="email" autocapitalize="none" autocomplete="email" required></div>
     <input id="rHp" class="hp" type="checkbox" tabindex="-1" autocomplete="off" aria-hidden="true">
-    <div class="field"><label for="rAlter">Teilnahmealter</label><select id="rAlter" required><option value="">Bitte auswählen</option><option value="volljaehrig">Ich bin mindestens 18 Jahre alt.</option><option value="vertretung_bestaetigt">Ich bin 16 oder 17; meine gesetzliche Vertretung hat zugestimmt.</option></select></div>
-    <label class="small" style="display:block;margin:16px 0"><input id="rRecht" type="checkbox" required> Ich akzeptiere die <a href="recht-2026-09-19-3.html#teilnahme" target="_blank" rel="noopener">Teilnahmebedingungen</a> (Version 2026-09-19.3). Die <a href="recht.html#datenschutz" target="_blank" rel="noopener">Datenschutzerklärung</a> habe ich zur Kenntnis genommen.</label>
+    <label class="consent-card"><input id="rAlter" type="checkbox" required><span>Ich bin mindestens 18 Jahre alt.<span class="consent-state" aria-hidden="true"></span></span></label>
+    <label class="consent-card"><input id="rRecht" type="checkbox" required><span>Ich akzeptiere die <a href="recht-2026-09-19-4.html#teilnahme" target="_blank" rel="noopener">Teilnahmebedingungen</a> (Version 2026-09-19.4). Die <a href="recht.html#datenschutz" target="_blank" rel="noopener">Datenschutzerklärung</a> habe ich zur Kenntnis genommen.<span class="consent-state" aria-hidden="true"></span></span></label>
     <button class="main-action" id="rBtn" type="submit">Dabei sein <svg class="ic"><use href="#i-arrow"/></svg></button>
   </form>
   <p class="small" style="margin-top:16px">Wir speichern Name und E-Mail, um dein Punktekonto zu führen. Deinen Zugang schicken wir an diese Adresse.
@@ -875,9 +893,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
     <div id="einwilligungen"></div>
     <p class="small">Alle Werbeeinwilligungen sind freiwillig. Du kannst sie hier jederzeit ausschalten. Deine Perlen und automatische Punktestandsaktualisierungen bleiben davon unabhängig.</p>
     <section id="rechtsBestaetigung" hidden><h3>Aktualisierte Teilnahmebedingungen</h3>
-      <p class="small">Bitte lies die <a href="recht-2026-09-19-3.html#teilnahme" target="_blank" rel="noopener">Bedingungen, Version 2026-09-19.3</a>. Du kannst deinen bisherigen Clubstand auch ohne Zustimmung weiterhin ansehen. Schweigen gilt nicht als Zustimmung.</p>
-      <div class="field"><label for="profilAlter">Teilnahmealter</label><select id="profilAlter"><option value="">Bitte auswählen</option><option value="volljaehrig">Ich bin mindestens 18 Jahre alt.</option><option value="vertretung_bestaetigt">Ich bin 16 oder 17; meine gesetzliche Vertretung hat zugestimmt.</option></select></div>
-      <button type="button" class="secondary" id="rechtAnnehmen">Bedingungen ausdrücklich annehmen</button>
+      <p class="small">Bitte lies die <a href="recht-2026-09-19-4.html#teilnahme" target="_blank" rel="noopener">Bedingungen, Version 2026-09-19.4</a>. Du kannst deinen bisherigen Clubstand auch ohne Zustimmung weiterhin ansehen. Schweigen gilt nicht als Zustimmung.</p>
+      <label class="consent-card" id="profilAlterZeile"><input id="profilAlter" type="checkbox"><span>Ich bin mindestens 18 Jahre alt.<span class="consent-state" aria-hidden="true"></span></span></label>
+      <button type="button" class="main-action" id="rechtAnnehmen">Bedingungen ausdrücklich annehmen</button><p id="rechtStatus" role="status" aria-live="polite" hidden></p>
     </section>
     <details style="margin-top:20px"><summary>Konto und Datenschutz</summary>
       <p class="small">Auskunft, Berichtigung oder Widerspruch: <a href="mailto:info@laperle-beauty.de">info@laperle-beauty.de</a>.</p>
@@ -989,7 +1007,7 @@ async function registrieren() {
   await mitSperre($("rBtn"), async () => {
     try {
       const r = await rpc("selbst_registrieren", { p_vorname: v, p_nachname: n, p_email: m,
-        p_studio_kennung: STUDIO, p_sprache: (navigator.language || "de").slice(0, 2), p_werberin: P.get("ref") || null, p_rechtsversion: "2026-09-19.3", p_altersfreigabe: $("rAlter").value });
+        p_studio_kennung: STUDIO, p_sprache: (navigator.language || "de").slice(0, 2), p_werberin: P.get("ref") || null, p_rechtsversion: "2026-09-19.4", p_altersfreigabe: ($("rAlter").checked ? "volljaehrig" : null) });
       // Vertrag 030: {status:'bestaetigen', vorname} – nie ein Token
       if (r?.status !== "bestaetigen") throw new Error("Deine Anmeldung wurde nicht bestätigt. Bitte versuche es erneut.");
       letzteMail = m;
@@ -1006,15 +1024,31 @@ async function registrieren() {
 $("fNochmal").onclick = () => mitSperre($("fNochmal"), async () => {
   if (window.LP_TESTBETRIEB) { sagen("Der E-Mail-Versand bleibt im Test ausgeschaltet.", true); return; }
   try { await rpc("selbst_registrieren", { p_vorname: $("rVor").value.trim() || "–", p_nachname: $("rNach").value.trim() || "–",
-      p_email: letzteMail, p_studio_kennung: STUDIO, p_sprache: "de", p_werberin: null, p_rechtsversion: "2026-09-19.3", p_altersfreigabe: $("rAlter").value });
+      p_email: letzteMail, p_studio_kennung: STUDIO, p_sprache: "de", p_werberin: null, p_rechtsversion: "2026-09-19.4", p_altersfreigabe: ($("rAlter").checked ? "volljaehrig" : null) });
     sagen("Wenn es ein Konto zu dieser Adresse gibt, ist der Link unterwegs."); }
   catch (e) { sagen(e.message, true); }
 });
 $("fZurueck").onclick = () => zeig("reg");
 
-$("rechtAnnehmen").onclick = () => mitSperre($("rechtAnnehmen"), async () => {
-  try { await rpc("kunde_rechtsnachweis", {p_token:token,p_version:"2026-09-19.3",p_altersfreigabe:$("profilAlter").value}); $("rechtsBestaetigung").hidden=true; sagen("Deine Zustimmung wurde gespeichert."); } catch(e) { sagen(e.message,true); }
-});
+function rechtsstatusZeigen(angenommen) {
+  $("rechtsBestaetigung").hidden=false;
+  $("rechtsBestaetigung").classList.toggle("bestaetigt",angenommen);
+  $("profilAlterZeile").hidden=angenommen;
+  $("rechtStatus").hidden=!angenommen;
+  $("rechtStatus").textContent=angenommen ? "Deine Bestätigung ist gespeichert. Du musst nichts weiter tun." : "";
+  $("rechtAnnehmen").disabled=angenommen;
+  $("rechtAnnehmen").textContent=angenommen ? "✓ Bestätigung gespeichert" : "Bedingungen ausdrücklich annehmen";
+}
+$("rechtAnnehmen").onclick = async () => {
+  if (!$("profilAlter").checked) { sagen("Bitte bestätige, dass du mindestens 18 Jahre alt bist.",true); $("profilAlter").focus(); return; }
+  let gespeichert=false;
+  await mitSperre($("rechtAnnehmen"), async () => {
+    $("rechtAnnehmen").textContent="Wird gespeichert …";
+    try { await rpc("kunde_rechtsnachweis", {p_token:token,p_version:"2026-09-19.4",p_altersfreigabe:"volljaehrig"}); gespeichert=true; }
+    catch(e) { sagen(e.message,true); }
+  });
+  rechtsstatusZeigen(gespeichert);
+};
 $("kontoSchliessen").onclick = () => mitSperre($("kontoSchliessen"), async () => {
   if (!$("loeschBestaetigt").checked) { sagen("Bitte bestätige zuerst die Kontoschließung.",true); return; }
   try { await rpc("kunde_loeschung_anfordern", {p_token:token,p_bestaetigt:true}); location.replace(location.pathname); } catch(e) { sagen(e.message,true); }
@@ -1067,7 +1101,7 @@ async function laden() {
     if (meine !== ladeGen) return;
     if ($("ladeFehler")) $("ladeFehler").hidden = true;
     daten = d; zeichnen(); zeig("club");
-    rpc("kunde_datenschutzstatus", {p_token:token}).then(r => { $("rechtsBestaetigung").hidden=!!r.angenommen; }).catch(() => { $("rechtsBestaetigung").hidden=false; });
+    rpc("kunde_datenschutzstatus", {p_token:token}).then(r => { rechtsstatusZeigen(!!r.angenommen); }).catch(() => { $("rechtsBestaetigung").hidden=false; });
     const mailZiel = { "#einwilligungen": "einwilligungen", "#praemienBox": "praemienBox", "#gewinneBox": "gewinneBox" }[location.hash];
     if (mailZiel && !mailAnkerGezeigt) {
       mailAnkerGezeigt = true;
