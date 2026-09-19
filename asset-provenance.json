@@ -1,0 +1,52 @@
+[
+  {
+    "url": "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.57.4/dist/umd/supabase.js",
+    "file": "club/assets/vendor/supabase-2.57.4.js",
+    "sha256": "7e94b62086deecef8c0ba3b38f514e2a1944ff6c81d92fb3ff967828c406c38f"
+  },
+  {
+    "url": "https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js",
+    "file": "club/assets/vendor/jsQR-1.4.0.js",
+    "sha256": "bc40c8a15196236b2314db0856f72ca0b49980cd5413b8c852a7349f5fee0859"
+  },
+  {
+    "url": "https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Jost:wght@400;500&display=swap",
+    "file": "club/assets/vendor/fonts.css",
+    "sha256": "1cdd08b8234b470b229e8ac185bbe2345c2d3c502d04ccabb78b2300bda14166"
+  },
+  {
+    "url": "https://fonts.gstatic.com/s/cormorantgaramond/v21/co3smX5slCNuHLi8bLeY9MK7whWMhyjYrGFEsdtdc62E6zd58jDOjw.ttf",
+    "file": "club/assets/vendor/font-0.ttf",
+    "sha256": "0b9a8a33cfaa624d30f70f9b6686da769b319b8c37a55af16e29fef690108bbf"
+  },
+  {
+    "url": "https://fonts.gstatic.com/s/cormorantgaramond/v21/co3smX5slCNuHLi8bLeY9MK7whWMhyjYrGFEsdtdc62E6zd5wDDOjw.ttf",
+    "file": "club/assets/vendor/font-1.ttf",
+    "sha256": "14efb9443652199ade5bc6ba8637b4084acce40a58368a3808f84f55667e3e90"
+  },
+  {
+    "url": "https://fonts.gstatic.com/s/cormorantgaramond/v21/co3umX5slCNuHLi8bLeY9MK7whWMhyjypVO7abI26QOD_v86GnM.ttf",
+    "file": "club/assets/vendor/font-2.ttf",
+    "sha256": "6d37a86241a25d63f8fe6018b4c083449886b7165c1acb15edd0f574f690ecf7"
+  },
+  {
+    "url": "https://fonts.gstatic.com/s/cormorantgaramond/v21/co3umX5slCNuHLi8bLeY9MK7whWMhyjypVO7abI26QOD_s06GnM.ttf",
+    "file": "club/assets/vendor/font-3.ttf",
+    "sha256": "1724047c8988ca5155bff667bc48fa52e97d57aabc6b42eebbf986f21a4be20b"
+  },
+  {
+    "url": "https://fonts.gstatic.com/s/cormorantgaramond/v21/co3umX5slCNuHLi8bLeY9MK7whWMhyjypVO7abI26QOD_iE9GnM.ttf",
+    "file": "club/assets/vendor/font-4.ttf",
+    "sha256": "69e7ae35cba23d962227b86f99217c250e642e4c6f6104b4f3ec465039e4e2d8"
+  },
+  {
+    "url": "https://fonts.gstatic.com/s/jost/v20/92zPtBhPNqw79Ij1E865zBUv7myjJQVG.ttf",
+    "file": "club/assets/vendor/font-5.ttf",
+    "sha256": "c3143e923ed1ca7bdf27f96c351fbafaebcbd3cf3f4c2d30d03e6c7f98e73d7a"
+  },
+  {
+    "url": "https://fonts.gstatic.com/s/jost/v20/92zPtBhPNqw79Ij1E865zBUv7myRJQVG.ttf",
+    "file": "club/assets/vendor/font-6.ttf",
+    "sha256": "d6ff7726ec21576cf2fdac55080b2d43832780fa981f03f0b66d2723a7c1ea09"
+  }
+]
