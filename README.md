@@ -45,3 +45,7 @@ einen CNAME-Eintrag auf `DEINNAME.github.io` setzen.
 Der öffentliche Supabase-Schlüssel in `index.html` ist dafür gedacht,
 öffentlich zu sein. Geschützt wird nicht durch ihn, sondern durch die
 Rechte in der Datenbank.
+
+## Vorbereitete Testfassung
+
+`test-midnight/` enthält den neuen Kundenclub für das getrennte Supabase-Testprojekt. Hinweise und offene Prüfungen stehen in [test-midnight/README.md](test-midnight/README.md). Die bestehende Club-Seite im Stamm bleibt unverändert.

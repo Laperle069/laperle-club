@@ -1,0 +1,16 @@
+# Zugangsdaten – niemals ins Repository
+.env
+.env.*
+*.pem
+*.p12
+*.key
+certs/
+
+# System
+.DS_Store
+Thumbs.db
+node_modules/
+.env
+tests/browser/node_modules/
+
+*.pkpass
