@@ -1,6 +1,24 @@
 # La Perlé — Lüster
 
-## Auftrag und verbindliche Basis
+## Erweiterung vom 20. September 2026 — aktueller Umfang
+
+Der Folgeauftrag erweitert ausdrücklich die frühere reine Darstellung um Hell/Dunkel-Auswahl, den vollständigen Prämienkatalog, öffentliche Bewertungslinks, Rangübersicht, optionale Advent-Produktbilder und serverbestätigte Behandlungsziele. Die nachfolgenden historischen Schutzgrenzen gelten für diese ausdrücklich genannten Änderungen nicht mehr. Die übrige Anwendung bleibt geschützt; der Grenztest erlaubt genau einen Club-Render-Hook und die Terminal-Kategorie `laser_intim`.
+
+- `appearance.js` speichert die ausdrückliche Hell/Dunkel-Wahl nur auf dem Gerät. Ohne Wahl gilt die Systemeinstellung.
+- Die Kette verbindet sechs 32-px-Buchungsperlen mit fünf 26-px-Zwischenperlen; 44-px-Treffflächen und die vorhandene Buchungsanzeige bleiben erhalten. Die große Perle trägt den Studionamen.
+- Neun tatsächlich konfigurierte Prämien, davon im Beispielkonto fünf freigeschaltet; vier deaktiviert mit fehlendem Perlenstand. Die Einlösung erfolgt weiterhin am Empfang.
+- Fünf konfigurierte Ränge mit den bestehenden Vorteilen. Rangperlen und verfügbares Prämienguthaben bleiben getrennt.
+- Google und Beautinda öffnen die verifizierten Studio-Profile. Ein direkter Google-Bewertungsformular-Link ist nicht hinterlegt; deshalb wird kein direkter Formularaufruf behauptet. Privates Feedback bleibt separat.
+- Advent: erfolgreiche Serverantwort startet 1450 ms Türflügel und 1750 ms Gewinn-Reveal. Die Datenaktualisierung erfolgt nach 1850 ms; übrige Eingaben bleiben bedienbar. Reduced Motion zeigt sofort den Endzustand. Produktbilder sind optional; ohne Bild bleibt der Gewinntext. Leere Bild-URL entfernt ein zuvor hinterlegtes Bild.
+- Behandlungsziele werden in der Verwaltung mit Kategorie, Anzahl, bestehender Prämie und Gültigkeit angelegt und ausdrücklich freigegeben. Standardmäßig bleiben neue Ziele Entwürfe. Ein Ziel kann pro Kundin einmal abgeschlossen werden; es läuft höchstens ein nicht abgeschlossenes Ziel gleichzeitig.
+- [ANNAHME] Passende gebuchte Behandlungen zählen nach Zielstart höchstens einmal je Berliner Kalendertag. Dies verhindert Fortschritt durch doppelte Buchungen. Terminal-Buchungen müssen die konfigurierte Kategorie verwenden, zum Beispiel `Laser · Intim`.
+- [ANNAHME] Zielprämien gelten standardmäßig 90 Tage; die Verwaltung kann 1–730 Tage festlegen. Die 10-Prozent-Prämie in der isolierten Vorschau ist ausschließlich ein Beispiel. In der TEST-Datenbank wurden keine aktiven Vorlagen angelegt.
+- SQL unter `release/club-missions.sql` und `release/club-images-and-policies.sql` wurde ausschließlich auf TEST angewendet. Produktion bleibt unverändert. Private Tabellen sind gegen direkte Zugriffe gesperrt; öffentliche RPCs prüfen vorhandene Kunden-/Mitarbeitertoken. Der SQL-Test arbeitet mit synthetischen Datensätzen innerhalb eines vollständig zurückgerollten Vorgangs.
+- Die öffentliche Testvorschau `/relaunch/club/` enthält ausschließlich Beispieldaten und lokale Demo-Aktionen; sie verwendet keine echten Kundensitzungen. Der GitHub-Entwurf wird aktualisiert, aber nicht zusammengeführt. Figma wurde in diesem Folgeauftrag nicht geändert.
+
+Prüfergebnisse: `design/evidence/club-features-QA.md`. Die folgenden Abschnitte dokumentieren den ursprünglichen Stand und dessen damalige Prüfungen; diese aktuelle Erweiterung hat bei Widersprüchen Vorrang.
+
+## Historische Ausgangsbasis des ersten Designauftrags
 
 Gestalterischer Relaunch ausschließlich von `club/index.html` (angemeldeter Bereich) und `terminal/index.html` (Arbeitsbereich). Basis: GitHub `main`, Commit `6ac9a6e`. Branch: `design/relaunch`. Kein Deployment, kein Merge, keine Datenbankoperation.
 

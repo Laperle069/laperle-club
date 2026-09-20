@@ -672,8 +672,11 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 
 
 
-<link rel="stylesheet" href="../design/relaunch.css">
-<script defer src="../design/relaunch.js"></script>
+<script src="../design/appearance.js?v=26"></script>
+<link rel="stylesheet" href="../design/relaunch.css?v=26">
+<script defer src="../design/relaunch.js?v=26"></script>
+<link rel="stylesheet" href="../design/club-extras.css?v=26">
+<script defer src="../design/club-extras.js?v=26"></script>
 </head>
 <body class="club-body">
 
@@ -1177,6 +1180,7 @@ function zeichnen() {
   $("rang").hidden = !(d.level && F.level !== false);
   if (d.level) $("rang").querySelector("span").textContent = d.level.name;
   ketteZeichnen(d.verlauf);
+  queueMicrotask(() => window.LaPerleClub?.render(d));
 
   // Prämie (V10): verfügbare zuerst (bestehende Reihenfolge nach Punkten), sonst die nächste
   const alle = [...(d.praemien || [])].sort((a,b) => a.punkte - b.punkte), frei = alle.filter(p => p.erreichbar);

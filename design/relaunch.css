@@ -247,3 +247,7 @@ body:has(#club:not(.hide)),body:has(:is(#sHome,#sKundin).on){min-height:100svh}
 #club .lp-pearl-object{overflow:hidden;contain:paint}
 #club>.lp-intro{position:relative;top:auto}
 #club .member{overflow:hidden}
+
+
+.lp-scope .brandbar{flex-wrap:wrap;column-gap:12px}.lp-scope .brandbar>.logo{margin-right:auto}
+.lp-palette{display:flex;border:1px solid var(--lp-rule);border-radius:999px;padding:2px;order:1}.lp-palette button{font:500 13px var(--lp-font-body);border:0;border-radius:999px;min-height:44px;min-width:50px;background:transparent;color:var(--lp-muted);padding:8px}.lp-palette button[aria-pressed=true]{background:var(--lp-action);color:var(--lp-on-action)}#club .brandbar>.icon-button{order:2}
