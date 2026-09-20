@@ -8,7 +8,8 @@
 /* Primitive and semantic tokens. Figma WEB syntax uses these exact names. */
 body:has(#club:not(.hide)),body:has(:is(#sHome,#sKundin).on){
  --lp-ink:#21191A;--lp-pearl:#F6E9DF;--lp-gold:#DFBE95;--lp-clay:#C6ABA8;--lp-wine:#3C272C;--lp-paper:#FFFDF9;
- --lp-bg:var(--lp-paper);--lp-surface:var(--lp-pearl);--lp-fg:var(--lp-ink);--lp-muted:var(--lp-wine);--lp-rule:color-mix(in srgb,var(--lp-wine) 24%,transparent);--lp-action:var(--lp-wine);--lp-on-action:var(--lp-paper);
+ --lp-rule-light:color-mix(in srgb,var(--lp-wine) 24%,transparent);--lp-rule-dark:color-mix(in srgb,var(--lp-clay) 32%,transparent);
+ --lp-bg:var(--lp-paper);--lp-surface:var(--lp-pearl);--lp-fg:var(--lp-ink);--lp-muted:var(--lp-wine);--lp-rule:var(--lp-rule-light);--lp-action:var(--lp-wine);--lp-on-action:var(--lp-paper);
  --lp-font-heading:'LP Editorial',Georgia,serif;--lp-font-body:'LP Sans',system-ui,sans-serif;
  --lp-size-xs:12px;--lp-size-sm:14px;--lp-size-body:16px;--lp-size-lead:20px;--lp-size-h3:28px;--lp-size-h2:40px;--lp-size-h1:56px;--lp-size-display:80px;
  --lp-space-1:4px;--lp-space-2:8px;--lp-space-3:12px;--lp-space-4:16px;--lp-space-6:24px;--lp-space-8:32px;--lp-space-12:48px;--lp-space-16:64px;
@@ -18,9 +19,9 @@ body:has(#club:not(.hide)),body:has(:is(#sHome,#sKundin).on){
  --mp-member-muted:var(--lp-muted);--mp-member-text:var(--lp-fg);--mp-bg:var(--lp-bg);--mp-surface:var(--lp-surface);--mp-text:var(--lp-fg);--mp-text-muted:var(--lp-muted);--mp-line:var(--lp-rule);--mp-accent:var(--lp-fg);--mp-card:var(--lp-surface);--mp-heading:var(--lp-font-heading);--mp-body:var(--lp-font-body);--mp-button-bg:var(--lp-action);--mp-button-text:var(--lp-on-action);
  background:var(--lp-bg);color:var(--lp-fg);font-family:var(--lp-font-body);color-scheme:light;
 }
-@media(prefers-color-scheme:dark){body:has(#club:not(.hide)),body:has(:is(#sHome,#sKundin).on){--lp-bg:var(--lp-ink);--lp-surface:var(--lp-wine);--lp-fg:var(--lp-pearl);--lp-muted:var(--lp-clay);--lp-rule:color-mix(in srgb,var(--lp-clay) 32%,transparent);--lp-action:var(--lp-gold);--lp-on-action:var(--lp-ink);color-scheme:dark}}
-html[data-lp-appearance=dark] body:has(#club:not(.hide),#sHome.on,#sKundin.on){--lp-bg:var(--lp-ink);--lp-surface:var(--lp-wine);--lp-fg:var(--lp-pearl);--lp-muted:var(--lp-clay);--lp-rule:color-mix(in srgb,var(--lp-clay) 32%,transparent);--lp-action:var(--lp-gold);--lp-on-action:var(--lp-ink);color-scheme:dark}
-html[data-lp-appearance=light] body:has(#club:not(.hide),#sHome.on,#sKundin.on){--lp-bg:var(--lp-paper);--lp-surface:var(--lp-pearl);--lp-fg:var(--lp-ink);--lp-muted:var(--lp-wine);--lp-rule:color-mix(in srgb,var(--lp-wine) 24%,transparent);--lp-action:var(--lp-wine);--lp-on-action:var(--lp-paper);color-scheme:light}
+@media(prefers-color-scheme:dark){body:has(#club:not(.hide)),body:has(:is(#sHome,#sKundin).on){--lp-bg:var(--lp-ink);--lp-surface:var(--lp-wine);--lp-fg:var(--lp-pearl);--lp-muted:var(--lp-clay);--lp-rule:var(--lp-rule-dark);--lp-action:var(--lp-gold);--lp-on-action:var(--lp-ink);color-scheme:dark}}
+html[data-lp-appearance=dark] body:has(#club:not(.hide),#sHome.on,#sKundin.on){--lp-bg:var(--lp-ink);--lp-surface:var(--lp-wine);--lp-fg:var(--lp-pearl);--lp-muted:var(--lp-clay);--lp-rule:var(--lp-rule-dark);--lp-action:var(--lp-gold);--lp-on-action:var(--lp-ink);color-scheme:dark}
+html[data-lp-appearance=light] body:has(#club:not(.hide),#sHome.on,#sKundin.on){--lp-bg:var(--lp-paper);--lp-surface:var(--lp-pearl);--lp-fg:var(--lp-ink);--lp-muted:var(--lp-wine);--lp-rule:var(--lp-rule-light);--lp-action:var(--lp-wine);--lp-on-action:var(--lp-paper);color-scheme:light}
 
 /* Shared presentation, deliberately excluding the official Wallet controls. */
 .lp-scope{font-family:var(--lp-font-body);font-size:var(--lp-size-body);line-height:1.55;overflow-wrap:anywhere}
@@ -227,3 +228,9 @@ body:has(#club:not(.hide)) .mp-feier .zu{min-width:44px;min-height:44px;color:#F
 #club #member.lp-enter{animation-delay:80ms}
 body:has(:is(#sHome,#sKundin).on) .sheet .btn{min-height:44px;min-width:44px}
 @media(min-width:700px){.lp-scope .booking #buchenBtn{margin-top:8px}}
+.lp-scope .list .item.gewinn .p{font:500 12px/1.4 var(--lp-font-body);letter-spacing:0;white-space:nowrap}
+/* Input boundaries remain distinguishable on both paper and wine surfaces. */
+.lp-scope :is(.field input,.field textarea,.field select,select,#amountInput,.search){border-color:color-mix(in srgb,var(--lp-fg) 55%,var(--lp-bg))}
+body:has(#club:not(.hide)),body:has(:is(#sHome,#sKundin).on){min-height:100svh}
+#club #rewardZahl{white-space:nowrap;flex-shrink:0}
+@media(max-width:420px){.lp-scope .customer h2{max-width:calc(100% - 110px)}.lp-scope .customer .lp-pearl-object{width:150px;height:150px;top:108px;right:-6px}}

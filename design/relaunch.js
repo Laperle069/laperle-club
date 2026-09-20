@@ -129,6 +129,7 @@
   stop(root){root?.classList.remove('lp-celebrate');}
  };
  function closeStage(){clearTimeout(wheelTimer);wheelStage?.classList.remove('lp-show');}
+ document.addEventListener('keydown',closeStage,{capture:true});
  function mirrorWheel(){
   const source=document.getElementById('wheel'),angle=source?.style.transform;
   if(angle==='rotate(0deg)'){wheelAngle='';return;}

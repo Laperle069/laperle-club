@@ -18,7 +18,7 @@ Eine Perle wird wie ein kleines Studioobjekt inszeniert: ein gerichtetes Licht, 
 
 Alle neuen Tokens stehen zentral in `design/relaunch.css` und gelten ausschließlich innerhalb der freigegebenen Oberfläche. Sechs benannte Grundfarben: `--lp-ink:#21191A`, `--lp-pearl:#F6E9DF`, `--lp-gold:#DFBE95`, `--lp-clay:#C6ABA8`, `--lp-wine:#3C272C`, `--lp-paper:#FFFDF9`. Gold dient als Material und Akzent, niemals als kleiner Text auf Creme. Semantische Tokens: `--lp-bg`, `--lp-surface`, `--lp-fg`, `--lp-muted`, `--lp-rule`, `--lp-action`, `--lp-on-action`. Heller Modus standardmäßig, dunkler Modus über `prefers-color-scheme:dark`; keine neue Einstellungsfunktion.
 
-Schriften: Cormorant Garamond Regular/Italic/Medium für Titel und Zahlen; Jost Regular/Medium für Bedienung und längere Texte. Vorhandene lokale Schriftdateien bleiben erhalten. Die neuen Oberflächen benutzen daraus verlustfrei konvertierte WOFF2-Dateien unter eigenen CSS-Familiennamen, damit Login und Verwaltung nicht beeinflusst werden. Schriftgrößen: 12, 14, 16, 20, 28, 40, 56, 80 px. Abstände: 4, 8, 12, 16, 24, 32, 48, 64 px. Radien: 4, 12, 24, 999 px. Touch-Mindestmaß: 44 px, Hauptaktion 56 px, Terminal-Ziffernblock 56 px.
+Schriften: Cormorant Garamond Regular/Italic/Medium für Titel und Zahlen; Jost Regular/Medium für Bedienung und längere Texte. Vorhandene lokale Schriftdateien bleiben erhalten. Die neuen Oberflächen benutzen daraus verlustfrei konvertierte WOFF2-Dateien unter eigenen CSS-Familiennamen, damit Login und Verwaltung nicht beeinflusst werden. Schriftgrößen: 12, 14, 16, 20, 28, 40, 56, 80 px. Abstände: 4, 8, 12, 16, 24, 32, 48, 64 px. Radien: 4, 12, 24, 999 px. Touch-Mindestmaß: 44 px, Hauptaktion 56 px, Terminal-Ziffernblock 56 px (ab 700 px Bildschirmbreite: 48 px). Geschützte Wallet-Schaltflächen sind die unten dokumentierte Ausnahme.
 
 Bewegung: `--lp-press:120ms`, `--lp-ui:180ms`, `--lp-reveal:640ms`, `--lp-moment:1200ms`; Auslauf `cubic-bezier(.22,1,.36,1)`, Druck `cubic-bezier(.2,.7,.3,1)`. Nur Transform und Deckkraft werden animiert; die ausdrücklich beauftragte WebGL-Materialdarstellung ist davon getrennt.
 
@@ -38,7 +38,7 @@ Bewegung: `--lp-press:120ms`, `--lp-ui:180ms`, `--lp-reveal:640ms`, `--lp-moment
 ## Choreografie und Interaktion
 
 - Club-Eröffnung: Markenleiste steht sofort. Begrüßung 0 ms / 420 ms / translateY(8px→0); Mitgliederfassung 80 ms / 640 ms / translateY(16px→0); Prämienmotiv beim Eintritt in den Bildschirm 0 ms / 640 ms / translateX(12px→0). Inhalte bleiben ohne JavaScript sichtbar.
-- Punktestand: nur nach Änderung des tatsächlich gerenderten Textes, dekorative `aria-hidden` Zählebene 0→echter Stand in 900 ms. Der originale Live-Text bleibt unverändert, die Animation reserviert dessen endgültige Breite. Im Terminal bleibt der Stand sofort sichtbar.
+- Punktestand: einmal beim Aktivieren des sichtbaren Clubs, ausschließlich auf Basis des tatsächlich gerenderten Textes, dekorative `aria-hidden` Zählebene 0→echter Stand in 900 ms. Der originale Live-Text bleibt unverändert, die Animation reserviert dessen endgültige Breite. Im Terminal bleibt der Stand sofort sichtbar.
 - Fortschritt: ausschließlich die von der Anwendung gesetzte Endbreite; transform scaleX(0→1) in 640 ms. Es wird weder ein Ziel noch ein Rang errechnet.
 - Prämienleiter: einzelne Zeilen treten mit translateY(10px→0) in 420 ms auf; Versatz höchstens 180 ms. Fokus beendet die betroffene Darstellung sofort.
 - Perle: WebGL-Material mit gerichteter Lichtquelle bei 28 % / 22 %, Blickrichtung aus Pointer und Scrollposition, Rotation maximal 0,16 rad. Rangmaterial aus der **ausgegebenen Rangbezeichnung**, keine eigenständige Einstufung. Rendering wird nach 900 ms ohne Eingabe, außerhalb des Bildschirms und im Hintergrund pausiert. Kein Sensorzugriff.
@@ -56,12 +56,34 @@ Reduced Motion: kein Zählen, kein Parallax, kein WebGL, keine Auftakt-/Glanz-/T
 
 ## Figma-Abbild und Prüfung
 
-Neue Seiten, Komponenten, Screens und Messwerte werden nach der fertigen Implementierung hier ergänzt. Keine echten Kundendaten, keine realen Zugangstoken oder Codes in Figma oder Testbildern. Die browsergestützte Prüfung verwendet einen separaten, nicht ausgelieferten Fixture-Server; Original-Handler bleiben darin unverändert und erhalten ausschließlich lokale Antworten.
+Die drei neuen Seiten sind angelegt: [Design-System](https://www.figma.com/design/jTdIOupNC0OLEx9eZdA4Np?node-id=38-18), [Club](https://www.figma.com/design/jTdIOupNC0OLEx9eZdA4Np?node-id=38-19), [Terminal](https://www.figma.com/design/jTdIOupNC0OLEx9eZdA4Np?node-id=38-20). Die bisherigen 13 Seiten bleiben erhalten. 45 Variablen in 3 neuen Collections, 8 Textstile, 10 Komponentenfamilien. Club 390 px und Terminal 1024 px jeweils in Hell, Dunkel, Leer, Laden und Fehler. Der ID-/Token-Nachweis steht in `design/evidence/figma-map.json`. Keine echten Kundendaten, keine realen Zugangstoken oder Codes in Figma oder Testbildern. Die browsergestützte Prüfung verwendet einen separaten, nicht ausgelieferten Fixture-Server; Original-Handler bleiben darin unverändert und erhalten ausschließlich lokale Antworten.
 
 ## Texte und Bibliotheken
 
-Keine Produkttexte werden verändert. Neue visuelle Zustände verwenden vorhandene Beschriftungen; keine neuen Produkttexte geplant. Keine neue Laufzeitbibliothek. Vorhandene GSAP-Dateien werden für diese beiden Oberflächen nicht mehr benötigt; sie bleiben für andere Bereiche unverändert im Repository. Eigene WebGL-Implementierung ohne Drittbibliothek. Schriftlizenzen und Messwerte werden in der Abgabe dokumentiert.
+Keine Produkttexte werden verändert. Neue visuelle Zustände verwenden vorhandene Beschriftungen; **0 neue oder geänderte Produkttexte**. Die gesamte sichtbare Bestandskopie wurde zusätzlich mit einem DOM-Vergleich geprüft. Keine neue Laufzeitbibliothek. Vorhandene GSAP-Dateien werden für diese beiden Oberflächen nicht mehr benötigt; sie bleiben für andere Bereiche unverändert im Repository. Eigene WebGL-Implementierung ohne Drittbibliothek. Jost Version 3.710 und Cormorant Garamond Version 4.001: jeweils SIL Open Font License 1.1, lokale Lizenztexte unter `design/fonts/`. WOFF2-Konvertierung mit fontTools/Brotli ausschließlich als Entwicklungswerkzeug; kein neuer Build-Schritt. Die 5 WOFF2-Dateien umfassen 229.904 Bytes. Zusätzliches JavaScript: `relaunch.js` und `pearl-webgl.js`, zusammen rund 15,7 KB unkomprimiert, Shader nur bedingt nachgeladen.
 
 ## Vorschläge außerhalb des Auftrags
 
 Die Differenz zwischen aktueller Testvorschau und GitHub `main` separat zusammenführen; Login-/Sitzungscode, Supabase-Konfiguration, zusätzliche Club-CTAs und manuelle Theme-Umschaltung nicht in einem Design-PR nachziehen. Die Supabase-Advisor-Prüfung gehört in einen eigenen Sicherheitsauftrag. Fehlender serverseitiger Trostpreisstatus darf nicht durch Gestaltung erfunden werden. Änderungen am 4900-ms-Ablauf des Glücksrads sind Geschäftsablauf und wurden nicht vorgenommen.
+
+
+### Figma-Abweichungen und Token-Abgleich
+
+Der automatische Webseiten-Capture blieb nach 10 Abfragen ohne Ergebnis; sein externes Capture-Skript war aus dieser Umgebung nicht erreichbar. Die Screens wurden deshalb aus der geprüften Oberfläche mit editierbaren Texten, Auto-Layout, Komponenteninstanzen und gebundenen Farben rekonstruiert. **Kein pixelgenauer automatischer Import.** Browserbilder unter `design/evidence/` und der Code sind verbindlich.
+
+- 3D ist eine native statische Gradientenkugel; Lichtreaktion und Materialwechsel laufen nur im Code. Das Glücksrad ist in Figma ein statischer Kreis aus 8 editierbaren Sektoren; die Canvas-Beschriftungen und Drehphysik verbleiben im Code.
+- Responsive Zeilenumbrüche, optische Zahlenformen, Kalendergravur und native Formular-/Wallet-Darstellung sind angenähert. Die Club-Fehlermeldung steht im Figma-Screen unter der Markenleiste zur Sichtprüfung; im Browser ist sie ein Overlay. Laden ist als Zustand einer bestehenden Aktion dargestellt, kein neuer Erstlade-Ablauf.
+- CSS-Familien `LP Sans` / `LP Editorial` entsprechen Jost / Cormorant Garamond in Figma. Alle 45 Token-Namen und Werte sind abgeglichen; FLOAT-Werte repräsentieren px beziehungsweise ms. Zwei abgeleitete Linienfarben `--lp-rule-light` / `--lp-rule-dark` ergänzen die sechs Grundfarben und haben Alpha 0,24 / 0,32. Die Schatten- und Easingwerte sind STRING-Tokens, keine ausführbaren Figma-Effekte.
+- Die Figma-Anmerkungen nennen Auslöser, Dauer, Easing und Reduced-Motion-Endzustand. Alle Daten und Codes in Screens sind erfunden.
+
+### Verifikation und offene Abnahme
+
+Details: [`design/evidence/QA.md`](design/evidence/QA.md). Die vorhandenen 3 Client-Testdateien und 3 Schutzgrenzen-Tests bestehen (6/6). Isolierte DOM-/Handler-Prüfungen bestätigen alle IDs, ursprünglichen Attribute/Klassen, Formfelder und Produkttexte sowie Advent und Terminal-Buchung bei Erfolg, Fehler und ausstehender Antwort. Zusätzliche Browserprüfung: Prämieneinlösung und identischer Endwinkel von Original-Glücksrad und dekorativer Kopie. Keine Tests gegen echte Kundendaten, keine Datenbank-Schreiboperationen.
+
+Bei 360/390 px Club und 390/768/1024 px Terminal sowie 1024 px Club wurde kein horizontaler Seitenüberlauf festgestellt. Hell und Dunkel sind visuell geprüft. Semantische Textkontraste liegen zwischen 6,45:1 und 16,96:1. Sichtbare Terminal-Bedienelemente erreichen 44×44 px; das Kontoschließungs-Checkboxlabel im Club misst 350×72,4 px. **Die geschützten Wallet-Buttons bleiben wie vorher 30 px hoch und haben ihren bisherigen unzureichenden Kontrast.** Sie wurden wegen der ausdrücklichen Schutzvorgabe nicht umgestaltet; keine pauschale AA-Konformität behauptet.
+
+Lighthouse mobil vorher/nachher: **nicht verfügbar**, weil kein lokales Chrome-/Chromium-Binary vorhanden ist (`CHROME_PATH`-Fehler). Die verwaltete Browserumgebung liefert zudem keinen WebGL-Kontext. Statische Ausweichvariante, Skriptladung, Reduced Motion und Abschaltpfad sind geprüft; GPU-Bild, echte Geräte-FPS, LCP, CLS und INP sind **noch nicht gemessen**. Der Pull Request bleibt deshalb ein Entwurf. Keine erfundenen Scores oder Leistungszusagen.
+
+Weitere Abnahme am Testgerät: QR-/Kamerascanner, echte Betriebssystem-Teilenansicht, Tastaturvergrößerung/Zoom und bestehende Authentifizierung mit einem freigegebenen Testkonto. Die unveränderten Handler und DOM-Verträge ersetzen diese Geräte-/Integrationstests nicht.
+
+Die geschützten Wallet-Schaltflächen sollten separat durch die freigegebenen Hersteller-Badges mit zugänglicher Trefffläche ersetzt werden. Das ist ausdrücklich kein Bestandteil dieses PR.
