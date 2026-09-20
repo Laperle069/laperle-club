@@ -38,7 +38,9 @@ Bewegung: `--lp-press:120ms`, `--lp-ui:180ms`, `--lp-reveal:640ms`, `--lp-moment
 ## Choreografie und Interaktion
 
 - Club-Eröffnung: Markenleiste steht sofort. Begrüßung 0 ms / 420 ms / translateY(8px→0); Mitgliederfassung 80 ms / 640 ms / translateY(16px→0); Prämienmotiv beim Eintritt in den Bildschirm 0 ms / 640 ms / translateX(12px→0). Inhalte bleiben ohne JavaScript sichtbar.
-- Punktestand: einmal beim Aktivieren des sichtbaren Clubs, ausschließlich auf Basis des tatsächlich gerenderten Textes, dekorative `aria-hidden` Zählebene 0→echter Stand in 900 ms. Der originale Live-Text bleibt unverändert, die Animation reserviert dessen endgültige Breite. Im Terminal bleibt der Stand sofort sichtbar.
+- Punktestand: sofort der tatsächlich gerenderte Stand, ohne zusätzlich positionierte Zählebene. So bleibt die Zahl bei Schriftwechsel, Zoom und Scrollen an ihrem Platz.
+- Club-Layout: Begrüßung und Mitgliedskarte bleiben im normalen Dokumentfluss; kein Sticky-Element über späteren Modulen.
+- Perlenkette: sechs feste 44 × 44 px Bedienflächen, 34 px Perlen, zehn rein dekorative 12 px Zwischenperlen statt einer gezeichneten Schnur. Klick/Touch, Maus und Tastaturfokus verwenden dieselbe vorhandene Buchungsanzeige unterhalb der Kette. Originale Datums-, Anlass- und Perlenwerte bleiben erhalten; keine erfundenen Behandlungsnamen.
 - Fortschritt: ausschließlich die von der Anwendung gesetzte Endbreite; transform scaleX(0→1) in 640 ms. Es wird weder ein Ziel noch ein Rang errechnet.
 - Prämienleiter: einzelne Zeilen treten mit translateY(10px→0) in 420 ms auf; Versatz höchstens 180 ms. Fokus beendet die betroffene Darstellung sofort.
 - Perle: WebGL-Material mit gerichteter Lichtquelle bei 28 % / 22 %, Blickrichtung aus Pointer und Scrollposition, Rotation maximal 0,16 rad. Rangmaterial aus der **ausgegebenen Rangbezeichnung**, keine eigenständige Einstufung. Rendering wird nach 900 ms ohne Eingabe, außerhalb des Bildschirms und im Hintergrund pausiert. Kein Sensorzugriff.
