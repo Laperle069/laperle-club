@@ -664,8 +664,10 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 .mp-feier.mp-gsap .mp-reward::after{display:none;}
 .mp-gsap-shine{position:absolute;inset:-40%;pointer-events:none;background:linear-gradient(115deg,transparent 35%,#F4DFB933 50%,transparent 65%);}
 </style>
-<script defer src="/laperle-club/club/assets/vendor/gsap.min.js"></script>
-<script defer src="/laperle-club/club/assets/celebration-motion.js"></script>
+
+
+<link rel="stylesheet" href="../design/relaunch.css">
+<script defer src="../design/relaunch.js"></script>
 </head>
 <body class="terminal">
 
@@ -694,9 +696,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 </section>
 
 <!-- ================= START ================= -->
-<section class="screen" id="sHome" aria-label="Kundin wählen">
+<section class="screen lp-scope" id="sHome" aria-label="Kundin wählen">
   <header class="brandbar">
-    <span class="logo"><img data-logo alt="La Perlé"></span>
+    <span class="logo"><img data-logo alt="La Perlé"><img class="lp-brand" src="../design/brand-original.svg" width="145" height="56" alt="" aria-hidden="true"></span>
     <span class="eyebrow">Empfang</span>
     <span class="user" id="who"></span>
   </header>
@@ -730,9 +732,9 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 </section>
 
 <!-- ================= KUNDIN ================= -->
-<section class="screen" id="sKundin" aria-label="Kundin">
+<section class="screen lp-scope" id="sKundin" aria-label="Kundin">
   <header class="brandbar">
-    <span class="logo"><img data-logo alt="La Perlé"></span>
+    <span class="logo"><img data-logo alt="La Perlé"><img class="lp-brand" src="../design/brand-original.svg" width="145" height="56" alt="" aria-hidden="true"></span>
     <span class="eyebrow">Empfang</span>
     <span class="user" id="who2"></span>
   </header>
@@ -760,6 +762,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 
       <!-- Kundenkarte (V13) -->
       <div class="customer">
+        <figure class="lp-pearl-object" aria-hidden="true"><canvas width="320" height="320"></canvas></figure>
         <div class="customer-top">
           <span class="avatar large" id="kInitialen" aria-hidden="true"></span>
           <span class="rank" id="kRang"><svg class="ic"><use href="#i-sparkle"/></svg><span></span></span>
