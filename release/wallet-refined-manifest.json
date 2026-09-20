@@ -1,0 +1,291 @@
+{
+  "design": "refined-metallic-v4",
+  "files": [
+    {
+      "file": "apple/bronze/strip.png",
+      "width": 375,
+      "height": 123,
+      "bytes": 7232,
+      "sha256": "f56363ce31e3229216f26e600f0591f898dfa572a02a96f6b73339b23041b1c6"
+    },
+    {
+      "file": "apple/bronze/logo.png",
+      "width": 160,
+      "height": 50,
+      "bytes": 3100,
+      "sha256": "741d8c646885faa0d01403573ff44a5c4aa11dfe42e599c3617336a4f79478c3"
+    },
+    {
+      "file": "apple/bronze/strip@2x.png",
+      "width": 750,
+      "height": 246,
+      "bytes": 16357,
+      "sha256": "e9f934f100f3c0a6a29042ad69c878f740a205a2cde923a3f2d4c93b5e45648b"
+    },
+    {
+      "file": "apple/bronze/logo@2x.png",
+      "width": 320,
+      "height": 100,
+      "bytes": 6896,
+      "sha256": "eea67932deb8ddccc0bc17b907db30860479036fe50c4467012b028a34d15f6d"
+    },
+    {
+      "file": "apple/bronze/strip@3x.png",
+      "width": 1125,
+      "height": 369,
+      "bytes": 28792,
+      "sha256": "3b7720d384e20e677056e5b8d40604ecc3b92ec143c749fbfe622a9175cf559a"
+    },
+    {
+      "file": "apple/bronze/logo@3x.png",
+      "width": 480,
+      "height": 150,
+      "bytes": 9683,
+      "sha256": "00482979af5e1e9970c4af3c8d384d526eccbd8c1a20d25bc8dafb3ff7a29a33"
+    },
+    {
+      "file": "google/bronze/hero.png",
+      "width": 1032,
+      "height": 812,
+      "bytes": 62331,
+      "sha256": "185db63c7380214ff21afe18b117a9e319b8b441a86085f0105d5403107ae74f"
+    },
+    {
+      "file": "apple/silber/strip.png",
+      "width": 375,
+      "height": 123,
+      "bytes": 13650,
+      "sha256": "2eb346aff426667145f40e55ae11e7b8fb20c47d093f3d7135d9017b6de1f6c6"
+    },
+    {
+      "file": "apple/silber/logo.png",
+      "width": 160,
+      "height": 50,
+      "bytes": 3100,
+      "sha256": "bfe6f49e90cb1b5ccf269dd78c100158e715c9fa8dda9e0babecef02457caf22"
+    },
+    {
+      "file": "apple/silber/strip@2x.png",
+      "width": 750,
+      "height": 246,
+      "bytes": 29610,
+      "sha256": "1087890125250f4a3b5d436f43c3e7e9fe96755dfef712226f3fa292a196a710"
+    },
+    {
+      "file": "apple/silber/logo@2x.png",
+      "width": 320,
+      "height": 100,
+      "bytes": 6837,
+      "sha256": "b8da77b899e9d21a464f4002c57b44579c557e46442fceabb55e9e577c853599"
+    },
+    {
+      "file": "apple/silber/strip@3x.png",
+      "width": 1125,
+      "height": 369,
+      "bytes": 55235,
+      "sha256": "f47224de760e731b2cb2b32a0d1ee9b134bd7150a8e965627d8ca94480340906"
+    },
+    {
+      "file": "apple/silber/logo@3x.png",
+      "width": 480,
+      "height": 150,
+      "bytes": 9650,
+      "sha256": "5b7fe2dffb5cb2cd727a1fc0def8994a18796ed2d719a3250fc5cd35ecdec2c0"
+    },
+    {
+      "file": "google/silber/hero.png",
+      "width": 1032,
+      "height": 812,
+      "bytes": 116252,
+      "sha256": "b1f3553fe6c3403f4737f331cb99a7f0ebab7610efd44901a33d0f1976b9638c"
+    },
+    {
+      "file": "apple/gold/strip.png",
+      "width": 375,
+      "height": 123,
+      "bytes": 12757,
+      "sha256": "27d784e70e650bcdbc91d9bd351e5b7ed660a1c8848078f7245b999846e0dabf"
+    },
+    {
+      "file": "apple/gold/logo.png",
+      "width": 160,
+      "height": 50,
+      "bytes": 3102,
+      "sha256": "0b381dbf37b4738132760478693260b4543972df52fedc5c42662e7705397e45"
+    },
+    {
+      "file": "apple/gold/strip@2x.png",
+      "width": 750,
+      "height": 246,
+      "bytes": 29117,
+      "sha256": "260a081c90bb557891abd9292ba44870b707fb937a108998f72008524632d97b"
+    },
+    {
+      "file": "apple/gold/logo@2x.png",
+      "width": 320,
+      "height": 100,
+      "bytes": 6835,
+      "sha256": "b93e0528585543ac25f1223042a814a10fefd63a4f0d482be1007bdbe0a6435f"
+    },
+    {
+      "file": "apple/gold/strip@3x.png",
+      "width": 1125,
+      "height": 369,
+      "bytes": 56231,
+      "sha256": "29b5892ae29f69029aa7051b7877425c223ae39c464b098fdf989b459daae505"
+    },
+    {
+      "file": "apple/gold/logo@3x.png",
+      "width": 480,
+      "height": 150,
+      "bytes": 9633,
+      "sha256": "8a05747e7fc83399b4745b7c5664ae4b0d06b13c94a68344722f4db5576dca55"
+    },
+    {
+      "file": "google/gold/hero.png",
+      "width": 1032,
+      "height": 812,
+      "bytes": 114964,
+      "sha256": "d307430d2fe140541e83d21b6b389c3c02c60e27e8f4ac9276db5322409c66f5"
+    },
+    {
+      "file": "apple/platin/strip.png",
+      "width": 375,
+      "height": 123,
+      "bytes": 12379,
+      "sha256": "8d3a2e36b0153d2b311023ee559d8b50407e2bb8fc2626e1fd25f5c68c9700dc"
+    },
+    {
+      "file": "apple/platin/logo.png",
+      "width": 160,
+      "height": 50,
+      "bytes": 3100,
+      "sha256": "0d0ead9eb6f23edca113b1cff519d214a84f33ca37e5c3e761b61a9288249ea7"
+    },
+    {
+      "file": "apple/platin/strip@2x.png",
+      "width": 750,
+      "height": 246,
+      "bytes": 25441,
+      "sha256": "06aa1416edafcaca78e800a2061b3c7f29e33c1b1682b6646ab4970cc146abf3"
+    },
+    {
+      "file": "apple/platin/logo@2x.png",
+      "width": 320,
+      "height": 100,
+      "bytes": 6833,
+      "sha256": "a290ec8bb61b415b78e2ec49812e0ff37eeffc1330d57a8169f07e12f67d0931"
+    },
+    {
+      "file": "apple/platin/strip@3x.png",
+      "width": 1125,
+      "height": 369,
+      "bytes": 46791,
+      "sha256": "32ba89d8a8756dc301ba8923a4ff573940ac7a3049846b6836fb5904c3664332"
+    },
+    {
+      "file": "apple/platin/logo@3x.png",
+      "width": 480,
+      "height": 150,
+      "bytes": 9674,
+      "sha256": "087a8de550866d114a79f1596d636e2df4a91f0e7d9505bbc8a2a4b4b4609f39"
+    },
+    {
+      "file": "google/platin/hero.png",
+      "width": 1032,
+      "height": 812,
+      "bytes": 96985,
+      "sha256": "da4af46ab66e03cea03c27bc8ca5fe9c8c859a5a34b73a1317c288a9e06333a8"
+    },
+    {
+      "file": "apple/diamant/strip.png",
+      "width": 375,
+      "height": 123,
+      "bytes": 11329,
+      "sha256": "ea6fc75d3c30ee4a4d9d25754a0a2cdc40972b3de90ae2ed3d7e9e7f423cf012"
+    },
+    {
+      "file": "apple/diamant/logo.png",
+      "width": 160,
+      "height": 50,
+      "bytes": 3100,
+      "sha256": "4295ee343b065e626770d16d770fabaccd82e7568e5324e5f8a2469f13f3a2ab"
+    },
+    {
+      "file": "apple/diamant/strip@2x.png",
+      "width": 750,
+      "height": 246,
+      "bytes": 23114,
+      "sha256": "46ea62e7232025b0e696953c3ef22d4311c8316c15a98e41ef7ca58f4fa7e4aa"
+    },
+    {
+      "file": "apple/diamant/logo@2x.png",
+      "width": 320,
+      "height": 100,
+      "bytes": 6828,
+      "sha256": "32f9ad682d2ce050890e3398c47a4d7267d3adf29854c6e9baa396c35c496199"
+    },
+    {
+      "file": "apple/diamant/strip@3x.png",
+      "width": 1125,
+      "height": 369,
+      "bytes": 43366,
+      "sha256": "4787a5955b07f78e0bd19930cfd537fd6e4fbd4e21d83ba2c0b9b85e34a954f1"
+    },
+    {
+      "file": "apple/diamant/logo@3x.png",
+      "width": 480,
+      "height": 150,
+      "bytes": 9614,
+      "sha256": "d00b5c0b4db765da1e7415228651b418c14c766aa39216995dd6027f2a6b74c1"
+    },
+    {
+      "file": "google/diamant/hero.png",
+      "width": 1032,
+      "height": 812,
+      "bytes": 90556,
+      "sha256": "b493426d1f9344ba51ef13acdd958e6f33be543dc9c98bf870aa59906d7dfcbc"
+    },
+    {
+      "file": "apple/icon.png",
+      "width": 29,
+      "height": 29,
+      "bytes": 828,
+      "sha256": "e5a0fedbadfe45a3a2881d85651859ae08076131fe8336aef4457320a7bef728"
+    },
+    {
+      "file": "apple/icon@2x.png",
+      "width": 58,
+      "height": 58,
+      "bytes": 1727,
+      "sha256": "d2dc17b29998edc2300514a8add02694ee6fa287ff3947133cd6239758cb697b"
+    },
+    {
+      "file": "apple/icon@3x.png",
+      "width": 87,
+      "height": 87,
+      "bytes": 2589,
+      "sha256": "303fc534e9131f834385604c88c3294f4711e4e0b26dc25a4654a37aa0944b8f"
+    }
+  ],
+  "productionBaseUrl": "https://laperle069.github.io/laperle-club/assets/wallet/refined-metallic-v4/",
+  "minimumStripContrast": {
+    "bronze": 5.15,
+    "silber": 6.47,
+    "gold": 4.77,
+    "platin": 6.0,
+    "diamant": 6.67
+  },
+  "appleStripPoints": [
+    375,
+    123
+  ],
+  "googleHeroPixels": [
+    1032,
+    812
+  ],
+  "sources": [
+    "https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/PassKit_PG/Creating.html",
+    "https://developers.google.com/wallet/retail/loyalty-cards/resources/brand-guidelines"
+  ]
+}

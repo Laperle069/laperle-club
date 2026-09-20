@@ -31,8 +31,8 @@ async function run(options={}){
  console.log('PASS Readiness: authorization, lowercase approval status, missing credentials, no card writes');
  let prod=await run({project:'https://byiocfdghgbxxdcmaqoh.supabase.co'});
  const prodObject=JSON.parse(prod.calls.find(x=>x.url.endsWith('/loyaltyObject')).init.body);
- assert.equal(prodObject.heroImage.sourceUri.uri,'https://byiocfdghgbxxdcmaqoh.supabase.co/storage/v1/object/public/oeffentlich/club-wallet/metallic-facets-v2/google/silber/hero.png');
- console.log('PASS Production Google artwork uses independent production storage');
+ assert.equal(prodObject.heroImage.sourceUri.uri,'https://laperle069.github.io/laperle-club/assets/wallet/refined-metallic-v4/google/silber/hero.png');
+ assert.equal(prodObject.hexBackgroundColor,'#C4CBD1');console.log('PASS Production artwork uses versioned assets and matching rank background');
  let r=await run();assert.equal(r.response.status,200);
  const jwt=r.body.url.split('/').pop(),payload=JSON.parse(Buffer.from(jwt.split('.')[1],'base64url'));
  assert.ok(jwt.length<1800);assert.deepEqual(payload.payload.loyaltyObjects,[{id:card.object_id}]);assert.ok(!JSON.stringify(payload).includes('PRIVATE-TEST-LINK'));

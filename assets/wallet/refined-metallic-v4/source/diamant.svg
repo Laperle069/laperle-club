@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1125" height="369" viewBox="0 0 1000 328" preserveAspectRatio="none"><defs>
+ <linearGradient id="metal" x1="0" y1=".2" x2="1" y2=".8"><stop stop-color="#A5BDC9"/><stop offset=".34" stop-color="#D1E2EC"/><stop offset=".52" stop-color="#F5FBFF"/><stop offset=".73" stop-color="#D1E2EC"/><stop offset="1" stop-color="#A5BDC9"/></linearGradient>
+ <linearGradient id="edge" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#D1E2EC"/><stop offset=".22" stop-color="#D1E2EC" stop-opacity="0"/><stop offset=".78" stop-color="#D1E2EC" stop-opacity="0"/><stop offset="1" stop-color="#D1E2EC"/></linearGradient>
+ <pattern id="brush" width="1000" height="3" patternUnits="userSpaceOnUse"><path d="M0 0H1000" stroke="white" stroke-opacity=".035" stroke-width=".5"/><path d="M0 1.5H1000" stroke="black" stroke-opacity=".025" stroke-width=".4"/></pattern>
+ </defs><path fill="url(#metal)" d="M0 0H1000V328H0Z"/><path fill="url(#brush)" d="M0 0H1000V328H0Z"/>
+ <g opacity="1"><path d="M760 0L920 50 710 190Z" fill="white" opacity=".12"/><path d="M920 50L1000 210 710 190Z" fill="white" opacity=".055"/><path d="M710 190L1000 210 820 328Z" fill="black" opacity=".05"/><path d="M760 0L920 50 710 190 820 328M710 190L1000 210" fill="none" stroke="white" opacity=".17" stroke-width="1"/></g>
+ <path fill="url(#edge)" d="M0 0H1000V328H0Z"/></svg>

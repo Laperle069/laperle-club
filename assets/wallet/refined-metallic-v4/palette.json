@@ -1,0 +1,37 @@
+{
+  "bronze": {
+    "name": "Bronze",
+    "base": "#78533F",
+    "shade": "#503A30",
+    "light": "#78533F",
+    "ink": "#FFF0DA"
+  },
+  "silber": {
+    "name": "Silber",
+    "base": "#C4CBD1",
+    "shade": "#9CA8B2",
+    "light": "#EDF1F4",
+    "ink": "#24252A"
+  },
+  "gold": {
+    "name": "Gold",
+    "base": "#C8AC74",
+    "shade": "#A88C56",
+    "light": "#E8D5A8",
+    "ink": "#322519"
+  },
+  "platin": {
+    "name": "Platin",
+    "base": "#D0D0C9",
+    "shade": "#AAAFA9",
+    "light": "#F1F1E9",
+    "ink": "#30312F"
+  },
+  "diamant": {
+    "name": "Diamant",
+    "base": "#D1E2EC",
+    "shade": "#A5BDC9",
+    "light": "#F5FBFF",
+    "ink": "#203342"
+  }
+}
