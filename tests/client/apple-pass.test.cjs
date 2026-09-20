@@ -42,8 +42,10 @@ Deno.writeFileSync(${JSON.stringify(path.join(temp,'Silber.pkpass'))},erstellePa
  run('python3',['-c',"import zipfile; zipfile.ZipFile('Silber.pkpass').extractall('unpacked')"]);
  const pass=JSON.parse(fs.readFileSync(path.join(temp,'unpacked/pass.json')));
  ok('Apple: fünf Rangkarten als signierte PKPass-Pakete erzeugt',fs.existsSync(path.join(temp,'Diamant.pkpass')));
- ok('Apple: ursprüngliches Eintrittsdatum sichtbar',pass.storeCard.auxiliaryFields.some(f=>f.key==='mitglied_seit'&&f.value==='20.09.2026'));
+ ok('Apple: ursprüngliches Eintrittsdatum sichtbar',pass.storeCard.secondaryFields.some(f=>f.key==='mitglied_seit'&&f.value==='20.09.2026'));
  ok('Apple: nächster Rang auf Vorderseite',pass.storeCard.secondaryFields.some(f=>f.key==='rangfortschritt'&&f.label==='BIS GOLD'&&f.value==='Noch 120 Perlen'));
+ ok('Apple: Name prominent und allein im Hauptfeld',pass.storeCard.primaryFields.length===1&&pass.storeCard.primaryFields[0].key==='mitglied'&&pass.storeCard.primaryFields[0].value==='Anna Test');
+ ok('Apple: Eintrittsdatum direkt unter dem Namen',pass.storeCard.secondaryFields[0].key==='mitglied_seit');
  ok('Apple: Silber mit dunkler Schrift',pass.foregroundColor==='rgb(36, 37, 42)');
  ok('Apple: native QR-Daten ohne Club-Token',pass.barcodes[0].message==='LP000240'&&!pass.barcodes[0].message.includes('TEST-NOT-REAL'));
  ok('Apple: stabile Seriennummer und echter Punktestand',pass.serialNumber===d.object_id&&pass.storeCard.headerFields[0].value===240);

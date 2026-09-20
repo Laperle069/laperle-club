@@ -77,16 +77,16 @@ export function erstellePass(d:PassDaten,e:Einrichtung):Buffer {
   });
   pass.type="storeCard";
   pass.headerFields.push({key:"perlen",label:"PERLEN",value:d.stand});
-  pass.primaryFields.push({key:"rang",label:"LA PERLÉ CLUB",value:d.rang?rang.name.toUpperCase():"MITGLIED"});
-  pass.secondaryFields.push({key:"mitglied",label:"MITGLIED",value:[d.vorname,d.nachname].filter(Boolean).join(" ")});
+  pass.primaryFields.push({key:"mitglied",label:d.rang?`${rang.name.toUpperCase()} · LA PERLÉ CLUB`:"LA PERLÉ CLUB",value:[d.vorname,d.nachname].filter(Boolean).join(" ")});
+  if(d.mitglied_seit) pass.secondaryFields.push({key:"mitglied_seit",label:"MITGLIED SEIT",value:d.mitglied_seit,textAlignment:"PKTextAlignmentLeft"});
   if(d.rang) {
     const next=d.rangfortschritt;
     pass.secondaryFields.push({key:"rangfortschritt",label:next?`BIS ${next.name.toLocaleUpperCase("de-DE")}`:"DEIN STATUS",
       value:next?`Noch ${next.fehlen.toLocaleString("de-DE")} ${next.fehlen===1?"Perle":"Perlen"}`:"Höchster Rang erreicht"});
   }
-  pass.auxiliaryFields.push({key:"kundennummer",label:"KUNDENNUMMER",value:d.kundennummer});
-  if(d.mitglied_seit) pass.auxiliaryFields.push({key:"mitglied_seit",label:"MITGLIED SEIT",value:d.mitglied_seit});
+
   pass.backFields.push(
+    {key:"kundennummer",label:"Kundennummer",value:d.kundennummer},
     {key:"club",label:"Dein Club und aktueller Punktestand",value:club.href},
     {key:"naechste",label:"Bis zur nächsten Prämie",value:d.naechste},
     {key:"aktualisierung",label:"Karte aktualisieren",value:d.web_service_url?"Dein Perlenstand und Rang werden automatisch aktualisiert. Aktiviere dafür automatische Updates in den Karteneinstellungen.":"Öffne deinen Club und füge die Karte erneut hinzu, um deinen aktuellen Stand zu übernehmen."},

@@ -137,6 +137,13 @@ function gleich(a: string, b: string): boolean {
 // ---------------------------------------------------------------------
 
 const gepruefteKlassen = new Set<string>();
+const feld = (fieldPath:string) => ({firstValue:{fields:[{fieldPath}]}});
+// Three native rows: name, membership date, then balance and next rank.
+const kartenLayout = {cardRowTemplateInfos:[
+  {oneItem:{item:feld("object.accountName")}},
+  {oneItem:{item:feld("object.textModulesData['mitglied_seit']")}},
+  {twoItems:{startItem:feld("object.loyaltyPoints.balance"),endItem:feld("object.secondaryLoyaltyPoints.balance")}},
+]};
 
 async function klasseSicherstellen(d: any) {
   if (gepruefteKlassen.has(d.class_id)) return;
@@ -146,13 +153,23 @@ async function klasseSicherstellen(d: any) {
   const da = await zeitFetch(`${url}/${d.class_id}`, {
     headers: { "Authorization": `Bearer ${at}` },
   });
-  if (da.ok) { gepruefteKlassen.add(d.class_id); return; }
+  if (da.ok) {
+    const current=await da.json();
+    if(JSON.stringify(current.classTemplateInfo?.cardTemplateOverride)!==JSON.stringify(kartenLayout)) {
+      const changed=await zeitFetch(`${url}/${d.class_id}`,{method:"PATCH",
+        headers:{Authorization:`Bearer ${at}`,"Content-Type":"application/json"},
+        body:JSON.stringify({reviewStatus:"UNDER_REVIEW",accountNameLabel:"Mitglied",classTemplateInfo:{...current.classTemplateInfo,cardTemplateOverride:kartenLayout}})});
+      if(!changed.ok) { const error=await changed.json().catch(()=>({})); throw new Error("Kartenlayout: "+changed.status+" "+String(error.error?.message??"").slice(0,150)); }
+    }
+    gepruefteKlassen.add(d.class_id); return;
+  }
   if (da.status !== 404) throw new Error("Klasse nicht erreichbar: " + da.status);
 
   const vorlage = {
     id: d.class_id,
     issuerName: "La Perlé Beauty Boutique",
     programName: "La Perlé Club",
+    classTemplateInfo:{cardTemplateOverride:kartenLayout},
     reviewStatus: "UNDER_REVIEW",
     // V33: Seitenhintergrund der Midnight-Privé-Palette; Textfarbe setzt Google automatisch (hell auf dunkel)
     hexBackgroundColor: "#21191A",
@@ -363,6 +380,7 @@ Deno.serve(async (anfrage) => {
       for (const k of offen) {
         if (!k.lease_id || Date.now() + 20_000 >= Date.parse(k.lease_bis)) break;
         try {
+          if(k.class_id) await klasseSicherstellen(k);
           const antwort = await zeitFetch(
             `https://walletobjects.googleapis.com/walletobjects/v1/loyaltyObject/${k.object_id}`,
             {
