@@ -8,7 +8,7 @@
  const terminal = document.getElementById('sKundin');
  const scopes = [...document.querySelectorAll('.lp-scope')];
  const seen = new WeakSet(), watched = new WeakSet(), doors = new WeakSet();
- const running = new Map(), counts = new Map(), renderers = new Set();
+ const running = new Map(), renderers = new Set();
  let frame = 0, active = false, previousCustomer = '', shaderLoaded = false;
  let wheelStage, wheelTimer, wheelImage, wheelAngle = '';
  const isVisible = el => !!el && !el.closest('.hide,[hidden]') && el.getClientRects().length > 0;
@@ -23,34 +23,6 @@
   finish(el); el.classList.add(name);
   running.set(el, setTimeout(() => finish(el), duration));
  }
- function finishCount(node) {
-  const state = counts.get(node); if (!state) return;
-  state.settle();
- }
- function count(node) {
-  if (!node || !canMove() || !isVisible(node)) return;
-  finishCount(node);
-  const text = node.textContent.trim();
-  if (!/^\d[\d.]*$/.test(text)) return;
-  const value = Number(text.replaceAll('.', ''));
-  if (!Number.isSafeInteger(value) || value < 1) return;
-  // Real value remains in the original live region; the disposable visual copy has no semantics.
-  const copy = document.createElement('span'); copy.className = 'lp-count-copy';
-  copy.setAttribute('aria-hidden','true'); copy.textContent = text;
-  const style = getComputedStyle(node);
-  for (const key of ['fontFamily','fontSize','fontWeight','lineHeight','letterSpacing','fontVariantNumeric']) copy.style[key] = style[key];
-  copy.style.inset='auto';copy.style.left=node.offsetLeft+'px';copy.style.top=node.offsetTop+'px';
-  node.parentElement.append(copy);node.classList.add('lp-count-source');
-  const start = performance.now(); const state = {copy,frame:0}; counts.set(node,state);
-  function step(now) {
-   if (!canMove() || node.textContent.trim() !== text || !isVisible(node)) return settle();
-   const p = Math.min(1,(now-start)/900), eased = 1-Math.pow(1-p,3);
-   copy.textContent = Math.round(value*eased).toLocaleString('de-DE');
-   if(p<1) state.frame=requestAnimationFrame(step); else settle();
-  }
-  function settle(){ cancelAnimationFrame(state.frame);copy.remove();node.classList.remove('lp-count-source');counts.delete(node); }
-  state.settle=settle;state.frame=requestAnimationFrame(step);
- }
  function reveal(el) {
   if (seen.has(el) || !isVisible(el)) return;
   seen.add(el);
@@ -64,6 +36,26 @@
  const observer = typeof IntersectionObserver==='function' ? new IntersectionObserver(entries=>{
   for(const entry of entries) if(entry.isIntersecting && isVisible(entry.target)) {reveal(entry.target);observer.unobserve(entry.target);}
  },{threshold:.14}) : null;
+ // Preserve the application's own click handler and booking text on mouse/focus as on touch.
+ const necklace=club?.querySelector('#necklace');
+ if(necklace){
+  const chain=necklace.querySelector('.chain');
+  const positions=[[8,30],[24.8,50],[41.6,60],[58.4,60],[75.2,50],[92,30]];
+  if(chain&&!chain.querySelector('.lp-strand-pearl')){
+   for(let i=0;i<positions.length-1;i++)for(const t of [1/3,2/3]){
+    const bead=document.createElement('i');bead.className='lp-strand-pearl';
+    bead.style.left=(positions[i][0]+(positions[i+1][0]-positions[i][0])*t)+'%';
+    bead.style.top=(positions[i][1]+(positions[i+1][1]-positions[i][1])*t)+'%';
+    chain.append(bead);
+   }
+  }
+  function showBooking(e){
+   const pearl=e.target.closest('button.pearl');
+   if(pearl&&necklace.contains(pearl)&&pearl.getAttribute('aria-pressed')!=='true')pearl.click();
+  }
+  necklace.addEventListener('mouseover',showBooking);
+  necklace.addEventListener('focusin',showBooking);
+ }
  function watch() {
   if(!club || !isVisible(club)) return;
   club.querySelectorAll('#featured,#rewardProgress,#empfBox,#adventBox,#zielBox,#gewinneBox,.reward-list .item,#boardBox .brow,.track>span').forEach(el=>{
@@ -82,7 +74,7 @@
   frame=0;
   const next=club ? isVisible(club) : isVisible(document.getElementById('sHome')) || isVisible(terminal);
   if(next && !active){
-   if(club){ play(club.querySelector('.greeting'),'lp-enter-greeting');play(document.getElementById('member'),'lp-enter');count(document.getElementById('kStand')); }
+   if(club){ play(club.querySelector('.greeting'),'lp-enter-greeting');play(document.getElementById('member'),'lp-enter'); }
    loadShader();
   }
   active=next;
@@ -112,7 +104,6 @@
  for(const id of ['note','toast']){const el=document.getElementById(id);if(el)dom.observe(el,{attributes:true,attributeOldValue:true,attributeFilter:['class'],childList:true});}
  function stopAll(){
   for(const el of [...running.keys()])finish(el);
-  for(const s of [...counts.values()])s.settle();
   document.querySelectorAll('.lp-celebrate').forEach(el=>el.classList.remove('lp-celebrate'));
   closeStage();renderers.forEach(r=>r.pause());
  }
