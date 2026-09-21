@@ -16,3 +16,6 @@
 @media(prefers-reduced-motion:reduce){#club .door.lp-door-opening::before,#club .door.lp-door-opening::after,#club .door.lp-door-opening .hinten,#club .door.lp-door-opening .vorn{animation:none!important}#club .door.auf::before,#club .door.auf::after,#club .door.auf .vorn{opacity:0!important}#club .door.auf .hinten{opacity:1!important;transform:none!important}}
 
 #club .lp-rank-compact{display:none!important}
+
+/* Personal notes load independently; they cannot hide the verified treatment goal. */
+#club .lp-mission-section #zielBox{padding:0;border:0;margin:20px 0 0}#club .lp-mission-section #zielBox>.eyebrow,#club .lp-mission-section #zielTitel{display:none}

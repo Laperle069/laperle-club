@@ -16,6 +16,8 @@ Der Folgeauftrag erweitert ausdrücklich die frühere reine Darstellung um Hell/
 - SQL unter `release/club-missions.sql` und `release/club-images-and-policies.sql` wurde ausschließlich auf TEST angewendet. Produktion bleibt unverändert. Private Tabellen sind gegen direkte Zugriffe gesperrt; öffentliche RPCs prüfen vorhandene Kunden-/Mitarbeitertoken. Der SQL-Test arbeitet mit synthetischen Datensätzen innerhalb eines vollständig zurückgerollten Vorgangs.
 - Die öffentliche Testvorschau `/relaunch/club/` enthält ausschließlich Beispieldaten und lokale Demo-Aktionen; sie verwendet keine echten Kundensitzungen. Der GitHub-Entwurf wird aktualisiert, aber nicht zusammengeführt. Figma wurde in diesem Folgeauftrag nicht geändert.
 
+Fortsetzung vom 21. September: Die freigegebene Gestaltung ist auch im bestehenden angemeldeten TEST-Club eingebunden. Behandlungsziele laden unabhängig von persönlichen Wunschtexten; ein Fehler im Wunschtext kann sie nicht mehr ausblenden. Der vollständige Backend–Terminal–Club-Ablauf wurde mit zurückgerollten synthetischen Daten durch die öffentlichen RPCs geprüft.
+
 Prüfergebnisse: `design/evidence/club-features-QA.md`. Die folgenden Abschnitte dokumentieren den ursprünglichen Stand und dessen damalige Prüfungen; diese aktuelle Erweiterung hat bei Widersprüchen Vorrang.
 
 ## Historische Ausgangsbasis des ersten Designauftrags

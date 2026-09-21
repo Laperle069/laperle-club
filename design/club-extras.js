@@ -43,10 +43,11 @@
  review.append(links,node('p','Die Links öffnen unser jeweiliges Profil. Öffentliche Bewertungen sind freiwillig und werden nicht mit Perlen belohnt.','small'));
  const privateDetails=node('details',null);privateDetails.append(node('summary','Feedback direkt an das Studio'),feedback);review.append(privateDetails);
  // Goals: retain personal notes separately; the mission cannot be self-completed by the customer.
- const goal=document.querySelector('#zielBox'),mission=node('div',null,'lp-mission');mission.setAttribute('aria-live','polite');
- const personal=node('details',null);personal.append(node('summary','Persönlichen Wunsch hinterlegen'),document.querySelector('#zielInhalt'));goal.append(mission,personal);
+ const goal=document.querySelector('#zielBox'),mission=node('div',null,'lp-mission'),missionSection=node('section',null,'lp-mission-section');missionSection.id='missionBox';mission.setAttribute('aria-live','polite');
+ goal.before(missionSection);missionSection.append(node('span','Worauf du hinarbeitest','eyebrow'),node('h2','Dein nächstes Ziel'),mission,goal);
+ const personal=node('details',null);personal.append(node('summary','Persönlichen Wunsch hinterlegen'),document.querySelector('#zielInhalt'));goal.append(personal);
  function updateMission(){
-  const demoOpen=mission.querySelector('.lp-demo-controls')?.open;const data=missionData;mission.replaceChildren();if(!data)return;goal.classList.remove('hide');document.querySelector('#zielTitel').textContent='Dein nächstes Ziel';
+  const demoOpen=mission.querySelector('.lp-demo-controls')?.open;const data=missionData;mission.replaceChildren();if(!data)return;
   if(data.aus){mission.append(node('p','Neue Behandlungsziele werden hier angezeigt, sobald das Studio sie freigibt.'));return;}
   const current=data.mission;
   if(current){mission.append(node('span',current.abgeschlossen?'Ziel erreicht':'Dein Behandlungsziel','eyebrow'),node('h3',current.titel));

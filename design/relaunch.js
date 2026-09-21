@@ -58,7 +58,7 @@
  }
  function watch() {
   if(!club || !isVisible(club)) return;
-  club.querySelectorAll('#featured,#rewardProgress,#empfBox,#adventBox,#zielBox,#gewinneBox,.reward-list .item,#boardBox .brow,.track>span').forEach(el=>{
+  club.querySelectorAll('#featured,#rewardProgress,#empfBox,#adventBox,#missionBox,#zielBox,#gewinneBox,.reward-list .item,#boardBox .brow,.track>span').forEach(el=>{
    if(watched.has(el)) return; watched.add(el);
    if(observer) observer.observe(el); else seen.add(el);
   });
