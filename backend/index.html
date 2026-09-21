@@ -649,7 +649,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 section > .card:first-child{ margin-top:0; }
 .tabelle-scroll{ margin-top:12px; }
 </style>
-<script defer src="../design/mission-admin.js?v=26"></script>
+<script defer src="../design/mission-admin.js?v=28"></script>
 </head>
 <body class="admin">
 
@@ -933,8 +933,8 @@ section > .card:first-child{ margin-top:0; }
       <!-- Mitteilungen -->
       <section id="vMitt" class="hide">
         <div class="card">
-          <h2>Nachricht an deine Kundinnen</h2>
-          <p class="muted">Geht als E-Mail an alle, die Werbung erlaubt haben – und als Banner oben im Clubbereich an alle in der Zielgruppe, unabhängig von Einwilligungen. Echte Push-Nachrichten gibt es bei Wallet-Karten nicht.</p>
+          <h2>Treueaktion für deine Kundinnen</h2>
+          <p class="muted">Deine Aktion erscheint bei „Ein Moment für dich“ für die gewählte Zielgruppe. Optional kannst du eine E-Mail an Kundinnen mit Werbeeinwilligung vormerken. Aktions-Push über Apple oder Google Wallet ist in dieser Anwendung noch nicht als Versandkanal angebunden; Kartenaktualisierungen sind davon getrennt.</p>
           <div class="aktionen"><span class="muted">Schnell:</span>
             <button class="btn ghost sm" data-v="ausfall" type="button">Terminausfall heute</button>
             <button class="btn ghost sm" data-v="aktion" type="button">Aktion</button>
@@ -954,7 +954,7 @@ section > .card:first-child{ margin-top:0; }
             <div><label for="mLinkText">Knopftext (optional)</label><input id="mLinkText" placeholder="Termin buchen"></div>
             <div><label for="mLinkUrl">Knopfziel (optional)</label><input id="mLinkUrl" placeholder="https://…"></div>
             <div><label for="mStunden">Sichtbar für … Stunden</label><input id="mStunden" type="number" value="48"></div>
-            <div><label for="mBanner">Banner im Club</label><select id="mBanner"><option value="true">ja</option><option value="false">nein</option></select></div>
+            <div><label for="mBanner">Aktion im Club</label><select id="mBanner"><option value="true">ja</option><option value="false">nein</option></select></div>
             <div><label for="mMail">Als E-Mail</label><select id="mMail"><option value="true">ja</option><option value="false">nein</option></select></div>
           </div>
           <div class="aktionen"><button class="btn ghost" id="mVorschau" type="button">Wie viele?</button><button class="btn" id="mSenden" type="button">Absenden</button></div>

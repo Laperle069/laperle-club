@@ -21,6 +21,7 @@ begin
  if not exists(select 1 from jsonb_array_elements(public.admin_missionen(session_token)->'vorlagen') j where j->>'id'=v::text) then raise exception 'Saved draft missing in admin';end if;
  if exists(select 1 from jsonb_array_elements(public.kunde_missionen(customer_token)->'vorlagen') j where j->>'id'=v::text) then raise exception 'Draft exposed to customer';end if;
  perform public.admin_mission_speichern(session_token,v,'5 x QA Intimlaser','laser_intim',5,reward,true,30);
+ if not exists(select 1 from jsonb_array_elements(public.kunde_missionen(customer_token)->'vorlagen') j where j->>'id'=v::text and j->>'belohnung_art' in ('prozent','betrag','gratisleistung')) then raise exception 'Reward type missing';end if;
  perform public.mission_starten(customer_token,v);
  update club_private.mission set gestartet_am=now()-interval '10 days' where kundin_id=k;
  for i in 1..4 loop

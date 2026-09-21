@@ -40,12 +40,13 @@
  const necklace=club?.querySelector('#necklace');
  if(necklace){
   const chain=necklace.querySelector('.chain');
-  const positions=[[8,30],[24.8,50],[41.6,60],[58.4,60],[75.2,50],[92,30]];
+  const positions=[[8,23],[24.8,52],[41.6,68],[58.4,68],[75.2,52],[92,23]];
   if(chain&&!chain.querySelector('.lp-strand-pearl')){
-   for(let i=0;i<positions.length-1;i++)for(const t of [1/2]){
+   for(let i=0;i<positions.length-1;i++)for(const t of [1/3,2/3]){
     const bead=document.createElement('i');bead.className='lp-strand-pearl';
     bead.style.left=(positions[i][0]+(positions[i+1][0]-positions[i][0])*t)+'%';
     bead.style.top=(positions[i][1]+(positions[i+1][1]-positions[i][1])*t)+'%';
+    bead.style.setProperty('--lp-link-angle',Math.atan2((positions[i+1][1]-positions[i][1])*1.54,(positions[i+1][0]-positions[i][0])*3.5)*180/Math.PI+'deg');
     chain.append(bead);
    }
   }
@@ -146,7 +147,7 @@
  const wheel=document.getElementById('wheel');
  if(wheel)new MutationObserver(mirrorWheel).observe(wheel,{attributes:true,attributeFilter:['style']});
  function loadShader(){
-  if(shaderLoaded||!config.enable3D||!canMove()||navigator.connection?.saveData||(navigator.deviceMemory&&navigator.deviceMemory<=2)||(navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=2))return;
+  if(club||shaderLoaded||!config.enable3D||!canMove()||navigator.connection?.saveData||(navigator.deviceMemory&&navigator.deviceMemory<=2)||(navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=2))return;
   shaderLoaded=true;
   requestAnimationFrame(()=>requestAnimationFrame(()=>{
    if(!active||!canMove()) {shaderLoaded=false;return;}

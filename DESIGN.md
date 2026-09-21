@@ -20,6 +20,14 @@ Fortsetzung vom 21. September: Die freigegebene Gestaltung ist auch im bestehend
 
 Prüfergebnisse: `design/evidence/club-features-QA.md`. Die folgenden Abschnitte dokumentieren den ursprünglichen Stand und dessen damalige Prüfungen; diese aktuelle Erweiterung hat bei Widersprüchen Vorrang.
 
+## Atelier-Erweiterung vom 21. September 2026
+
+`club-atelier.css` und `goal-picker.js` ergänzen den aktuellen Stand: Logo auf stilisierter Perle, goldene Kettenglieder mit erklärter Sammelaktion, Prämien als Gutscheine, nummerierte Rangvorteile und Advent in beiden Farbmodi. Club-WebGL ist zugunsten der stilisierten Oberfläche deaktiviert. Das Licht läuft einmal 2200 ms; Fokus/Hover reagiert über 500 ms, Reduced Motion bleibt statisch.
+
+Fünf lokale Präferenzfragen sortieren ausschließlich freigegebene Ziele anhand der vorhandenen Kategorie, Anzahl und konfigurierten Prämienart. Antworten werden nicht gespeichert oder übertragen. Der Server entscheidet unverändert über Fortschritt und Abschlussgeschenk. `release/club-mission-recommendations.sql` ergänzt nur die Prämienart im vorhandenen TEST-RPC.
+
+Die vorhandene zielgruppengesteuerte Aktion erscheint bei „Ein Moment für dich“. Im Backend führen direkte Schaltflächen zu Aktionen, Rangvorteilen, Adventbildern und Behandlungszielen. Es wurden weder echte Kampagnen verschickt noch Angebote aktiviert. Aktions-Push über Wallet ist weiterhin nicht als Versandkanal angebunden; vorhandene Kartenaktualisierungen sind davon getrennt.
+
 ## Historische Ausgangsbasis des ersten Designauftrags
 
 Gestalterischer Relaunch ausschließlich von `club/index.html` (angemeldeter Bereich) und `terminal/index.html` (Arbeitsbereich). Basis: GitHub `main`, Commit `6ac9a6e`. Branch: `design/relaunch`. Kein Deployment, kein Merge, keine Datenbankoperation.

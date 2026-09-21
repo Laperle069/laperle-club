@@ -23,3 +23,14 @@ The existing authenticated TEST Club now uses the reviewed presentation assets a
 - The new theme controller also updates the established registration/postbox theme controls, using the same device-local preference.
 - Five focused interaction tests, the existing 24 UI regression tests and static validation pass. The connected-page interaction test uses the actual shipped HTML and its complete inline application.
 - Additional browser QA of the connected local fixture route was blocked by the browser runtime (`ERR_BLOCKED_BY_CLIENT`); no claim of a new visual pass for that route. The previous responsive visual checks remain documented above. No production schema, customer data, source main branch or goal offers activated.
+
+## Atelier update — 2026-09-21
+
+- Stylized, logo-bearing hero pearl; Club WebGL no longer loads. A contained 2200 ms light reveal and focus/hover lighting replace realistic rendering. Reduced motion is static.
+- Six preserved booking controls are joined by gold links. Explanatory copy and an appointment link explain the existing collection; no fabricated balance or new reward threshold.
+- Reward vouchers preserve all configured prices/availability; ranks keep configured benefits and present a numbered path. Advent uses semantic light/dark surfaces for doors and gifts.
+- Five-question local preference flow: interest, starting preference, stage length, gift type, ordering priority. Suggestions draw exclusively from active server templates; only explicit goal selection starts a mission. Answers are neither persisted nor transmitted. Treatment suitability and timing remain a studio discussion.
+- TEST migration adds only configured `belohnung_art` to the existing authenticated mission response. Transactional journey test confirms reward type, configuration, booking, completion and authorization. No active templates or campaigns were created.
+- Existing targeted campaigns appear below “Ein Moment für dich”. Backend shortcuts expose campaigns, ranks, Advent images and treatment goals. Next reward derives from existing reward prices; there is no duplicated setting.
+- Wallet campaign push is NOT implemented. Existing Apple/Google card-update infrastructure does not provide this campaign channel. Backend wording now states that limitation accurately; no messages were sent and no delivery settings were changed.
+- Six focused UI tests, 24 established UI regression tests, three source-boundary tests and static validation pass. Browser preview verifies logo, necklace, reward cards and the complete five-question flow at 390 px; face-care choices recommend only the configured face-care goal, without starting it. Responsive checks at 360, 768, 1024 and 1280 px show scrollWidth equals clientWidth. Advent colors and text contrast were checked in both light and dark mode.
