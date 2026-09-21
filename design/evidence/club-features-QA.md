@@ -34,3 +34,13 @@ The existing authenticated TEST Club now uses the reviewed presentation assets a
 - Existing targeted campaigns appear below “Ein Moment für dich”. Backend shortcuts expose campaigns, ranks, Advent images and treatment goals. Next reward derives from existing reward prices; there is no duplicated setting.
 - Wallet campaign push is NOT implemented. Existing Apple/Google card-update infrastructure does not provide this campaign channel. Backend wording now states that limitation accurately; no messages were sent and no delivery settings were changed.
 - Six focused UI tests, 24 established UI regression tests, three source-boundary tests and static validation pass. Browser preview verifies logo, necklace, reward cards and the complete five-question flow at 390 px; face-care choices recommend only the configured face-care goal, without starting it. Responsive checks at 360, 768, 1024 and 1280 px show scrollWidth equals clientWidth. Advent colors and text contrast were checked in both light and dark mode.
+
+## Centered screen chapters — 2026-09-21
+
+- Native vertical CSS scroll snapping, viewport-relative page height and centered columns; persistent appearance controls and section picker/previous/next buttons. Optional unavailable sections are omitted from both pager and content.
+- Existing nodes/IDs, booking details, reward dialogs, missions, Wallet navigation and data handlers retained. No database or messaging changes.
+- Eight focused interaction tests pass, including reload stability, unique controls, preserved booking history and removal of inactive chapters. Three source-boundary tests and static references/isolation validation pass.
+- Browser: 390 × 844 px shows the entire welcome, necklace, campaign and compact reward-progress chapters without inner overflow. A native downward scroll moves to the next snapped chapter. Large lists, expanded rank benefits, Advent and profile content remain individually scrollable; navigation stays outside them.
+- At 360 × 568 px every chapter has no horizontal overflow; short-height content is scrollable rather than clipped. At 1280 × 844 px the reward grid is centered with a bounded width. Dark mobile and light desktop were visually inspected.
+- Browser confirms pearl selection still displays date, treatment and pearls. The existing Wallet shortcut navigates to the profile chapter and focuses the actual Apple Wallet button. No Wallet request was submitted.
+- Reduced motion is covered by the interaction suite and CSS end states. Physical iOS/Android finger gestures and hardware performance were not measured; the implementation uses native browser scrolling without custom gesture recognition.

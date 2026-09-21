@@ -28,6 +28,14 @@ Fünf lokale Präferenzfragen sortieren ausschließlich freigegebene Ziele anhan
 
 Die vorhandene zielgruppengesteuerte Aktion erscheint bei „Ein Moment für dich“. Im Backend führen direkte Schaltflächen zu Aktionen, Rangvorteilen, Adventbildern und Behandlungszielen. Es wurden weder echte Kampagnen verschickt noch Angebote aktiviert. Aktions-Push über Wallet ist weiterhin nicht als Versandkanal angebunden; vorhandene Kartenaktualisierungen sind davon getrennt.
 
+## Bildschirmabschnitte vom 21. September 2026
+
+Der Folgeauftrag ersetzt die lange Clubseite durch vertikal einrastende Bildschirmabschnitte. `club-pages.js` verschiebt vorhandene Elemente unverändert in thematische Seiten; IDs, Daten, Einlösungen, Einwilligungen und vorhandene Aktionshandler bleiben bestehen. Die Startseite zeigt Begrüßung, Logo-Perle, Guthaben und Terminbuchung. Die Sammlung bekommt eine eigene Seite. Aktionen, Prämienfortschritt, Katalog, Rang und weitere Module folgen als einzelne Kapitel. Nicht verfügbare optionale Module erscheinen weder als leere Seite noch in der Abschnittswahl.
+
+`club-pages.css` hält Markenleiste und Hell/Dunkel-Schalter oben, Abschnittswahl und Pfeile unten. Dazwischen richtet sich der nutzbare Raum nach `100dvh`. Alle Seiten haben eine mittige Inhaltsspalte mit mindestens 24 px Seitenpolster und maximal 680 px Inhaltsbreite. Kurze Inhalte sind auch vertikal zentriert; überlange Inhalte beginnen oben und sind vollständig scrollbar, auch auf kurzen Displays. Kein Text wird abgeschnitten oder zur Einhaltung einer Bildschirmhöhe verkleinert.
+
+Native CSS-Scroll-Snap-Navigation ohne Touch-/Wheel-Abfangen; lange Listen können innerhalb der Seite gescrollt werden. Pfeile und Auswahl bieten einen direkten Weg zu anderen Abschnitten. PageUp/PageDown und Home/End wechseln nur bei ausdrücklich fokussiertem Abschnitt; Formulare behalten ihre Tasten. Kapitel erhalten einmalig 420 ms `translateY(14px) scale(.99)` → `none` mit `cubic-bezier(.22,1,.36,1)`. Eingaben warten nicht. Reduced Motion unterdrückt die Zusatzanimation und wechselt direkt. Alte Einblendungen auf den verschobenen Karten werden unterdrückt, damit sich keine Animationsebenen überschneiden.
+
 ## Historische Ausgangsbasis des ersten Designauftrags
 
 Gestalterischer Relaunch ausschließlich von `club/index.html` (angemeldeter Bereich) und `terminal/index.html` (Arbeitsbereich). Basis: GitHub `main`, Commit `6ac9a6e`. Branch: `design/relaunch`. Kein Deployment, kein Merge, keine Datenbankoperation.
