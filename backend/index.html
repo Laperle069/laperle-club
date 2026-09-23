@@ -649,6 +649,7 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,te
 section > .card:first-child{ margin-top:0; }
 .tabelle-scroll{ margin-top:12px; }
 </style>
+<script defer src="../design/mission-admin.js?v=28"></script>
 </head>
 <body class="admin">
 
@@ -932,8 +933,8 @@ section > .card:first-child{ margin-top:0; }
       <!-- Mitteilungen -->
       <section id="vMitt" class="hide">
         <div class="card">
-          <h2>Nachricht an deine Kundinnen</h2>
-          <p class="muted">Geht als E-Mail an alle, die Werbung erlaubt haben – und als Banner oben im Clubbereich an alle in der Zielgruppe, unabhängig von Einwilligungen. Echte Push-Nachrichten gibt es bei Wallet-Karten nicht.</p>
+          <h2>Treueaktion für deine Kundinnen</h2>
+          <p class="muted">Deine Aktion erscheint bei „Ein Moment für dich“ für die gewählte Zielgruppe. Optional kannst du eine E-Mail an Kundinnen mit Werbeeinwilligung vormerken. Aktions-Push über Apple oder Google Wallet ist in dieser Anwendung noch nicht als Versandkanal angebunden; Kartenaktualisierungen sind davon getrennt.</p>
           <div class="aktionen"><span class="muted">Schnell:</span>
             <button class="btn ghost sm" data-v="ausfall" type="button">Terminausfall heute</button>
             <button class="btn ghost sm" data-v="aktion" type="button">Aktion</button>
@@ -953,7 +954,7 @@ section > .card:first-child{ margin-top:0; }
             <div><label for="mLinkText">Knopftext (optional)</label><input id="mLinkText" placeholder="Termin buchen"></div>
             <div><label for="mLinkUrl">Knopfziel (optional)</label><input id="mLinkUrl" placeholder="https://…"></div>
             <div><label for="mStunden">Sichtbar für … Stunden</label><input id="mStunden" type="number" value="48"></div>
-            <div><label for="mBanner">Banner im Club</label><select id="mBanner"><option value="true">ja</option><option value="false">nein</option></select></div>
+            <div><label for="mBanner">Aktion im Club</label><select id="mBanner"><option value="true">ja</option><option value="false">nein</option></select></div>
             <div><label for="mMail">Als E-Mail</label><select id="mMail"><option value="true">ja</option><option value="false">nein</option></select></div>
           </div>
           <div class="aktionen"><button class="btn ghost" id="mVorschau" type="button">Wie viele?</button><button class="btn" id="mSenden" type="button">Absenden</button></div>
@@ -2001,13 +2002,13 @@ async function stammLaden() {
 }
 
 function renderPraemien() {
-  $("praemien").innerHTML = "<tr><th class='num'>Punkte</th><th>Bezeichnung</th><th>Art</th><th class='num'>Wert</th><th>Status</th><th></th></tr>" +
+  $("praemien").innerHTML = "<tr><th class='num'>Punkte</th><th>Bezeichnung</th><th>Art</th><th class='num'>Wert</th><th>Produktbild (optional)</th><th>Status</th><th></th></tr>" +
     stamm.praemien.map(p => `<tr data-id="${esc(p.id)}">
       <td class="num"><input value="${esc(p.punkte)}" type="number" aria-label="Punkte" style="width:90px"></td>
       <td><input value="${esc(p.bezeichnung)}" aria-label="Bezeichnung"></td>
       <td>${esc(p.art)}</td>
       <td class="num"><input value="${esc(p.wert ?? "")}" type="number" aria-label="Wert" style="width:90px"></td>
-      <td><input value="${esc(p.bild_url || "")}" placeholder="Bildadresse" aria-label="Bildadresse" style="min-width:180px"></td>
+      <td><input value="${esc(p.bild_url || "")}" placeholder="https://… (optional)" aria-label="Produktbild-Adresse, optional" style="min-width:180px"></td>
       <td>${p.aktiv ? "<span class='pill'>aktiv</span>" : "<span class='muted'>inaktiv</span>"}</td>
       <td><div class="aktionen" style="margin:0;flex-wrap:nowrap"><button class="btn sm" data-a="save">Sichern</button>
         <button class="btn ghost sm" data-a="toggle">${p.aktiv ? "Ausblenden" : "Aktivieren"}</button></div></td></tr>`).join("");
@@ -2038,7 +2039,7 @@ $("npAdd").onclick = () => mitSperre($("npAdd"), async () => {
 
 function renderAdvent() {
   $("adventJahr").textContent = new Date().getFullYear();
-  $("advent").innerHTML = "<tr><th>Tag</th><th>Inhalt</th><th>Art</th><th class='num'>Punkte</th><th>Push</th><th></th></tr>" +
+  $("advent").innerHTML = "<tr><th>Tag</th><th>Inhalt</th><th>Art</th><th class='num'>Punkte</th><th>Produktbild (optional)</th><th>Push</th><th></th></tr>" +
     stamm.advent.map(t => `<tr data-tag="${esc(t.tag)}">
       <td style="font-family:var(--mp-heading);font-size:21px;color:var(--mp-accent)">${esc(t.tag)}.</td>
       <td><input value="${esc(t.bezeichnung || "")}" aria-label="Inhalt"></td>
@@ -2047,7 +2048,7 @@ function renderAdvent() {
         <option value="praemie"${t.art==='praemie'?' selected':''}>Prämie</option>
         <option value="aktion"${t.art==='aktion'?' selected':''}>Aktion</option></select></td>
       <td class="num"><input value="${esc(t.punkte ?? 0)}" type="number" aria-label="Punkte" style="width:85px"></td>
-      <td><input value="${esc(t.bild_url || "")}" placeholder="Bildadresse" aria-label="Bildadresse" style="min-width:170px"></td>
+      <td><input value="${esc(t.bild_url || "")}" placeholder="https://… (optional)" aria-label="Produktbild-Adresse, optional" style="min-width:170px"></td>
       <td><input type="checkbox"${t.push_senden?' checked':''} aria-label="Push"></td>
       <td><button class="btn sm">Sichern</button></td></tr>`).join("");
 
