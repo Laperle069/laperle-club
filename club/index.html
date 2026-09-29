@@ -1154,6 +1154,20 @@ function ketteZeichnen(verlauf) {
   });
 }
 
+// ---------- Adventskalender (E37, aus design/relaunch): Öffnen nur nach erfolgreicher Serverantwort ----------
+const adventOeffnung = new Map();
+const adventRuhig = () => sanft() || document.documentElement.dataset.motion === "reduced";
+function adventBild(v) {   // nur https oder gleiche Herkunft
+  if (!v) return null;
+  try { const u = new URL(String(v), location.href); return (u.protocol === "https:" || u.origin === location.origin) ? u.href : null; }
+  catch (e) { return null; }
+}
+function adventGewinn(ziel, text, bild) {
+  ziel.replaceChildren(); const src = adventBild(bild);
+  if (src) { const img = el("img", null, { src, alt: text }); img.onerror = () => img.remove(); ziel.append(img); }
+  ziel.append(el("span", text));
+}
+
 // ---------- Hauptkomposition ----------
 function zeichnen() {
   const d = daten, F = d.funktionen || {};
@@ -1253,15 +1267,29 @@ function zeichnen() {
   $("adventBox").classList.toggle("hide", !dez && !adv.some(t => t.geoeffnet));
   const av = $("advent"); av.innerHTML = "";
   adv.forEach(t => {
-    const b = el("button", null, { type: "button", class: "door" + (t.geoeffnet ? " auf" : "") + (t.verpasst ? " verpasst" : ""), "aria-label": "Türchen " + t.tag });
+    // Tür = Zahl (.vorn) + Gewinn (.hinten); die beiden Flügel zeichnet das CSS (::before/::after)
+    const b = el("button", null, { type: "button", class: "door" + (t.geoeffnet ? " auf" : "") + (t.verpasst ? " verpasst" : ""),
+      "aria-label": "Türchen " + t.tag + (t.geoeffnet && t.gewinn ? ": " + t.gewinn : "") });
+    b.dataset.day = t.tag;
     if (t.geoeffnet || !t.offen) b.disabled = true;
-    if (urlOk(t.bild)) b.appendChild(el("img", null, { class: "bild", src: urlOk(t.bild), alt: "" }));
-    b.append(el("span", String(t.tag), { class: "vorn", style: "position:relative" }), el("span", t.geoeffnet ? (t.gewinn || "") : "", { class: "hinten" }));
-    if (!b.disabled) b.onclick = () => mitSperre(b, async () => {
+    const hinten = el("span", null, { class: "hinten" });
+    if (t.geoeffnet) adventGewinn(hinten, t.gewinn || "", t.bild);
+    b.append(el("span", String(t.tag), { class: "vorn" }), hinten);
+    // Wird während einer Öffnung neu gezeichnet, läuft die Bewegung an derselben Stelle weiter
+    const lauf = adventOeffnung.get(t.tag);
+    if (lauf && lauf.bis > performance.now()) { adventGewinn(hinten, lauf.text, lauf.bild); b.classList.add("auf", "lp-door-opening");
+      b.style.setProperty("--_door-elapsed", Math.max(0, performance.now() - lauf.start) + "ms"); }
+    if (!b.disabled) b.onclick = async () => {
+      if (b.getAttribute("aria-busy") === "true") return; b.disabled = true; b.setAttribute("aria-busy", "true");
       try { const r = await rpc("advent_oeffnen", { p_token: token, p_tag: +t.tag });
-        b.querySelector(".hinten").textContent = r.bezeichnung; b.classList.add("auf"); b.disabled = true;
-        sagen(`Türchen ${r.tag}: ${r.bezeichnung}`); setTimeout(laden, 900);
-      } catch (e) { sagen(e.message, true); } });
+        b.removeAttribute("aria-busy"); adventGewinn(hinten, r.bezeichnung, r.bild || t.bild);
+        const ruhig = adventRuhig(), start = performance.now();
+        adventOeffnung.set(t.tag, { start, bis: start + 1850, text: r.bezeichnung, bild: r.bild || t.bild });
+        b.classList.add("auf"); if (!ruhig) b.classList.add("lp-door-opening");
+        b.setAttribute("aria-label", `Türchen ${t.tag}: ${r.bezeichnung}`); sagen(`Türchen ${r.tag}: ${r.bezeichnung}`);
+        // Eingaben bleiben bedienbar; nur das Neuladen wartet auf das Ende der Öffnung (1850 ms, reduziert sofort)
+        setTimeout(() => { adventOeffnung.delete(t.tag); b.classList.remove("lp-door-opening"); laden(); }, ruhig ? 0 : 1850);
+      } catch (e) { b.removeAttribute("aria-busy"); b.disabled = false; sagen(e.message, true); } };
     av.appendChild(b);
   });
 

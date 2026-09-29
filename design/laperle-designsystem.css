@@ -1018,10 +1018,11 @@ dl.zusammenfassung dd{ margin:0; font-weight:var(--lp-fw-medium); font-variant-n
 .door .vorn{ position:relative; z-index:3; display:block; color:var(--lp-text);
   font:var(--lp-fw-regular) 30px var(--font-display); font-variant-numeric:var(--lp-numeric); }
 .door .hinten{ position:absolute; inset:var(--lp-space-2); z-index:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
-  gap:6px; opacity:0; color:var(--lp-text); overflow-wrap:anywhere; font:var(--lp-fw-regular) var(--lp-fs-13)/1.2 var(--font-ui); }
+  gap:6px; opacity:0; color:var(--lp-text); overflow-wrap:anywhere; -webkit-hyphens:auto; hyphens:auto; text-align:center;
+  font:var(--lp-fw-regular) var(--lp-fs-13)/1.2 var(--font-ui); }
 .door .hinten img{ display:block; max-width:100%; height:52px; object-fit:contain; border-radius:5px; }
 .door .bild{ display:none; }                                    /* Bild steht jetzt optional in .hinten */
-.door:disabled{ opacity:1; }                                    /* Zustand über Form, nicht über Deckkraft */
+.advent > .door:is(:disabled,[aria-disabled="true"]){ opacity:1; }   /* Zustand über Form, nicht über Deckkraft (schlägt F.8) */
 .door:not(:disabled){ border-width:2px; border-color:var(--lp-accent-mark); box-shadow:0 0 0 3px var(--lp-line); }   /* heute */
 .door.verpasst{ border-style:dashed; }
 .door.auf{ background:var(--lp-bg); cursor:default; }
@@ -1042,7 +1043,7 @@ dl.zusammenfassung dd{ margin:0; font-weight:var(--lp-fw-medium); font-variant-n
 @keyframes lp-gift-rise{ 0%,24%{ transform:translateY(8px) scale(.75); opacity:0; } 65%{ transform:translateY(0) scale(1.08); opacity:1; } 100%{ transform:translateY(0) scale(1); opacity:1; } }
 @keyframes lp-door-number{ from{ opacity:1; } to{ opacity:0; } }
 @media (max-width:600px){ .advent{ grid-template-columns:repeat(3,minmax(0,1fr)); } .door{ height:108px; } }
-@media (max-width:420px){ .advent{ gap:var(--lp-space-2); } }
+@media (max-width:420px){ .advent{ gap:var(--lp-space-2); } .door .hinten{ inset:5px; font-size:var(--lp-fs-12); } }   /* Relaunch ≤ 420 */
 @container lp-advent (min-width:640px){ .advent{ grid-template-columns:repeat(6,minmax(0,1fr)); } }
 @container lp-advent (min-width:900px){ .advent{ grid-template-columns:repeat(8,minmax(0,1fr)); gap:var(--lp-space-4); } .door{ height:120px; } }
 .ziel .satz{ font:var(--lp-fw-medium) var(--lp-fs-21)/var(--lp-lh-quote) var(--font-display); }
