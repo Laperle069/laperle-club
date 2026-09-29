@@ -5,13 +5,32 @@
 
 Prüft ohne Netzwerk und ohne Abhängigkeiten:
   1. tokens.json: Grammatik (Namen, Eindeutigkeit, Farbwerte, Aliase, Themen).
-  2. Tokengleichheit: jeder Farbtoken steht mit demselben Wert je Thema im CSS.
+  2. Tokengleichheit: jeder Token (Farbe je Thema, Schatten je Thema, alle übrigen
+     Familien, type.families als --font-<Schlüssel>) steht mit demselben Wert im CSS;
+     die Kopie für data-theme="auto" (prefers-color-scheme: light) gleicht dem
+     Perle-Satz, die Druckkopie dem Perle-Satz mit Papierweiß (lp-paper) für
+     Grund und Flächen und Perle-Text auf der Mitgliedskarte (SPEC B.3 1e, E08, G.18).
   3. Vollständigkeit: jede var(--…) im CSS ist definiert.
-  4. Kompatibilität: jede Klasse und ID aus Fassung 3 kommt in Fassung 4 vor,
-     und jede --mp-*-Variable, die eine Seite außerhalb des Blocks nutzt, ist definiert.
+  4. Kompatibilität: jede Klasse und ID aus Fassung 3 kommt in Fassung 4 vor (auch
+     verkettete wie .btn.ghost), und jede --*-Variable, die eine Seite mit Designblock
+     außerhalb des Blocks nutzt, ist definiert.
   5. Kein Grün: kein Farbwert im CSS oder in tokens.json liegt im Grünbereich.
   6. Kontrast: alle Paare aus kontrastpaare.json erreichen ihr Minimum in jedem Thema.
 Rückgabewert 0 nur, wenn alles besteht.
+
+Format von kontrastpaare.json: eine Liste von Paaren
+  {"fg": Token oder #hex, "bg": Token oder #hex, "min": Zahl, "usage": "…"}
+mit den optionalen Feldern
+  "themen":        Liste der Themen, in denen das Paar vorkommt (Standard: alle).
+  "bg_over":       Token oder #hex: deckender Grund unter einem durchscheinenden bg
+                   (z. B. lp-hover über lp-surface); bg wird zuerst darüber gelegt.
+  "fg_brightness", "bg_brightness":
+                   Faktor k von filter:brightness(k) auf Vordergrund bzw. Grund
+                   (Kanal × k, gekappt), z. B. 1.08 für den Hover der Primärfläche.
+  "satz":          Thema, dessen Farbsatz in jedem Seitenthema gilt (Nacht-Inseln
+                   deklarieren den dunklen Satz selbst: "satz": "dark").
+  "info":          true = wird berechnet und gezählt, ist aber kein Kriterium.
+  "id":            Verweis auf die Kontrasttabelle der Spezifikation (nur Anzeige).
 """
 import json
 import math
@@ -25,7 +44,11 @@ F3 = DESIGN / "midnight-prive-fassung-3.css"
 F4 = DESIGN / "laperle-designsystem.css"
 TOKENS = DESIGN / "tokens.json"
 PAARE = DESIGN / "kontrastpaare.json"
-SEITEN = ["club/index.html", "club/recht.html", "terminal/index.html", "backend/index.html"]
+START, ENDE = "/* MP-DESIGN-START */", "/* MP-DESIGN-END */"
+# Druck (SPEC B.3 1e, E08, G.18): diese Rollen tragen Papierweiß (lp-paper), die
+# Mitgliedskarte trägt Perle-Text; alle übrigen Werte der Druckkopie = Perle-Satz.
+DRUCK_PAPIER = ("lp-bg", "lp-surface", "lp-surface-raised", "lp-field", "lp-selected")
+DRUCK_TEXT = {"lp-member-text": "lp-text", "lp-member-muted": "lp-text-muted"}
 # Laufzeitvariablen, die Skripte am Element setzen (Bühnenstaub), und private Bauteilvariablen.
 LAUFZEIT = {"--x", "--y", "--delay"}
 NAME = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]{0,63}$")
@@ -183,13 +206,26 @@ def css_bloecke(css):
 
 
 def selektor_namen(css):
+    """Alle Klassen und IDs aus Selektoren, auch verkettete (.btn.ghost → .btn, .ghost).
+    Attributselektoren sind vorher entfernt, @-Präludien und Keyframe-Stufen tragen keine."""
     namen = set()
     for sel in re.findall(r"([^{}]+)\{", ohne_kommentare(css)):
         if sel.strip().startswith("@"):
             continue
         sel = re.sub(r"\[[^\]]*\]", "", sel)
-        namen.update(re.findall(r"(?<![\w-])([.#][A-Za-z_][\w-]*)", sel))
+        namen.update(re.findall(r"([.#][A-Za-z_][\w-]*)", sel))
     return namen
+
+
+def seiten():
+    """Alle HTML-Seiten mit Designblock (wie design/einbetten.py): Startmarke als eigene Zeile."""
+    treffer = []
+    for pfad in sorted(WURZEL.rglob("*.html")):
+        if ".git" in pfad.parts or pfad.is_relative_to(DESIGN):
+            continue
+        if any(z.strip() == START for z in pfad.read_text("utf-8").splitlines()):
+            treffer.append(pfad)
+    return treffer
 
 
 def definierte_variablen(css):
@@ -203,42 +239,105 @@ def benutzte_variablen(text):
 def seitenrest(html):
     zeilen = html.splitlines()
     try:
-        a = zeilen.index("/* MP-DESIGN-START */")
-        b = zeilen.index("/* MP-DESIGN-END */")
+        a = zeilen.index(START)
+        b = zeilen.index(ENDE)
     except ValueError:
         return html
     return "\n".join(zeilen[:a] + zeilen[b + 1:])
 
 
 # --- 2. Tokengleichheit -------------------------------------------------------
-def token_gleichheit(css, aufgeloest, themen):
-    dunkel, hell = {}, {}
+def themen_saetze(css):
+    """Deklarationen der Themenblöcke: dunkel (:root, [data-theme="dark"]), hell
+    ([data-theme="light"]), auto (in prefers-color-scheme: light) und druck (in @media print)."""
+    saetze = {"dunkel": {}, "hell": {}, "auto": {}, "druck": {}}
     for sel, dekl, umgebung in css_bloecke(css):
-        if any("print" in u for u in umgebung):
-            continue
         teile = {s.strip() for s in sel.split(",")}
-        for n, v in re.findall(r"(--lp-[A-Za-z0-9_-]+)\s*:\s*([^;]+)", dekl):
-            if teile & {":root", '[data-theme="dark"]', ":root[data-theme=\"dark\"]"} and not umgebung:
-                dunkel.setdefault(n, v.strip())
-            if any('data-theme="light"' in s for s in teile) and not umgebung:
-                hell.setdefault(n, v.strip())
+        kontext = " ".join(" ".join(umgebung).split())
+        if not umgebung:
+            art = ("dunkel" if teile & {":root", '[data-theme="dark"]', ':root[data-theme="dark"]'}
+                   else "hell" if any('data-theme="light"' in s for s in teile) else None)
+        elif re.fullmatch(r"@media \(prefers-color-scheme: ?light\)", kontext) and '[data-theme="auto"]' in teile:
+            art = "auto"
+        elif kontext == "@media print" and ":root" in teile:
+            art = "druck"
+        else:
+            art = None
+        if art:
+            for n, v in re.findall(r"(--(?:lp|mp|font)-[A-Za-z0-9_-]+|--_select-arrow)\s*:\s*([^;]+)", dekl):
+                saetze[art].setdefault(n, " ".join(v.split()))
+    return saetze
+
+
+def aufloesen_css(v, *saetze):
+    """var(--x) über die genannten Sätze auflösen (mehrstufig)."""
+    for _ in range(8):
+        m = re.fullmatch(r"var\(\s*(--[A-Za-z0-9_-]+)\s*\)", v or "")
+        if not m:
+            break
+        v = next((s[m.group(1)] for s in saetze if m.group(1) in s), None)
+    return v
+
+
+def gleich(a, b):
+    if a is None or b is None:
+        return False
+    if " ".join(a.split()) == " ".join(b.split()):
+        return True
+    fa, fb = farbe(a), farbe(b)
+    return bool(fa and fb) and all(abs(x - y) <= 0.003 for x, y in zip(fa, fb))
+
+
+def token_gleichheit(css, aufgeloest, themen):
+    s = themen_saetze(css)
+    dunkel, hell = s["dunkel"], s["hell"]
+
+    def css_wert(name, th):
+        ziel = [hell, dunkel] if th == "light" else [dunkel]
+        roh = next((z["--" + name] for z in ziel if "--" + name in z), None)
+        return roh, aufloesen_css(roh, *ziel)
+
+    # Farben je Thema
     for (name, th), wert in aufgeloest.items():
-        if wert is None:
+        if wert is None or th not in ("dark", "light"):
             continue
-        css_name = "--" + name
-        ziel = dunkel if th == "dark" else hell if th == "light" else None
-        if ziel is None:
-            continue
-        v = ziel.get(css_name) or (dunkel.get(css_name) if th == "light" else None)
-        if v is None:
-            fail("gleichheit", f"{css_name} ({th}) nicht im CSS definiert")
-            continue
-        if v.startswith("var("):
-            ref = re.match(r"var\(\s*(--[A-Za-z0-9_-]+)", v).group(1)
-            v = (ziel.get(ref) or dunkel.get(ref) or v)
-        if farbe(v) and farbe(wert):
-            if any(abs(x - y) > 0.003 for x, y in zip(farbe(v), farbe(wert))):
-                fail("gleichheit", f"{css_name} ({th}): CSS {v} ≠ tokens.json {wert}")
+        roh, v = css_wert(name, th)
+        if roh is None:
+            fail("gleichheit", f"--{name} ({th}) nicht im CSS definiert")
+        elif not gleich(v, wert):
+            fail("gleichheit", f"--{name} ({th}): CSS {roh} → {v} ≠ tokens.json {wert}")
+    # Alle übrigen Familien (Schatten je Thema) und type.families
+    if TOKENS.exists():
+        t = json.loads(TOKENS.read_text("utf-8"))
+        for fam, inhalt in t.items():
+            if fam in ("name", "version", "meta", "type", "color") or not isinstance(inhalt, dict):
+                continue
+            for tok in inhalt.get("tokens", []):
+                werte = tok["value"] if isinstance(tok["value"], dict) else {"dark": tok["value"]}
+                for th, wert in werte.items():
+                    roh, v = css_wert(tok["name"], th)
+                    if roh is None:
+                        fail("gleichheit", f"--{tok['name']} ({fam}, {th}) nicht im CSS definiert")
+                    elif not gleich(v, wert):
+                        fail("gleichheit", f"--{tok['name']} ({fam}, {th}): CSS {roh} → {v} ≠ tokens.json {wert}")
+        for schluessel, wert in t.get("type", {}).get("families", {}).items():
+            if not gleich(dunkel.get("--font-" + schluessel), wert):
+                fail("gleichheit", f"--font-{schluessel}: CSS {dunkel.get('--font-' + schluessel)} ≠ tokens.json {wert}")
+    # Kopie für data-theme="auto" = Perle-Satz (1c), vollständig und wertgleich
+    for n in sorted(set(hell) | set(s["auto"])):
+        if not gleich(s["auto"].get(n), hell.get(n)):
+            fail("gleichheit", f"auto-Kopie {n}: {s['auto'].get(n)} ≠ Perle {hell.get(n)}")
+    # Druckkopie = Perle-Satz mit Papierweiß und Perle-Text auf der Mitgliedskarte
+    soll = dict(hell)
+    papier = aufgeloest.get(("lp-paper", "light"))
+    for n in DRUCK_PAPIER:
+        soll["--" + n] = papier
+    for n, quelle in DRUCK_TEXT.items():
+        soll["--" + n] = aufgeloest.get((quelle, "light"))
+    for n in sorted(set(soll) | set(s["druck"])):
+        ist = aufloesen_css(s["druck"].get(n), s["druck"], dunkel)
+        if not (gleich(s["druck"].get(n), soll.get(n)) or gleich(ist, aufloesen_css(soll.get(n), hell, dunkel))):
+            fail("gleichheit", f"Druckkopie {n}: {s['druck'].get(n)} ≠ Soll {soll.get(n)}")
 
 
 # --- Ablauf -------------------------------------------------------------------
@@ -259,10 +358,13 @@ def main():
     fehlend = sorted(selektor_namen(f3) - selektor_namen(f4))
     for n in fehlend:
         fail("kompatibel", f"Selektor {n} aus Fassung 3 fehlt in Fassung 4")
-    for s in SEITEN:
-        rest = seitenrest((WURZEL / s).read_text("utf-8"))
+    liste = seiten()
+    if not liste:
+        fail("kompatibel", "keine Seite mit Designblock gefunden")
+    for pfad in liste:
+        rest = seitenrest(pfad.read_text("utf-8"))
         for v in sorted(benutzte_variablen(rest) - definiert - LAUFZEIT):
-            fail("kompatibel", f"{s} nutzt {v}, Fassung 4 definiert es nicht")
+            fail("kompatibel", f"{pfad.relative_to(WURZEL)} nutzt {v}, Fassung 4 definiert es nicht")
 
     literale = set(re.findall(r"#[0-9a-fA-F]{3,8}\b|rgba?\([^)]*\)", ohne_kommentare(f4)))
     if TOKENS.exists():
@@ -273,24 +375,43 @@ def main():
             L, c, h = oklch(rgb)
             fail("kein Grün", f"{lit} (OKLCH h {h:.0f}°, C {c:.3f})")
 
-    geprueft = 0
+    geprueft = info = 0
     if PAARE.exists():
+        def rgb_von(ausdruck, thema):
+            wert = ausdruck if ausdruck.startswith("#") else aufgeloest.get((ausdruck, thema))
+            return farbe(wert) if wert else None
+
+        def hell(rgb, k):
+            return tuple(min(1.0, c * k) for c in rgb[:3]) + (rgb[3],)
+
         for p in json.loads(PAARE.read_text("utf-8")):
+            name = f"{p.get('id', '')} {p['fg']} auf {p['bg']}".strip()
             for th in p.get("themen", themen):
-                fg = aufgeloest.get((p["fg"], th)) if not p["fg"].startswith("#") else p["fg"]
-                bg = aufgeloest.get((p["bg"], th)) if not p["bg"].startswith("#") else p["bg"]
-                if not fg or not bg or not farbe(fg) or not farbe(bg):
-                    fail("kontrast", f"{p['fg']} auf {p['bg']} ({th}): Wert fehlt")
+                satz = p.get("satz", th)
+                fg, bg = rgb_von(p["fg"], satz), rgb_von(p["bg"], satz)
+                unten = rgb_von(p["bg_over"], satz) if "bg_over" in p else None
+                if satz not in themen or not fg or not bg or ("bg_over" in p and (not unten or unten[3] < 1)):
+                    fail("kontrast", f"{name} ({th}): Wert fehlt")
                     continue
-                r = kontrast(farbe(fg), farbe(bg))
+                if unten:
+                    bg = ueber(bg, unten)
+                if "fg_brightness" in p:
+                    fg = hell(fg, p["fg_brightness"])
+                if "bg_brightness" in p:
+                    bg = hell(bg, p["bg_brightness"])
+                r = kontrast(fg, bg)
+                if p.get("info"):
+                    info += 1
+                    continue
                 geprueft += 1
                 if r + 1e-9 < p["min"]:
-                    fail("kontrast", f"{p['fg']} auf {p['bg']} ({th}): {r:.2f} < {p['min']}")
+                    fail("kontrast", f"{name} ({th}): {r:.2f} < {p['min']}")
     else:
         fail("kontrast", "design/kontrastpaare.json fehlt")
 
     print(f"Fassung 3: {len(selektor_namen(f3))} Klassen/IDs · Fassung 4: {len(selektor_namen(f4))}")
-    print(f"Farbtoken geprüft: {len({n for n, _ in aufgeloest})} · Kontrastpaare geprüft: {geprueft}")
+    print(f"Farbtoken geprüft: {len({n for n, _ in aufgeloest})} · Kontrastpaare geprüft: {geprueft}"
+          f" (+ {info} Info ohne Soll)")
     if fehler:
         print(f"\n{len(fehler)} Fehler:")
         for f in fehler:
