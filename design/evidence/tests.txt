@@ -1,0 +1,60 @@
+PASS Apple: öffentliche Zertifikate ersetzen fehlenden oder beschädigten PEM-Import
+PASS Apple: gültige konfigurierte Zertifikate haben für Rotation Vorrang
+PASS Apple: fünf Rangkarten als signierte PKPass-Pakete erzeugt
+PASS Apple: ursprüngliches Eintrittsdatum sichtbar
+PASS Apple: nächster Rang auf Vorderseite
+PASS Apple: Name prominent und allein im Hauptfeld
+PASS Apple: Eintrittsdatum direkt unter dem Namen
+PASS Apple: Silber mit dunkler Schrift
+PASS Apple: native QR-Daten ohne Club-Token
+PASS Apple: stabile Seriennummer und echter Punktestand
+PASS Apple: keine vorgetäuschte Push-Anbindung
+PASS Apple: Update-Pass enthält HTTPS-Dienst und separaten stabilen Token
+PASS Apple: CMS-Signatur mit unabhängiger OpenSSL-Prüfung gültig
+PASS Apple: Manifest stimmt mit allen Paketdateien überein
+PASS Apple: falsche Team-ID verhindert Ausgabe
+PASS Apple: falsches Schlüsselpasswort verhindert Ausgabe
+PASS Apple: unpassendes Ausstellerzertifikat verhindert Ausgabe
+PASS Apple: fremder privater Schlüssel verhindert Ausgabe
+PASS Apple: fehlendes freigegebenes Artwork verhindert Ausgabe
+PASS Apple: Platzhalter-Clubadresse verhindert Ausgabe
+(node:12) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ tests/client/apple-pass.test.cjs (2727.564648ms)
+(node:13) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS Readiness: authorization, lowercase approval status, missing credentials, no card writes
+PASS Production artwork uses versioned assets and matching rank background
+PASS Google Save-Link kurz, echt signiert und ohne persönlichen Club-Zugang im JWT
+PASS Google: eigener Namensbereich, Mitglied seit darunter, Punkte und Rangziel in dritter Zeile
+PASS Echte Kunden-, Punkte- und Rangdaten im Google-Objekt
+PASS Bereits vorhandene Google-Karte wird aktualisiert
+PASS Fehlende Google-Berechtigung legt keine neue Klasse an
+PASS Fehlgeschlagene Ausgabe wird nicht registriert
+PASS Fehlender Schlüssel klar abgefangen ohne Google-Aufruf
+PASS Ausgeschaltetes Wallet erzeugt keine externe Karte
+PASS Falscher Token-Typ wird vor Datenbankzugriff abgelehnt
+✔ tests/client/wallet-ausgabe.test.cjs (731.303266ms)
+(node:14) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time
+(Use `node --trace-warnings ...` to show where the warning was created)
+PASS Wallet Worker überträgt Club-Link, Timeout und Besitzkennung
+PASS Eintrittsdatum bleibt bei Punkte- und Rangänderungen erhalten
+PASS Rangfortschritt, höchster Rang und Singular
+PASS Neuer Supabase-API-Key wird nicht als JWT missbraucht
+PASS Kein neuer PATCH kurz vor Lease-Ende
+PASS Transportfehler quittiert mit korrekter Besitzkennung
+PASS Wallet 429 beendet Batch nach erster Ablehnung
+PASS Wallet Sync ohne Geheimnis verweigert jeden Datenbankaufruf
+PASS Wallet Sync verlangt POST
+✔ tests/client/wallet-worker.test.cjs (634.730839ms)
+✔ club/index.html: protected application and contracts remain identical (50.683617ms)
+✔ terminal/index.html: protected application and contracts remain identical (40.931332ms)
+✔ presentation scripts have no data transport, storage or event cancellation (1.548705ms)
+ℹ tests 6
+ℹ suites 0
+ℹ pass 6
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2746.358504

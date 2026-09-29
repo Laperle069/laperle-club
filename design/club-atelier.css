@@ -1,0 +1,71 @@
+/* La Perlé Atelier: existing palette, stylized pearl and connected collection. */
+#club .member{isolation:isolate}
+#club .lp-pearl-object{width:160px;height:160px;right:-4px;top:65px;overflow:visible;transform:none}
+#club .lp-pearl-object canvas{display:none!important}
+#club .lp-pearl-object::before,#club .lp-pearl-object[data-rank]::before{inset:13%;opacity:1;background:linear-gradient(145deg,#FFFDF9 6%,#F6E9DF 46%,#DFBE95 100%);border:1px solid #DFBE95;box-shadow:inset 0 0 0 7px #FFFDF940,0 9px 0 -4px #C6ABA83D,0 22px 25px -19px #21191A80;transform:rotate(-8deg)}
+#club .lp-pearl-object::after{display:block;inset:-14%;border:0;z-index:-1;border-radius:50%;background:radial-gradient(ellipse,#DFBE9538,transparent 68%);transform:scale(.92);animation:lp-atelier-light 2200ms cubic-bezier(.22,1,.36,1) both}
+#club .lp-pearl-wordmark{inset:36% 22% auto;z-index:3;text-shadow:none;transform:rotate(-8deg)}
+#club .lp-pearl-wordmark img{display:block;width:100%;height:auto;filter:brightness(.52);opacity:1}
+#club .member:focus-within .lp-pearl-object::after,#club .member:hover .lp-pearl-object::after{transform:scale(1.06);transition:transform 500ms cubic-bezier(.22,1,.36,1)}
+@keyframes lp-atelier-light{from{transform:translateY(8px) scale(.85);opacity:.45}to{transform:translateY(0) scale(1);opacity:1}}
+#club .lp-chain-intro{margin-top:28px;border-top:1px solid var(--lp-rule);padding-top:24px;position:relative;z-index:2}
+#club .lp-chain-intro h3{font-size:27px;margin:8px 0 12px}
+#club .lp-chain-intro p{font-size:14px;line-height:1.6;color:var(--lp-muted);max-width:400px;margin:0}
+#club .necklace{height:154px;max-width:350px;margin:12px auto 18px;isolation:isolate}
+#club .necklace .pearl.p1{left:8%;top:23%}#club .necklace .pearl.p2{left:24.8%;top:52%}#club .necklace .pearl.p3{left:41.6%;top:68%}#club .necklace .pearl.p4{left:58.4%;top:68%}#club .necklace .pearl.p5{left:75.2%;top:52%}#club .necklace .pearl.p6{left:92%;top:23%}
+#club .necklace .chain .lp-strand-pearl{width:21px;height:9px;border:2px solid var(--lp-gold);background:var(--lp-bg);box-shadow:inset 0 1px 0 #FFFDF940,0 1px 1px #21191A40;transform:translate(-50%,-50%) rotate(var(--lp-link-angle,0deg));z-index:0}
+#club .necklace .pearl{z-index:1}
+#club .necklace .pearl::before{inset:4px;width:36px;height:36px;background:linear-gradient(145deg,#FFFDF9,#F6E9DF 55%,#DFBE95);border:1px solid #DFBE95;box-shadow:inset 0 0 0 3px #FFFDF938,0 4px 7px -3px #21191A80}
+#club .necklace .pearl.deko::before{background:var(--lp-bg);border:1px dashed var(--lp-muted);box-shadow:inset 0 0 0 3px var(--lp-surface)}
+#club .necklace .pearl[aria-pressed=true]::after{inset:-2px;border:1px solid var(--lp-fg)}
+#club .member .foot{background:transparent;border:0;border-top:1px solid var(--lp-rule);border-radius:0;padding:16px 0;min-height:72px}
+#club .lp-chain-action{display:flex;min-height:48px;align-items:center;justify-content:center;text-align:center;padding:12px 16px;border:1px solid var(--lp-rule);border-radius:999px;font:500 14px var(--lp-font-body);color:var(--lp-fg);text-decoration:none;margin-top:8px}
+#club .lp-chain-action:hover{background:var(--lp-surface)}
+/* Campaign content reuses the existing, server-targeted banner and expiry. */
+#club #bannerBox{position:relative;border:1px solid var(--lp-gold)!important;border-radius:24px;padding:24px;background:var(--lp-surface);margin:0 0 24px!important}
+#club #bannerBox h3{font-size:30px;margin:12px 0!important}#club #bannerBox .eyebrow{color:var(--lp-fg)}
+/* Reward vouchers: visible denomination, editorial title, persistent availability. */
+#club .reward-list{gap:18px}
+#club .reward-list button.item{display:grid;grid-template-columns:1fr auto;gap:14px 12px;align-content:start;position:relative;padding:24px;border-radius:3px 22px 22px 3px;min-height:242px;border-left:4px solid var(--lp-rule);overflow:hidden;transition:none}
+#club .reward-list button.item.frei{background:var(--lp-pearl);border-color:var(--lp-gold);color:var(--lp-ink)}
+#club .reward-list .lp-reward-no{position:static;grid-column:2;grid-row:1;font:400 28px/1 var(--lp-font-heading);color:inherit}
+#club .reward-list .item .pts{grid-column:1;grid-row:1;justify-self:start;background:transparent!important;padding:0;order:0;font:500 13px var(--lp-font-body);align-self:center;letter-spacing:.06em;text-transform:uppercase;color:inherit}
+#club .reward-list .item strong{grid-column:1/-1;font:400 29px/1.12 var(--lp-font-heading);max-width:92%;color:inherit}
+#club .reward-list .lp-reward-description{grid-column:1/-1;font-size:14px;line-height:1.55;max-width:38em;color:inherit}
+#club .reward-list .item .small{grid-column:1/-1;font-size:13px;line-height:1.5;padding-top:16px;border-top:1px dashed currentColor;margin-top:4px;color:inherit}
+#club .reward-list .item img{grid-column:1/-1;height:108px;object-fit:contain}
+#club .reward-list button.item:disabled{background:var(--lp-surface);color:var(--lp-muted);border-color:var(--lp-rule)}
+#club .reward-list button.item:disabled :is(strong,.pts,.small){color:inherit}
+#club .reward-list button.item.frei::after{content:'';position:absolute;width:12px;height:12px;border-radius:50%;right:-7px;bottom:50px;background:var(--lp-bg);border:1px solid var(--lp-gold)}
+/* Ranks form a numbered path; benefits remain the configured source text. */
+#club .lp-rank-card{border-radius:24px;padding:24px;background:var(--lp-surface)}
+#club .lp-rank-card>h3{font-size:38px}
+#club .lp-rank-list{position:relative;padding:4px 0}
+#club .lp-rank-list li{position:relative;display:grid;grid-template-columns:44px 1fr;column-gap:14px;padding:20px 0;border-top:1px solid var(--lp-rule)}
+#club .lp-rank-list li[aria-current=true]{border-left:0;padding-left:0}
+#club .lp-rank-list .lp-rank-badge{grid-column:1;grid-row:1/4;align-self:start;display:grid;place-items:center;width:40px;height:40px;border:1px solid var(--lp-rule);border-radius:50%;font:400 19px var(--lp-font-heading);color:var(--lp-fg);margin:0;background:var(--lp-bg)}
+#club .lp-rank-list li[aria-current=true] .lp-rank-badge{background:var(--lp-action);color:var(--lp-on-action);border-color:var(--lp-action);box-shadow:0 0 0 4px var(--lp-bg)}
+#club .lp-rank-list :is(strong,span:not(.lp-rank-badge),small){grid-column:2}#club .lp-rank-list strong{font-size:18px}#club .lp-rank-list span:not(.lp-rank-badge){font-size:13px;margin-top:4px}#club .lp-rank-list small{font-size:14px;line-height:1.55}
+/* The question flow never chooses or starts a goal without explicit input. */
+#club .lp-mission{padding:28px;border-radius:24px;background:var(--lp-surface)}
+#club .lp-goal-picker h3{font-size:34px;margin:12px 0 16px;max-width:440px}
+#club .lp-goal-picker p{font-size:15px;line-height:1.65}
+#club .lp-goal-picker>.btn{margin:14px 12px 0 0}#club .lp-goal-picker>.linkbtn{display:block;margin-top:10px}
+#club .lp-quiz-meta{display:flex;justify-content:space-between;gap:12px;font-size:12px;letter-spacing:.06em;text-transform:uppercase;color:var(--lp-muted)}
+#club .lp-quiz-dots{display:flex;gap:5px;margin:12px 0 28px}#club .lp-quiz-dots i{height:3px;flex:1;background:var(--lp-rule)}#club .lp-quiz-dots .done{background:var(--lp-action)}
+#club .lp-quiz-actions{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:20px;flex-wrap:wrap}
+#club .lp-goal-picker fieldset{margin:12px 0}#club .lp-mission .lp-choice,#club .lp-mission .lp-goal-result{border-radius:16px;padding:18px;align-items:center;min-height:76px;background:var(--lp-bg)}
+#club .lp-mission .lp-choice:has(input:checked),#club .lp-mission .lp-goal-result:has(input:checked){padding:17px;border-color:var(--lp-fg)}
+#club .lp-choice>span,#club .lp-goal-result>span{min-width:0;font-size:16px}#club .lp-choice small{font-size:14px}
+#club .lp-goal-result strong{display:block;font:400 27px/1.15 var(--lp-font-heading);margin:6px 0 10px}#club .lp-goal-result .lp-result-count{font-size:12px;text-transform:uppercase;letter-spacing:.06em}#club .lp-goal-result .lp-result-gift{display:block;border-top:1px solid var(--lp-rule);padding-top:12px;margin-top:12px;font-size:14px;font-weight:500}
+.lp-sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;border:0}
+/* Calendar uses semantic light/dark surfaces all the way into the opened gift. */
+#club #adventBox{background:var(--lp-surface);color:var(--lp-fg);border:1px solid var(--lp-rule);padding:36px 24px;border-radius:80px 80px 24px 24px}
+#club #adventBox> :is(.eyebrow,h2,.lead){color:var(--lp-fg)}#club #adventBox::before,#club #adventBox::after{border-color:var(--lp-muted);opacity:.45}
+#club #adventBox .door{background:var(--lp-bg);color:var(--lp-fg);border-color:var(--lp-rule)}
+#club #adventBox .door::before,#club #adventBox .door::after{background:linear-gradient(145deg,var(--lp-bg),var(--lp-surface));border-color:var(--lp-rule)}
+#club #adventBox .door :is(.vorn,.hinten){color:var(--lp-fg)}#club #adventBox .door:not(:disabled){border-color:var(--lp-action);box-shadow:0 0 0 3px var(--lp-rule)}#club #adventBox .door:not(:disabled) .vorn{color:var(--lp-fg)}#club #adventBox .door.auf{background:var(--lp-bg)}
+#club #adventBox .lp-demo-controls{color:var(--lp-fg)}#club #adventBox .lp-demo-controls .small{color:var(--lp-muted)}
+@media(min-width:800px){#club .lp-pearl-object{width:190px;height:190px;top:62px;right:-5px}#club .lp-chain-intro{margin-top:40px}#club .reward-list{grid-template-columns:repeat(3,minmax(0,1fr))}#club .lp-goal-picker{max-width:640px;margin:0 auto}}
+@media(max-width:400px){#club .lp-pearl-object{width:132px;height:132px;top:69px;right:-4px}#club .lp-mission{padding:20px}#club .lp-goal-picker h3{font-size:30px}#club .reward-list button.item{padding:20px}#club .necklace{height:138px}}
+@media(prefers-reduced-motion:reduce){#club .lp-pearl-object::after{animation:none;transform:none;opacity:1}#club .member:hover .lp-pearl-object::after,#club .member:focus-within .lp-pearl-object::after{transition:none;transform:none}}
