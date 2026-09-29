@@ -2,9 +2,9 @@
 
 Stand 29.09.2026. Knapper Arbeitsstand dieses Repositorys (Club, Terminal, Verwaltung, Rechtstexte). Keine Gesprächshistorie.
 
-## Designsystem Fassung 4 – Entwurf zur Designabnahme
+## Designsystem Fassung 4 – auf dem Branch eingebettet, noch nicht live
 
-**Status:** gebaut und geprüft, **nicht in die Seiten eingebettet**. Alle sechs Seiten tragen weiterhin Fassung 3 „Midnight Privé“ (md5 `4232834a3388a1c34011a142b07110f7`). Keine Änderung an Club, Terminal, Verwaltung, Rechtstexten, Daten oder Server.
+**Status:** gebaut, geprüft und auf dem Branch `claude/design-system-extraction-mmqyeb` in alle sechs Seiten eingebettet (md5 `20e87646…`). Außerhalb des Blocks ist nur der Advent-Code in `club/index.html` geändert (Adventskalender aus `design/relaunch`). Auf `main` und damit live trägt alles weiterhin Fassung 3; Live erst nach Freigabe und Zusammenführen. Keine Änderung an Daten oder Server.
 
 **Bereich:** gemeinsamer Designblock aller drei Arbeitsbereiche (Club, Terminal, Verwaltung) und der Rechtstexte. Eine spätere Einbettung wirkt in allen sechs Seiten zugleich.
 
@@ -21,6 +21,7 @@ Design-System-Referenz (claude.ai, privat): https://claude.ai/artifact/NyUuVMUiu
 **Bestandene Prüfungen:**
 - `python3 design/pruefen.py`: Token-Grammatik, Token = CSS je Thema, alle 203 Klassen und 4 IDs aus Fassung 3 abgedeckt, `--mp-*` der Seitenreste definiert, kein Grün, 272 Kontrastprüfungen.
 - `python3 design/einbetten.py pruefen`: sechs Seiten, ein identischer Block.
+- Nach dem Einbetten in die echten Seiten: 154 Läufe (41 Zustände, 390 und 1280 px, dunkel und hell) ohne Seitenfehler und ohne Überlauf; außerhalb des Blocks byte-gleich zum Stand davor.
 - Einbettungstest auf einer Kopie (41 App-Zustände, 320–1280 px, dunkel und hell):
   - 0 Seitenfehler, 0 horizontaler Überlauf, auch ohne `body{overflow-x:hidden}`;
   - 0 Buttonreihen mit ungleicher Höhe, auch mit +40 % Text in DE/EN/RU;
@@ -29,7 +30,8 @@ Design-System-Referenz (claude.ai, privat): https://claude.ai/artifact/NyUuVMUiu
 - Styleguide bei 320–1440 px in beiden Themen: 0 Fehler, 244 von 244 Farbwerten gleich `tokens.json`.
 
 **Offen:**
-- Freigabe der offenen Designentscheidungen (`design/README.md`, Abschnitt „Offene Entscheidungen“), danach Einbettung nur in der lokalen Vorschau: `python3 design/einbetten.py schreiben design/laperle-designsystem.css`, Rückweg mit `design/midnight-prive-fassung-3.css`.
+- Offene Designentscheidungen (`design/README.md`) sind mit den umgesetzten Werten angenommen und jederzeit änderbar. Rückweg auf diesem Branch: `python3 design/einbetten.py schreiben design/midnight-prive-fassung-3.css`.
+- Live: erst nach ausdrücklicher Freigabe durch Zusammenführen nach `main` (GitHub Pages).
 - Folgearbeiten in den Seitenresten nach Spezifikation H.6 (u. a. Einwilligungskarten, Glücksradfarben, Heatmap-Stufen, Tabellen-Hüllen), je Bereich ein eigener Diff; Voraussetzung für das helle Thema „Perle“.
 - Bekannte Grenzen:
   - Die Hauptaktion bricht bei 320 px auf zwei Zeilen um, wie schon in Fassung 3.
