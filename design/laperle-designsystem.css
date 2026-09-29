@@ -548,6 +548,10 @@ button{ cursor:pointer; -webkit-tap-highlight-color:transparent; }
 > :not(button,input,select,textarea,label,code,output,.btn,.secondary,.linkbtn,.row-button,.icon-button,.main-action,.search){
   align-self:center; }   /* R6: Texte wie „Schnell:“ mittig */
 .row > :is(h2,h3):first-child{ margin-right:auto; }   /* Kopf links, Aktionen rechts – auch bei space-between im Markup */
+/* R9: Reihe mit Link-Buttons – gefüllte Buttons stehen allein in der ersten Zeile, die Links bleiben
+   zusammen darunter (keine Waise). Im Club immer (schmale Spalte), sonst unter 481px (13). */
+.club :is(.aktionen,.zielaktionen):has(> :is(.linkbtn,.row-button)) > :is(.btn,.btn-gold,.secondary,.btn-line,.btn-ghost):not(.sm){ flex:1 1 100%; }
+.customer .aktionen > :is(.btn,.btn-gold,.secondary,.btn-line,.btn-ghost):not(.sm){ flex:1 1 auto; }   /* Kundenkarte: Paar füllt die Zeile, gestapelt gleich breit */
 
 /* --- 4. Felder und Auswahl --------------------------------------------- */
 label{ display:block; margin:0 0 var(--lp-rhythm-inside); color:var(--lp-text-muted);
@@ -649,7 +653,7 @@ td input[type="text"]{ min-width:22ch; }
   font:var(--lp-fw-medium) var(--lp-fs-13)/var(--lp-lh-body) var(--font-ui); }
 .formzeile{ display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,160px),1fr)); gap:var(--lp-space-3); align-items:end; }
 .linkfeld{ margin-top:var(--lp-space-3); }
-.linkfeld code{ flex:1 1 160px; min-width:0; min-height:var(--lp-control-md); display:flex; align-items:center; padding:8px 16px;
+.linkfeld code{ flex:1 1 auto; min-width:0; min-height:var(--lp-control-md); display:flex; align-items:center; padding:8px 16px;
   background:var(--lp-field); border:var(--lp-border) solid var(--lp-border-control); border-radius:var(--lp-radius-m);
   font:var(--lp-fw-regular) var(--lp-fs-13)/var(--lp-lh-body) var(--font-ui); color:var(--lp-text-muted); overflow-wrap:anywhere; }
 
@@ -681,7 +685,10 @@ table th{ font:var(--lp-fw-medium) var(--lp-fs-12)/var(--lp-lh-body) var(--font-
   padding:var(--lp-space-2) var(--lp-pad-cell-x); border-bottom:var(--lp-border) solid var(--lp-line); background:var(--lp-surface); }
 table td{ padding:var(--lp-pad-cell-y) var(--lp-pad-cell-x); border-bottom:var(--lp-border) solid var(--lp-line-soft); vertical-align:top; }
 table tr:last-child td{ border-bottom:0; }
-body.admin table td,body.admin table th,table.dicht td{ padding:var(--lp-pad-cell-y-dense) var(--lp-pad-cell-x); font-size:var(--lp-fs-14); }
+body.admin table td,body.admin table th,table.dicht td{ padding:var(--lp-pad-cell-y-dense) calc(var(--lp-pad-cell-x) / 2); font-size:var(--lp-fs-14); }
+body.admin table :is(td,th):first-child,table.dicht td:first-child{ padding-left:var(--lp-pad-cell-x); }    /* Dicht: 12px zwischen den Spalten */
+body.admin table :is(td,th):last-child,table.dicht td:last-child{ padding-right:var(--lp-pad-cell-x); }     /* (2 × 6) und 12px am Rand */
+:is(body.admin table,table.dicht) td:is(:not(:first-child,.num,:empty,:has(:not(.muted,small,br))),:has(> :is(.linkbtn,.row-button))){ min-width:12ch; }   /* Textzellen ab Spalte 2 (Spalte 1 = Nr./Tag) und Namensbuttons: kurze Namen ohne Umbruch, kein nowrap */
 body.admin table th{ font-size:var(--lp-fs-12); }
 table th.num,table td.num{ text-align:right; font-variant-numeric:var(--lp-numeric); white-space:nowrap; }
 @media (max-width:359.98px){ table :is(th,td){ padding-inline:var(--lp-space-2); } }   /* Rechtstexte bei 320 ohne Überlauf */
@@ -985,16 +992,59 @@ dl.zusammenfassung dd{ margin:0; font-weight:var(--lp-fw-medium); font-variant-n
 .board .brow.ich{ color:var(--lp-accent); }
 .board .pl{ font:var(--lp-fw-medium) var(--lp-fs-18)/var(--lp-lh-heading) var(--font-display); font-variant-numeric:var(--lp-numeric); }
 .board .pn{ font-variant-numeric:var(--lp-numeric); }
-.advent{ display:grid; grid-template-columns:repeat(4,1fr); gap:var(--lp-gap-chips); }
-.door{ min-height:var(--lp-door-min); position:relative; padding:8px; overflow:hidden; border:var(--lp-border) solid var(--lp-border-control);
-  border-radius:var(--lp-radius-m); background:var(--lp-surface); color:var(--lp-text);
-  font:var(--lp-fw-medium) var(--lp-fs-21)/var(--lp-lh-title) var(--font-display); font-variant-numeric:var(--lp-numeric); }
-.door .hinten{ display:none; font:var(--lp-fw-regular) var(--lp-fs-12)/var(--lp-lh-body) var(--font-ui); }
-.door.auf{ border-color:var(--lp-accent-mark); background:var(--lp-reward-gradient); box-shadow:var(--lp-shadow-reward-edge); }
-.door.auf .vorn{ display:none; } .door.auf .hinten{ display:block; }
-.door.verpasst,.door:disabled{ opacity:var(--lp-opacity-disabled); }
-.door.auf:disabled{ opacity:1; }   /* geöffnet = Inhalt, nicht gesperrt */
-.door .bild{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:var(--lp-opacity-door-image); }
+/* Adventskalender (E37, aus design/relaunch übernommen): Bogenkasten mit gravierten Fächern, Bogentüren
+   mit zwei Flügeln. Radien 80/80/24/24 (Kasten) und 30/30/4/4 (Tür) sind Markenmaterial wie die
+   Mitgliedskarte (F.1). Geöffnet nie verblasst, verpasst gestrichelt, künftig geschlossen, heute 2px + Hof. */
+#adventBox{ position:relative; isolation:isolate; container:lp-advent / inline-size;
+  margin:var(--lp-rhythm-between) calc(-1 * var(--lp-space-2)) var(--lp-rhythm-section); padding:36px var(--lp-space-6);
+  background:var(--lp-surface); color:var(--lp-text); border:var(--lp-border) solid var(--lp-line); border-radius:80px 80px 24px 24px; }
+#adventBox > :is(.eyebrow,h2,.lead){ position:relative; z-index:1; color:var(--lp-text); text-align:center; }
+#adventBox > .eyebrow{ display:block; margin-top:var(--lp-space-2); }
+#adventBox > h2{ font-size:36px; font-weight:var(--lp-fw-regular); }
+#adventBox > .lead{ font-size:var(--lp-fs-14); margin-inline:auto; }
+#adventBox::before,#adventBox::after{ content:""; position:absolute; top:22px; width:38px; height:108px; pointer-events:none;
+  border-left:var(--lp-border) solid var(--lp-text-muted); border-radius:50%; opacity:.45;
+  background:repeating-linear-gradient(34deg,transparent 0 13px,var(--lp-accent-mark) 14px 15px,transparent 16px 23px); }
+#adventBox::before{ left:15px; transform:rotate(-24deg); }
+#adventBox::after{ right:15px; transform:scaleX(-1) rotate(-24deg); }
+.advent{ display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:10px; margin-top:var(--lp-rhythm-group); perspective:800px; }
+.door{ position:relative; isolation:isolate; width:100%; height:92px; min-width:var(--lp-hit-min); min-height:var(--lp-hit-min);
+  padding:var(--lp-space-2); overflow:hidden; opacity:1; transform-style:preserve-3d; perspective:800px;
+  border:var(--lp-border) solid var(--lp-border-control); border-radius:30px 30px 4px 4px; background:var(--lp-bg); color:var(--lp-text); }
+.door::before,.door::after{ content:""; position:absolute; inset:0 50% 0 0; z-index:2; pointer-events:none; backface-visibility:hidden;
+  border:var(--lp-border) solid var(--lp-border-control); border-radius:30px 0 0 4px; transform-origin:left center;
+  background:linear-gradient(145deg,var(--lp-bg),var(--lp-surface)); }
+.door::after{ inset:0 0 0 50%; border-radius:0 30px 4px 0; transform-origin:right center; }
+.door .vorn{ position:relative; z-index:3; display:block; color:var(--lp-text);
+  font:var(--lp-fw-regular) 30px var(--font-display); font-variant-numeric:var(--lp-numeric); }
+.door .hinten{ position:absolute; inset:var(--lp-space-2); z-index:1; display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:6px; opacity:0; color:var(--lp-text); overflow-wrap:anywhere; font:var(--lp-fw-regular) var(--lp-fs-13)/1.2 var(--font-ui); }
+.door .hinten img{ display:block; max-width:100%; height:52px; object-fit:contain; border-radius:5px; }
+.door .bild{ display:none; }                                    /* Bild steht jetzt optional in .hinten */
+.door:disabled{ opacity:1; }                                    /* Zustand über Form, nicht über Deckkraft */
+.door:not(:disabled){ border-width:2px; border-color:var(--lp-accent-mark); box-shadow:0 0 0 3px var(--lp-line); }   /* heute */
+.door.verpasst{ border-style:dashed; }
+.door.auf{ background:var(--lp-bg); cursor:default; }
+.door.auf::before{ transform:rotateY(-108deg); opacity:0; }
+.door.auf::after{ transform:rotateY(108deg); opacity:0; }
+.door.auf .vorn{ opacity:0; }
+.door.auf .hinten{ opacity:1; }
+.door[aria-busy="true"] .vorn{ font-size:var(--lp-fs-16); }
+/* Öffnen nach erfolgreicher Serverantwort: Flügel 1450 ms, Gewinn 1750 ms, Zahl 600 ms (Werte Relaunch);
+   --_door-elapsed setzt das Skript, wenn während der Öffnung neu gezeichnet wird */
+.door.lp-door-opening::before{ animation:lp-open-left 1450ms var(--lp-ease) both; animation-delay:calc(var(--_door-elapsed,0ms) * -1); }
+.door.lp-door-opening::after{ animation:lp-open-right 1450ms var(--lp-ease) both; animation-delay:calc(var(--_door-elapsed,0ms) * -1); }
+.door.lp-door-opening .hinten{ animation:lp-gift-rise 1750ms var(--lp-ease) both; animation-delay:calc(var(--_door-elapsed,0ms) * -1); }
+.door.lp-door-opening .vorn{ animation:lp-door-number 600ms var(--lp-ease-linear) both; animation-delay:calc(var(--_door-elapsed,0ms) * -1); }
+.door.auf:not(.lp-door-opening)::before,.door.auf:not(.lp-door-opening)::after{ animation:none; }
+@keyframes lp-open-left{ 0%,8%{ transform:rotateY(0); opacity:1; } 85%{ opacity:1; } 100%{ transform:rotateY(-105deg); opacity:0; } }
+@keyframes lp-open-right{ 0%,8%{ transform:rotateY(0); opacity:1; } 85%{ opacity:1; } 100%{ transform:rotateY(105deg); opacity:0; } }
+@keyframes lp-gift-rise{ 0%,24%{ transform:translateY(8px) scale(.75); opacity:0; } 65%{ transform:translateY(0) scale(1.08); opacity:1; } 100%{ transform:translateY(0) scale(1); opacity:1; } }
+@keyframes lp-door-number{ from{ opacity:1; } to{ opacity:0; } }
+@media (max-width:600px){ .advent{ grid-template-columns:repeat(3,minmax(0,1fr)); } .door{ height:108px; } }
+@media (max-width:420px){ .advent{ gap:var(--lp-space-2); } }
+@container lp-advent (min-width:640px){ .advent{ grid-template-columns:repeat(6,minmax(0,1fr)); } }
+@container lp-advent (min-width:900px){ .advent{ grid-template-columns:repeat(8,minmax(0,1fr)); gap:var(--lp-space-4); } .door{ height:120px; } }
 .ziel .satz{ font:var(--lp-fw-medium) var(--lp-fs-21)/var(--lp-lh-quote) var(--font-display); }
 .ziel .seit{ font-size:var(--lp-fs-14); color:var(--lp-text-muted); margin-top:var(--lp-rhythm-inside); }
 .zielaktionen{ margin-top:var(--lp-rhythm-between); }
@@ -1245,6 +1295,7 @@ body.admin .bestaetigt{ box-shadow:0 0 0 2px var(--lp-ok); }   /* 400ms Rückmel
 @media (forced-colors:active){
   :is(a,button,input,select,textarea,summary,[tabindex]):focus-visible{ outline-color:Highlight; }
   :is(.btn,.btn-gold,.main-action,.secondary,.btn-line,.btn-ghost,.icon-button,.nps button,.pad button,.list .item,.door){ border:1px solid ButtonText; }
+  .door:not(:disabled){ border:2px solid Highlight; } .door.verpasst{ border-style:dashed; }   /* heute / verpasst ohne Farbe unterscheidbar */
   .card,.sheet .card,.dialog,.mp-admin-dialog,.toast,#toast,.note,.member,.featured-reward,.hinweis,.unklar,.mp-feier .buehne{ border:1px solid CanvasText; }
   .sw{ forced-color-adjust:none; background:Canvas; border-color:ButtonText; }
   .sw::after{ forced-color-adjust:none; background:ButtonText; }
@@ -1268,11 +1319,14 @@ body.admin .bestaetigt{ box-shadow:0 0 0 2px var(--lp-ok); }   /* 400ms Rückmel
   *,*::before,*::after{ animation-duration:var(--lp-dur-reduced) !important; animation-iteration-count:1 !important; transition-duration:var(--lp-dur-reduced) !important; scroll-behavior:auto !important; }
   .mp-feier .mp-arc,.mp-feier .mp-dust{ display:none !important; }
   .track > span{ transition:none; }
+  .door.lp-door-opening::before,.door.lp-door-opening::after,.door.lp-door-opening :is(.vorn,.hinten){ animation:none !important; }   /* sofort Endzustand */
 }
 :root[data-motion="reduced"] *,:root[data-motion="reduced"] *::before,:root[data-motion="reduced"] *::after{
   animation-duration:var(--lp-dur-reduced) !important; animation-iteration-count:1 !important; transition-duration:var(--lp-dur-reduced) !important; scroll-behavior:auto !important; }
 :root[data-motion="reduced"] .mp-feier .mp-arc,:root[data-motion="reduced"] .mp-feier .mp-dust{ display:none !important; }
 :root[data-motion="reduced"] .track > span{ transition:none; }
+:root[data-motion="reduced"] .door.lp-door-opening::before,:root[data-motion="reduced"] .door.lp-door-opening::after,
+:root[data-motion="reduced"] .door.lp-door-opening :is(.vorn,.hinten){ animation:none !important; }
 /* Datensparen: schaltet nur optionale Bewegung ab – Spinner, Toast, Sheet, Fortschritt,
    Schalter, Glücksrad und Feier bleiben (E05, F.11). Setzt nie data-motion. */
 :root[data-saver="on"] .member:hover::after{ animation:none; }                                   /* Kartenglanz */
@@ -1306,13 +1360,26 @@ body.admin .bestaetigt{ box-shadow:0 0 0 2px var(--lp-ok); }   /* 400ms Rückmel
   .featured-reward{ grid-template-columns:var(--lp-art-col-sm) 1fr; }
   .reward-copy{ padding:16px 12px; }
   .art-pearl{ left:13px; }
-  .advent{ grid-template-columns:repeat(3,1fr); }
   .amount{ font-size:var(--lp-fs-44); }
   .customer-balance{ font-size:var(--lp-fs-44); }
   .admin-title h1{ font-size:var(--lp-fs-28); }
   /* R3: Aktionen füllen die Zeile, keine kleinen Restknöpfe; Reihenfolge = DOM. Die Bühne (10) ist
      eingefroren und behält die Breiten aus Fassung 3. */
   :is(.aktionen,.zielaktionen,.row,.club-footer > div):not(.mp-feier *) > :is(.btn,.btn-gold,.secondary,.btn-line,.btn-ghost):not(.sm){ flex:1 1 auto; }
+  :is(.aktionen,.zielaktionen,.row):not(.mp-feier *):has(> :is(.linkbtn,.row-button)) > :is(.btn,.btn-gold,.secondary,.btn-line,.btn-ghost):not(.sm){ flex:1 1 100%; }   /* R9 */
+  /* Suchreihe: Feld allein oben; zwei Buttons teilen sich die Zeile, drei stehen gleich breit untereinander */
+  .searchrow > .search{ flex-basis:100%; }
+  .searchrow > :not(.search){ flex:1 1 auto; }
+  .searchrow:has(> :nth-child(4)) > :not(.search){ flex-basis:100%; }
+  /* Ungeklärt-Hinweis und -Liste: Buttons gleich breit untereinander */
+  :is(.unklar,#offenListe .zeile) > :is(.btn,.btn-gold,.secondary,.btn-line,.btn-ghost){ flex:1 1 100%; }
+  .row:not(.mp-feier *) > :is(.btn,.secondary).sm{ flex:1 1 auto; }   /* Kopfreihe (#kDetail): kleine Buttons füllen, gestapelt gleich breit */
+  /* Filter: Felder und „Anzeigen“ untereinander, Button volle Breite (Hülle mit Inline-flex:0 0 auto
+     folgt width), Chipgruppe füllt ihre Zeile */
+  .filter > *,.filter > div{ flex-basis:100%; }
+  .filter > div:has(> :is(.btn,.btn-gold,.secondary,.btn-line,.btn-ghost)){ width:100%; }
+  .filter > div > :is(.btn,.btn-gold,.secondary,.btn-line,.btn-ghost){ width:100%; }
+  .filter .aktionen > *{ flex:1 1 auto; }
   /* Verlauf: Datum unter dem Anlass, Punkte rechts über beide Zeilen – Beträge brechen nicht um */
   .log .zeile{ grid-template-columns:minmax(0,1fr) 8ch; row-gap:var(--lp-space-hair); }
   .log .zeile .b{ grid-column:2; grid-row:1 / 3; align-self:center; }
@@ -1321,6 +1388,12 @@ body.admin .bestaetigt{ box-shadow:0 0 0 2px var(--lp-ok); }   /* 400ms Rückmel
 /* Schmale Karte: erste/letzte Perle nach innen, damit die Trefffläche in der Karte bleibt */
 @media (max-width:400px){ .pearl.p1{ left:9%; } .pearl.p6{ left:91%; } }
 @media (max-width:359.98px){ .nps{ gap:4px; } }
+@media (max-width:379.98px){ .filter .aktionen > *{ flex:1 1 0; } }   /* drei Chips gleich breit in einer Zeile */
+@media (max-width:359.98px){   /* Schnellreihe mit Label („Schnell:“): Label oben, Chips paarweise gleich breit */
+  .aktionen:has(> .muted:first-child) > .muted:first-child{ flex-basis:100%; }
+  .aktionen:has(> .muted:first-child) > .sm{ flex:1 1 calc(50% - var(--lp-gap-actions) / 2); }
+}
+@media (max-width:800px){ .searchrow:has(> :nth-child(4)) > .search{ flex-basis:100%; } }   /* Feld + 3 Buttons passen erst ab ~760px in eine Zeile */
 @media (max-width:340px){
   .pad{ gap:6px; } .pad button{ min-height:var(--lp-control-md); font-size:var(--lp-fs-21); }
   .balance{ font-size:var(--lp-fs-52); }
