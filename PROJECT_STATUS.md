@@ -16,6 +16,8 @@ Stand 29.09.2026. Knapper Arbeitsstand dieses Repositorys (Club, Terminal, Verwa
 - `styleguide.html`, `logo-660.png` – lebender Styleguide
 - `bestandsaufnahme-fassung-3.md`, `fassung-4-spezifikation.md`
 
+Design-System-Referenz (claude.ai, privat): https://claude.ai/artifact/NyUuVMUiuGdVSjk7JuMCro – gleiche Token und dasselbe CSS, 28 Bauteile mit Live-Vorschau.
+
 **Bestandene Prüfungen:**
 - `python3 design/pruefen.py`: Token-Grammatik, Token = CSS je Thema, alle 203 Klassen und 4 IDs aus Fassung 3 abgedeckt, `--mp-*` der Seitenreste definiert, kein Grün, 272 Kontrastprüfungen.
 - `python3 design/einbetten.py pruefen`: sechs Seiten, ein identischer Block.

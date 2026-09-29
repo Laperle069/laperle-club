@@ -1606,13 +1606,18 @@
     <div>
       <h4>Ablesezahl – lining und tabular</h4>
       <p class="lp-t-figure sg-luft">1.284 Perlen</p>
-      <dl class="zusammenfassung sg-luft">
-        <div><dt>Ganzzahl</dt><dd>1.284 Perlen</dd></div>
-        <div><dt>Minus (U+2212)</dt><dd>−300</dd></div>
-        <div><dt>Betrag</dt><dd>129,50&nbsp;€</dd></div>
-        <div><dt>Prozent</dt><dd>3,8&nbsp;%</dd></div>
-        <div><dt>Datum</dt><dd>20.09.2026</dd></div>
-      </dl>
+      <div class="tabelle-scroll sg-luft" tabindex="0" role="region" aria-label="Zahlenformate">
+        <table>
+          <thead><tr><th scope="col">Format</th><th class="num" scope="col">Wert</th></tr></thead>
+          <tbody>
+            <tr><td>Ganzzahl</td><td class="num">1.284 Perlen</td></tr>
+            <tr><td>Minus (U+2212)</td><td class="num">−300</td></tr>
+            <tr><td>Betrag</td><td class="num">129,50&nbsp;€</td></tr>
+            <tr><td>Prozent</td><td class="num">3,8&nbsp;%</td></tr>
+            <tr><td>Datum</td><td class="num">20.09.2026</td></tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 
@@ -2261,7 +2266,7 @@
   <h2 id="h-fokus">Fokus</h2>
   <p class="lead sg-regel">Ein Fokusring je Control: 2px <code><span class="sg-strich">--</span>lp-focus</code>, Versatz 3px; <code>outline:none</code> nur, wo der Behälter den Ring trägt. (F.7)</p>
   <p class="sg-luft">Mit der Tab-Taste durch die Beispiele gehen: Jeder Halt zeigt genau einen Ring. Suche und Auswahlkarte tragen den Ring am Behälter, die Perlen der Mitgliedskarte innen (Versatz −2px), die Tabellenhülle ist selbst ein Halt.</p>
-  <div class="sg-zeile">
+  <div class="sg-probe aktionen">
     <a href="#fokus">Teilnahmebedingungen</a>
     <button class="btn" type="button">Perlen buchen</button>
     <button class="btn ghost" type="button">Prämien ansehen</button>
@@ -2326,7 +2331,7 @@
   <p class="small sg-notiz"><code>.linkbtn</code>: sm 44, Gewicht 400, unterstrichen mit <code><span class="sg-strich">--</span>lp-link-underline</code>, Hover <code><span class="sg-strich">--</span>lp-text</code>.</p>
 
   <h4>Icon</h4>
-  <div class="sg-zeile">
+  <div class="aktionen">
     <button class="icon-button" type="button" aria-label="Karte in die Wallet legen"><svg class="ic" aria-hidden="true"><use href="#i-scan"/></svg></button>
     <button class="icon-button" type="button" aria-label="Schließen"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg></button>
     <button class="icon-button" type="button" aria-label="Kundin anlegen" disabled><svg class="ic" aria-hidden="true"><use href="#i-plus"/></svg></button>
@@ -2362,11 +2367,12 @@
   </div>
 
   <h3>Reihen</h3>
-  <p class="small sg-notiz">R1: <code>align-items:stretch</code> – alle Buttons einer Zeile übernehmen die Höhe des höchsten. R2: eine Größe je Reihe. R4: der Link streckt sich mit, sein Text sitzt mittig. R5: nie <code>nowrap</code>, keine Ellipse.</p>
+  <p class="small sg-notiz">R1: <code>align-items:stretch</code> – alle Buttons einer Zeile übernehmen die Höhe des höchsten. R2: eine Größe je Reihe. R4: der Link streckt sich mit, sein Text sitzt mittig; der Icon-Button bleibt rund und mittig. R5: nie <code>nowrap</code>, keine Ellipse.</p>
   <div class="aktionen sg-reihe" id="sgReihe1">
     <button class="btn" type="button" id="sgR1a">Bei Google bewerten</button>
     <button class="btn ghost" type="button" id="sgR1b"><svg class="ic" aria-hidden="true"><use href="#i-scan"/></svg><span>Karte scannen</span></button>
     <button class="linkbtn" type="button" id="sgR1c">Hab ich schon gemacht</button>
+    <button class="icon-button" type="button" id="sgR1d" aria-label="Schließen"><svg class="ic" aria-hidden="true"><use href="#i-x"/></svg></button>
   </div>
   <p class="small sg-notiz">Gemessen: <output class="sg-mess" data-sg-reihe="sgReihe1"></output></p>
 
@@ -2394,11 +2400,13 @@
   <p class="small sg-notiz">In einer umbrechenden Reihe (<code>flex-wrap</code>) bricht ein Label nur um, wenn sein Button allein in der Zeile steht; dann bleibt er zweizeilig (58 bzw. 53px) mit 28px-Ecke.</p>
 
   <h3>Wallet und Altklassen</h3>
-  <div class="club-footer">
-    <span>Mit Liebe, Lorin</span>
-    <div><button type="button">Zu Apple Wallet hinzufügen</button><button type="button">Zu Google Wallet hinzufügen</button></div>
+  <div class="sg-telefon">
+    <div class="club-footer">
+      <span>Mit Liebe, Lorin</span>
+      <div><button type="button">Zu Apple Wallet hinzufügen</button><button type="button">Zu Google Wallet hinzufügen</button></div>
+    </div>
   </div>
-  <p class="small sg-notiz">Wallet-Buttons im Club-Fuß sind Sekundär md (keine UA-Buttons mehr).</p>
+  <p class="small sg-notiz">Wallet-Buttons im Club-Fuß sind Sekundär md (keine UA-Buttons mehr), gleich breit in der Club-Spalte.</p>
   <div class="aktionen">
     <button class="btn-gold" type="button">.btn-gold</button>
     <button class="btn-line" type="button">.btn-line</button>
@@ -2555,7 +2563,7 @@
     <div class="section-title"><h2>Prämienauszug</h2><button class="secondary" type="button">Als CSV laden</button></div>
     <div class="tabelle-scroll" tabindex="0" role="region" aria-label="Prämienauszug September 2026">
       <table>
-        <thead><tr><th scope="col">Kundin</th><th scope="col">Datum</th><th scope="col">Prämie</th><th class="num" scope="col">Kassenbon</th><th class="num" scope="col">Nachlass (€)</th><th class="num" scope="col">Perlen</th><th scope="col" aria-label="Aktion"></th></tr></thead>
+        <thead><tr><th scope="col">Kundin</th><th scope="col">Datum</th><th scope="col">Prämie</th><th class="num" scope="col">Kassenbon</th><th class="num" scope="col">Nachlass (€)</th><th class="num" scope="col">Perlen</th><th scope="col"><span class="sr-only">Aktion</span></th></tr></thead>
         <tbody>
           <tr class="klickbar"><td><button class="linkbtn" type="button">Anastasia Kramer</button></td><td>20.09.2026</td><td>Wimpernlifting</td><td class="num">20417</td><td class="num">45,00</td><td class="num">−900</td><td><button class="btn ghost" type="button">richtigstellen</button></td></tr>
           <tr class="klickbar"><td><button class="linkbtn" type="button">Sophia Marquardt</button></td><td>18.09.2026</td><td>Signature-Gesichtsbehandlung</td><td class="num">20388</td><td class="num">129,50</td><td class="num">−1.500</td><td><button class="btn ghost" type="button">richtigstellen</button></td></tr>
@@ -2722,7 +2730,7 @@
       <p>Prüfe zuerst das Anbieterprotokoll. Eine Wiederholung ist nur sicher, wenn die Annahme ausgeschlossen wurde.</p>
       <label>Prüfergebnis<select><option>Bitte wählen</option><option selected>Vom Anbieter angenommen</option><option>Sicher nicht angenommen – erneut einreihen</option><option>Nicht weiter versenden</option></select></label>
       <label>Prüfnachweis<textarea placeholder="Zeitpunkt und Ergebnis aus dem Anbieterprotokoll"></textarea></label>
-      <div class="hinweis ok sg-probe"><span>Gespeichert. Der Versand ist als „vom Anbieter angenommen“ markiert.</span></div>
+      <div class="hinweis ok sg-probe"><p>Gespeichert. Der Versand ist als „vom Anbieter angenommen“ markiert.</p></div>
       <div class="row"><button class="btn ghost" type="button">Abbrechen</button><button class="btn" type="button">Entscheidung speichern</button></div>
     </dialog>
   </div>
@@ -2849,6 +2857,14 @@
         <span class="bottom"><span>900 Perlen</span><svg class="ic" aria-hidden="true"><use href="#i-arrow-up"/></svg></span>
       </span>
     </button>
+    <section class="card" aria-labelledby="sgRPTitel">
+      <span class="eyebrow">Dein nächstes Prämienziel</span>
+      <h3 id="sgRPTitel">Noch 260 Perlen bis zu deiner nächsten Prämie</h3>
+      <strong>Signature-Gesichtsbehandlung</strong>
+      <p class="muted">Beim nächsten Besuch kommst du deinem Ziel näher.</p>
+      <div class="track" role="progressbar" aria-label="Fortschritt zur nächsten Prämie" aria-valuemin="0" aria-valuemax="100" aria-valuenow="83" aria-valuetext="1.240 von 1.500 Perlen; noch 260 Perlen"><span style="width:83%"></span></div>
+      <p class="small">Prämien bezahlst du mit deinem verfügbaren Perlenstand. Dein Rang wird separat berechnet.</p>
+    </section>
     <p class="sg-luft"><button class="linkbtn" type="button">Alle Prämien ansehen</button></p>
 
     <div class="reward-heading">
@@ -3049,7 +3065,7 @@
     <p class="muted">Grundlage sind die Punktebuchungen am Empfang – also der Moment des Bezahlens, nicht der Termin selbst.</p>
     <div class="tabelle-scroll sg-luft" tabindex="0" role="region" aria-label="Besuche nach Wochentag und Stunde">
       <table class="sg-heat">
-        <thead><tr><th scope="col" aria-label="Tag"></th><th class="num" scope="col">9</th><th class="num" scope="col">10</th><th class="num" scope="col">11</th><th class="num" scope="col">12</th><th class="num" scope="col">13</th><th class="num" scope="col">14</th><th class="num" scope="col">15</th><th class="num" scope="col">16</th><th class="num" scope="col">17</th><th class="num" scope="col">18</th><th class="num" scope="col">19</th></tr></thead>
+        <thead><tr><th scope="col"><span class="sr-only">Tag</span></th><th class="num" scope="col">9</th><th class="num" scope="col">10</th><th class="num" scope="col">11</th><th class="num" scope="col">12</th><th class="num" scope="col">13</th><th class="num" scope="col">14</th><th class="num" scope="col">15</th><th class="num" scope="col">16</th><th class="num" scope="col">17</th><th class="num" scope="col">18</th><th class="num" scope="col">19</th></tr></thead>
         <tbody>
           <tr><th scope="row">Mo</th><td><div data-stufe="1" title="Mo 9 Uhr: 1 Besuche">1</div></td><td><div data-stufe="1" title="Mo 10 Uhr: 2 Besuche">2</div></td><td><div data-stufe="1" title="Mo 11 Uhr: 3 Besuche">3</div></td><td><div data-stufe="1" title="Mo 12 Uhr: 2 Besuche">2</div></td><td><div data-stufe="1" title="Mo 13 Uhr: 1 Besuche">1</div></td><td><div data-stufe="1" title="Mo 14 Uhr: 2 Besuche">2</div></td><td><div data-stufe="1" title="Mo 15 Uhr: 3 Besuche">3</div></td><td><div data-stufe="2" title="Mo 16 Uhr: 4 Besuche">4</div></td><td><div data-stufe="2" title="Mo 17 Uhr: 6 Besuche">6</div></td><td><div data-stufe="2" title="Mo 18 Uhr: 5 Besuche">5</div></td><td><div data-stufe="1" title="Mo 19 Uhr: 2 Besuche">2</div></td></tr>
           <tr><th scope="row">Di</th><td><div data-stufe="1" title="Di 9 Uhr: 2 Besuche">2</div></td><td><div data-stufe="1" title="Di 10 Uhr: 3 Besuche">3</div></td><td><div data-stufe="2" title="Di 11 Uhr: 4 Besuche">4</div></td><td><div data-stufe="1" title="Di 12 Uhr: 3 Besuche">3</div></td><td><div data-stufe="1" title="Di 13 Uhr: 2 Besuche">2</div></td><td><div data-stufe="1" title="Di 14 Uhr: 3 Besuche">3</div></td><td><div data-stufe="2" title="Di 15 Uhr: 4 Besuche">4</div></td><td><div data-stufe="2" title="Di 16 Uhr: 6 Besuche">6</div></td><td><div data-stufe="3" title="Di 17 Uhr: 8 Besuche">8</div></td><td><div data-stufe="3" title="Di 18 Uhr: 7 Besuche">7</div></td><td><div data-stufe="1" title="Di 19 Uhr: 3 Besuche">3</div></td></tr>
@@ -3062,14 +3078,14 @@
       </table>
     </div>
     <div class="sg-legende" aria-hidden="true"><span data-stufe="0"></span><span data-stufe="1"></span><span data-stufe="2"></span><span data-stufe="3"></span><span data-stufe="4"></span><span class="small">Je kräftiger der Goldton, desto mehr Besuche.</span></div>
-    <p class="small sg-notiz">Zellen <code>[data-stufe="0…4"]</code> aus dem Block; Legende mit fünf 16 × 16-Feldern und themenneutralem Satz (statt „Je dunkler …“, M23). Die Stunden-Köpfe sind <code>th.num</code> wie in der Verwaltung.</p>
+    <p class="small sg-notiz">Zellen <code>[data-stufe="0…4"]</code> aus dem Block; Legende mit fünf 16 × 16-Feldern und themenneutralem Satz (statt „Je dunkler …“, M23). Zahl mittig in der Zelle; die Stunden-Köpfe (<code>th.num</code> wie in der Verwaltung) stehen über der Zellmitte.</p>
   </div>
 
   <div class="card sg-probe">
     <div class="section-title"><h2>E-Mail-Versand</h2><button class="secondary" type="button">Als CSV laden</button></div>
     <div class="tabelle-scroll" tabindex="0" role="region" aria-label="E-Mail-Versand">
       <table class="dicht">
-        <thead><tr><th scope="col">Empfängerin</th><th scope="col">Anlass</th><th scope="col">Status</th><th scope="col" aria-label="Aktion"></th></tr></thead>
+        <thead><tr><th scope="col">Empfängerin</th><th scope="col">Anlass</th><th scope="col">Status</th><th scope="col"><span class="sr-only">Aktion</span></th></tr></thead>
         <tbody>
           <tr><td>Anastasia Kramer</td><td>Geburtstag</td><td><span class="pill ok">vom Anbieter angenommen</span></td><td></td></tr>
           <tr><td>Sophia Marquardt</td><td>Rückkehr</td><td><span class="pill">angestoßen – Antwort ausstehend</span></td><td></td></tr>

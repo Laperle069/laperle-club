@@ -20,7 +20,8 @@ Fassung 4 lässt Fachlogik, vorhandene Wortlaute und die bestätigten Animatione
 | [`kontrastpaare.json`](kontrastpaare.json) | 144 Kontrastpaare P001–P144 (Spezifikation C.7) mit Mindestwert: Text ≥ 4.5:1, UI ≥ 3:1 |
 | [`pruefen.py`](pruefen.py) | Freigabeprüfung Fassung 4 (ein Befehl, Rückgabewert 0 nur bei Erfolg) |
 | [`einbetten.py`](einbetten.py) | prüft bzw. schreibt den Block in allen sechs Seiten |
-| [`styleguide.html`](styleguide.html) | lebender Styleguide zu Fassung 4 (folgt) |
+| [`styleguide.html`](styleguide.html) | lebender Styleguide zu Fassung 4: alle Bauteile live auf dem echten CSS, Themenschalter; lokal über einen Webserver öffnen (lädt `../club/assets/vendor/fonts.css`) |
+| [`logo-660.png`](logo-660.png) | das Seitenlogo als Datei (bytegleich mit dem eingebetteten Data-URI), für Styleguide und Übergaben |
 | [`bestandsaufnahme-fassung-3.md`](bestandsaufnahme-fassung-3.md) | Bestandsaufnahme Fassung 3: alle Werte, Messungen und Befunde H1–H11, M1–M28, L1–L16 |
 | [`fassung-4-spezifikation.md`](fassung-4-spezifikation.md) | Spezifikation Fassung 4: Entscheidungen E01–E36, Abschnitte A–I |
 
@@ -123,6 +124,8 @@ Aus Spezifikation Abschnitt I; die Empfehlung steht jeweils dort.
 Technische Punkte ohne Entscheidungsbedarf: `body{overflow-x:hidden}` fällt erst nach H.7 Nr. 3 (I.6); `:has()`, Container-Abfragen und Masken auf dem Terminal-iPad prüfen (I.10); der Einbetter ist wiederhergestellt (I.14).
 
 ## Weiterlesen
+
+- Design-System-Referenz (claude.ai, privat, Freigabe über das Teilen-Menü): https://claude.ai/artifact/NyUuVMUiuGdVSjk7JuMCro – Markenhandbuch, Token beider Themen, 28 Bauteile mit Live-Vorschau, Schriften, Logo, Icons und Rangmotive.
 
 - [Bestandsaufnahme Fassung 3](bestandsaufnahme-fassung-3.md) – Zustand vor Fassung 4: Tokens, Typografie, Abstände, Bauteile, Assets, Kontrast (200 Paare), Befunde nach Schwere und Leitplanken.
 - [Spezifikation Fassung 4](fassung-4-spezifikation.md) – Entscheidungen, Token-Architektur, Farbe und Kontrast, Typografie, Raum, Form und Tiefe, Komponenten, Migration (H.1–H.7) und offene Entscheidungen.
