@@ -2,9 +2,9 @@
 
 Stand 29.09.2026. Knapper Arbeitsstand dieses Repositorys (Club, Terminal, Verwaltung, Rechtstexte). Keine Gesprächshistorie.
 
-## Designsystem Fassung 4 – auf dem Branch eingebettet, noch nicht live
+## Designsystem Fassung 4 – live seit 29.09.2026
 
-**Status:** gebaut, geprüft und auf dem Branch `claude/design-system-extraction-mmqyeb` in alle sechs Seiten eingebettet (md5 `20e87646…`). Außerhalb des Blocks ist nur der Advent-Code in `club/index.html` geändert (Adventskalender aus `design/relaunch`). Auf `main` und damit live trägt alles weiterhin Fassung 3; Live erst nach Freigabe und Zusammenführen. Keine Änderung an Daten oder Server.
+**Status:** gebaut, geprüft, in alle sechs Seiten eingebettet (md5 `20e87646…`) und am 29.09.2026 mit [Laperle069/laperle-club#3](https://github.com/Laperle069/laperle-club/pull/3) nach `main` zusammengeführt; GitHub Pages hat den Stand `cae0491` erfolgreich veröffentlicht. Außerhalb des Blocks ist nur der Advent-Code in `club/index.html` geändert (Adventskalender aus `design/relaunch`). Keine Änderung an Daten oder Server.
 
 **Bereich:** gemeinsamer Designblock aller drei Arbeitsbereiche (Club, Terminal, Verwaltung) und der Rechtstexte. Eine spätere Einbettung wirkt in allen sechs Seiten zugleich.
 
@@ -30,8 +30,8 @@ Design-System-Referenz (claude.ai, privat): https://claude.ai/artifact/NyUuVMUiu
 - Styleguide bei 320–1440 px in beiden Themen: 0 Fehler, 244 von 244 Farbwerten gleich `tokens.json`.
 
 **Offen:**
-- Offene Designentscheidungen (`design/README.md`) sind mit den umgesetzten Werten angenommen und jederzeit änderbar. Rückweg auf diesem Branch: `python3 design/einbetten.py schreiben design/midnight-prive-fassung-3.css`.
-- Live: erst nach ausdrücklicher Freigabe durch Zusammenführen nach `main` (GitHub Pages).
+- Offene Designentscheidungen (`design/README.md`) sind mit den umgesetzten Werten angenommen und jederzeit änderbar. Rückweg: `python3 design/einbetten.py schreiben design/midnight-prive-fassung-3.css` mit einem Folge-Commit.
+- Live-Stand auf echten Geräten ansehen (Telefon, Terminal-iPad, Desktop); Safari und echte Übersetzungen sind noch nicht geprüft.
 - Folgearbeiten in den Seitenresten nach Spezifikation H.6 (u. a. Einwilligungskarten, Glücksradfarben, Heatmap-Stufen, Tabellen-Hüllen), je Bereich ein eigener Diff; Voraussetzung für das helle Thema „Perle“.
 - Bekannte Grenzen:
   - Die Hauptaktion bricht bei 320 px auf zwei Zeilen um, wie schon in Fassung 3.

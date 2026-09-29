@@ -4,8 +4,8 @@ Ein gemeinsames Designsystem für vier Oberflächen: **Club** (`club/index.html`
 
 | Fassung | Quelle | Stand 29.09.2026 |
 |---|---|---|
-| 3 „Midnight Privé“ (17.09.2026) | [`midnight-prive-fassung-3.css`](midnight-prive-fassung-3.css) | auf `main` und damit live eingebettet (md5 `4232834a3388a1c34011a142b07110f7`), nur dunkel; Rückweg für diesen Branch |
-| 4 | [`laperle-designsystem.css`](laperle-designsystem.css), [`tokens.json`](tokens.json) | **auf dem Branch `claude/design-system-extraction-mmqyeb` in allen sechs Seiten eingebettet** (md5 `20e87646…`), noch nicht live; optimierter Nachfolger mit Hell-Thema, Buttonsystem, Skalen und dem Adventskalender aus `design/relaunch` |
+| 3 „Midnight Privé“ (17.09.2026) | [`midnight-prive-fassung-3.css`](midnight-prive-fassung-3.css) | bis 29.09.2026 eingebettet (md5 `4232834a3388a1c34011a142b07110f7`), nur dunkel; bleibt als Rückweg |
+| 4 | [`laperle-designsystem.css`](laperle-designsystem.css), [`tokens.json`](tokens.json) | **seit 29.09.2026 in allen sechs Seiten eingebettet und live** (md5 `20e87646…`); optimierter Nachfolger mit Hell-Thema, Buttonsystem, Skalen und dem Adventskalender aus `design/relaunch` |
 
 Fassung 4 lässt Fachlogik, vorhandene Wortlaute und die bestätigten Animationen unverändert. Sie bleibt bis zur Abnahme der offenen Entscheidungen (unten) außerhalb der Seiten.
 
@@ -76,7 +76,7 @@ python3 design/einbetten.py pruefen design/laperle-designsystem.css  # tragen al
 python3 design/pruefen.py                                            # Freigabeprüfung Fassung 4
 ```
 
-`einbetten.py pruefen` gibt je Seite die md5 und die passende Quelle in `design/` aus und endet mit `OK: 6 Seiten, ein identischer Block.` Auf diesem Branch tragen seit 29.09.2026 alle sechs Seiten `laperle-designsystem.css`; auf `main` (live) weiterhin `midnight-prive-fassung-3.css`.
+`einbetten.py pruefen` gibt je Seite die md5 und die passende Quelle in `design/` aus und endet mit `OK: 6 Seiten, ein identischer Block.` Seit 29.09.2026 tragen alle sechs Seiten `laperle-designsystem.css`.
 
 `pruefen.py` liest `laperle-designsystem.css`, `tokens.json`, `kontrastpaare.json`, Fassung 3 und die Seiten, prüft sechs Punkte und gibt nur bei vollem Erfolg 0 zurück:
 
