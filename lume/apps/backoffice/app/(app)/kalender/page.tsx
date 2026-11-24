@@ -7,16 +7,17 @@ import { ApiProblem, Notice, params, type SearchParams } from "@/app/ui";
 
 export const dynamic = "force-dynamic";
 
-const START_HOUR = 7;
-const END_HOUR = 21;
+const DEFAULT_START_HOUR = 7;
+const DEFAULT_END_HOUR = 21;
 const PX_PER_MIN = 1.6;
 
-function minutesSinceStart(iso: string, tz: string) {
+/** Minuten seit Mitternacht in Studio-Zeit. */
+function minuteOfDay(iso: string, tz: string) {
   const [h, m] = new Intl.DateTimeFormat("en-GB", { hour: "2-digit", minute: "2-digit", hourCycle: "h23", timeZone: tz })
     .format(new Date(iso))
     .split(":")
     .map(Number);
-  return (h ?? 0) * 60 + (m ?? 0) - START_HOUR * 60;
+  return (h ?? 0) * 60 + (m ?? 0);
 }
 
 export default async function Calendar({ searchParams }: { searchParams: SearchParams }) {
@@ -27,15 +28,30 @@ export default async function Calendar({ searchParams }: { searchParams: SearchP
   let appointments: AppointmentDto[];
   try {
     studio = await api<StudioDto>("/studio");
-    staff = (await api<StaffDto[]>("/staff")).filter((s) => s.active);
+    const allStaff = await api<StaffDto[]>("/staff");
     const { from, to } = dayBounds(date);
     appointments = (await api<AppointmentDto[]>(`/appointments?from=${from}&to=${to}`)).filter(
       (a) => dateInTz(a.startsAt, studio.timezone) === date,
     );
+    // Inaktive Mitarbeiter trotzdem zeigen, solange sie an diesem Tag Termine haben
+    staff = allStaff.filter((s) => s.active || appointments.some((a) => a.staffId === s.id));
   } catch (err) {
     if (err instanceof ApiRequestError) return <ApiProblem error={err} />;
     throw err;
   }
+  // Sichtbarer Bereich: 7–21 Uhr, erweitert um frühere oder spätere Termine
+  const START_HOUR = Math.min(
+    DEFAULT_START_HOUR,
+    ...appointments.map((a) => Math.floor(minuteOfDay(a.startsAt, studio.timezone) / 60)),
+  );
+  const END_HOUR = Math.max(
+    DEFAULT_END_HOUR,
+    ...appointments.map((a) =>
+      dateInTz(a.endsAt, studio.timezone) === date ? Math.ceil(minuteOfDay(a.endsAt, studio.timezone) / 60) : 24,
+    ),
+  );
+  const minutesSinceStart = (iso: string) => minuteOfDay(iso, studio.timezone) - START_HOUR * 60;
+  const now = Date.now();
   const hours = Array.from({ length: END_HOUR - START_HOUR }, (_, i) => START_HOUR + i);
   const height = (END_HOUR - START_HOUR) * 60 * PX_PER_MIN;
 
@@ -87,7 +103,7 @@ export default async function Calendar({ searchParams }: { searchParams: SearchP
               {appointments
                 .filter((a) => a.staffId === s.id)
                 .map((a) => {
-                  const top = Math.max(0, minutesSinceStart(a.startsAt, studio.timezone)) * PX_PER_MIN;
+                  const top = minutesSinceStart(a.startsAt) * PX_PER_MIN;
                   const len = (new Date(a.endsAt).getTime() - new Date(a.startsAt).getTime()) / 60000;
                   return (
                     <div
@@ -111,9 +127,11 @@ export default async function Calendar({ searchParams }: { searchParams: SearchP
                           <button name="status" value="completed" title="Erledigt">
                             ✓
                           </button>
-                          <button name="status" value="no_show" title="Nicht erschienen">
-                            ∅
-                          </button>
+                          {new Date(a.startsAt).getTime() <= now ? (
+                            <button name="status" value="no_show" title="Nicht erschienen">
+                              ∅
+                            </button>
+                          ) : null}
                           <button name="status" value="cancelled" title="Absagen">
                             ✕
                           </button>

@@ -153,6 +153,10 @@ appointmentRoutes.openapi(
       throw new ApiError(409, "invalid_state", "Abgesagte Termine können nicht geändert werden");
     }
     const patch = c.req.valid("json");
+    if (patch.status === "no_show" && new Date(current.startsAt) > new Date()) {
+      // Sonst würde die Zeit frei und könnte doppelt vergeben werden
+      throw new ApiError(409, "invalid_state", "\"Nicht erschienen\" geht erst ab Terminbeginn");
+    }
     if (Object.keys(patch).length > 0) {
       await c.get("db").update(appointments).set(patch).where(eq(appointments.id, id));
     }

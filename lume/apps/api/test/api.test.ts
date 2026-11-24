@@ -218,6 +218,36 @@ describe("Buchen", () => {
   });
 });
 
+describe("Sonderfälle", () => {
+  it("verteilt gleichzeitige Buchungen ohne Wunsch-Mitarbeiterin auf alle Freien", async () => {
+    const body = { serviceId, customerId, startsAt: "2030-03-25T08:00:00Z" };
+    const [a, b] = await Promise.all([
+      call("POST", "/v1/appointments", { body }),
+      call("POST", "/v1/appointments", { body }),
+    ]);
+    expect([a.status, b.status]).toEqual([201, 201]);
+    expect(new Set([a.body.staffName, b.body.staffName])).toEqual(new Set(["Mila", "Sara"]));
+  });
+
+  it("setzt 'nicht erschienen' erst ab Terminbeginn und verschiebt solche Termine nicht", async () => {
+    const future = await call("POST", "/v1/appointments", {
+      body: { serviceId, staffId: milaId, customerId, startsAt: "2030-04-01T08:00:00Z" },
+    });
+    const early = await call("PATCH", `/v1/appointments/${future.body.id}`, { body: { status: "no_show" } });
+    expect(early.status).toBe(409);
+
+    const past = await call("POST", "/v1/appointments", {
+      body: { serviceId, staffId: milaId, customerId, startsAt: "2020-03-02T08:00:00Z" },
+    });
+    expect(past.status).toBe(201);
+    expect((await call("PATCH", `/v1/appointments/${past.body.id}`, { body: { status: "no_show" } })).status).toBe(200);
+    const moved = await call("POST", `/v1/appointments/${past.body.id}/reschedule`, {
+      body: { startsAt: "2030-04-01T09:30:00Z" },
+    });
+    expect(moved.status).toBe(409);
+  });
+});
+
 describe("Online-Buchung", () => {
   it("zeigt das Studio öffentlich und bucht ohne Schlüssel", async () => {
     const studio = await call("GET", "/v1/public/studios/test-studio", { key: null });

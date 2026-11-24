@@ -181,8 +181,8 @@ export interface BookInput {
   onlineOnly?: boolean;
 }
 
-/** Freie, passende Mitarbeiterin für genau diesen Zeitpunkt finden. */
-async function pickStaff(
+/** Alle freien, passenden Mitarbeiterinnen für genau diesen Zeitpunkt (in fester Reihenfolge). */
+async function freeStaff(
   db: Db,
   studio: Studio,
   service: { id: string; durationMin: number; bufferAfterMin: number },
@@ -198,15 +198,30 @@ async function pickStaff(
     { start: addMinutes(startsAt, -24 * 60), end: addMinutes(blockedUntil, 24 * 60) },
     options.excludeAppointmentId,
   );
-  const free = calendars.find((cal) =>
+  const free = calendars.filter((cal) =>
     isStaffFree(cal, studio.timezone, startsAt, service.durationMin, service.bufferAfterMin, {
       ignoreWorkingHours: options.ignoreWorkingHours,
     }),
   );
-  if (!free) {
-    throw new ApiError(409, "slot_unavailable", "Dieser Termin ist nicht mehr frei");
+  if (free.length === 0) throw slotUnavailable();
+  return free.map((f) => f.staffId);
+}
+
+const slotUnavailable = () => new ApiError(409, "slot_unavailable", "Dieser Termin ist nicht mehr frei");
+
+/**
+ * Versucht die Kandidaten der Reihe nach. Greift die Datenbank-Sperre gegen
+ * Überschneidungen (gleichzeitige Buchung), kommt die nächste freie Person dran.
+ */
+async function withFirstAvailable<T>(candidates: string[], write: (staffId: string) => Promise<T>): Promise<T> {
+  for (const staffId of candidates) {
+    try {
+      return await write(staffId);
+    } catch (err) {
+      if (pgCode(err) !== "23P01") throw err;
+    }
   }
-  return free.staffId;
+  throw slotUnavailable();
 }
 
 export async function bookAppointment(db: Db, studioId: string, input: BookInput, now = new Date()) {
@@ -225,9 +240,9 @@ export async function bookAppointment(db: Db, studioId: string, input: BookInput
     .limit(1);
   if (!customer) throw notFound("Kundin");
 
-  const staffId = await pickStaff(db, studio, service, input.startsAt, input);
+  const candidates = await freeStaff(db, studio, service, input.startsAt, input);
   const endsAt = addMinutes(input.startsAt, service.durationMin);
-  try {
+  return withFirstAvailable(candidates, async (staffId) => {
     const [created] = await db
       .insert(appointments)
       .values({
@@ -245,13 +260,7 @@ export async function bookAppointment(db: Db, studioId: string, input: BookInput
       .returning({ id: appointments.id });
     if (!created) throw new Error("Termin wurde nicht gespeichert");
     return created.id;
-  } catch (err) {
-    // Gleichzeitige Buchung: die Datenbank-Sperre gegen Überschneidungen hat gegriffen
-    if (pgCode(err) === "23P01") {
-      throw new ApiError(409, "slot_unavailable", "Dieser Termin ist nicht mehr frei");
-    }
-    throw err;
-  }
+  });
 }
 
 export async function rescheduleAppointment(
@@ -266,19 +275,20 @@ export async function rescheduleAppointment(
     .where(and(eq(appointments.id, appointmentId), eq(appointments.studioId, studioId)))
     .limit(1);
   if (!current) throw notFound("Termin");
-  if (current.status === "cancelled" || current.status === "completed") {
+  // Nur aktive Termine: abgesagte, erledigte und "nicht erschienen" blockieren keine Zeit
+  if (current.status !== "booked" && current.status !== "confirmed") {
     throw new ApiError(409, "invalid_state", "Dieser Termin kann nicht mehr verschoben werden");
   }
   const studio = await getStudio(db, studioId);
   const service = await getService(db, studioId, current.serviceId);
-  const staffId = await pickStaff(db, studio, service, input.startsAt, {
+  const candidates = await freeStaff(db, studio, service, input.startsAt, {
     staffId: input.staffId ?? current.staffId,
     ignoreWorkingHours: input.ignoreWorkingHours,
     excludeAppointmentId: current.id,
   });
   const endsAt = addMinutes(input.startsAt, service.durationMin);
-  try {
-    await db
+  await withFirstAvailable(candidates, (staffId) =>
+    db
       .update(appointments)
       .set({
         staffId,
@@ -286,11 +296,6 @@ export async function rescheduleAppointment(
         endsAt,
         blockedUntil: addMinutes(endsAt, service.bufferAfterMin),
       })
-      .where(eq(appointments.id, current.id));
-  } catch (err) {
-    if (pgCode(err) === "23P01") {
-      throw new ApiError(409, "slot_unavailable", "Dieser Termin ist nicht mehr frei");
-    }
-    throw err;
-  }
+      .where(eq(appointments.id, current.id)),
+  );
 }
