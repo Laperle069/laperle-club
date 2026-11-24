@@ -4,7 +4,11 @@ import type { Db } from "@lume/db";
 export interface AuthContext {
   studioId: string;
   role: Role;
-  apiKeyId: string;
+  /** Wie angemeldet: Mensch (Sitzung) oder Programm/Agent (API-Schlüssel) */
+  kind: "session" | "api_key";
+  userId?: string;
+  sessionId?: string;
+  apiKeyId?: string;
 }
 
 export type AppEnv = {

@@ -1,8 +1,8 @@
 import type { ServiceDto } from "@lume/api/types";
 import { api, ApiRequestError } from "@/lib/api";
 import { euro } from "@/lib/format";
-import { createService, toggleService } from "../actions";
-import { ApiDown, Notice, params, type SearchParams } from "../ui";
+import { createService, toggleService } from "@/app/actions";
+import { ApiProblem, Notice, params, type SearchParams } from "@/app/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -12,7 +12,7 @@ export default async function Services({ searchParams }: { searchParams: SearchP
   try {
     services = await api<ServiceDto[]>("/services");
   } catch (err) {
-    if (err instanceof ApiRequestError) return <ApiDown message={err.message} />;
+    if (err instanceof ApiRequestError) return <ApiProblem error={err} />;
     throw err;
   }
   return (

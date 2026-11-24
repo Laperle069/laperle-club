@@ -1,7 +1,7 @@
 import type { CustomerDto } from "@lume/api/types";
 import { api, ApiRequestError } from "@/lib/api";
-import { createCustomer } from "../actions";
-import { ApiDown, Notice, params, type SearchParams } from "../ui";
+import { createCustomer } from "@/app/actions";
+import { ApiProblem, Notice, params, type SearchParams } from "@/app/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -12,7 +12,7 @@ export default async function Customers({ searchParams }: { searchParams: Search
   try {
     customers = await api<CustomerDto[]>(`/customers?limit=200${q ? `&q=${encodeURIComponent(q)}` : ""}`);
   } catch (err) {
-    if (err instanceof ApiRequestError) return <ApiDown message={err.message} />;
+    if (err instanceof ApiRequestError) return <ApiProblem error={err} />;
     throw err;
   }
   return (

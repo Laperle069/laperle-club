@@ -1,7 +1,7 @@
 import type { ModuleDto, StudioDto } from "@lume/api/types";
 import { api, ApiRequestError } from "@/lib/api";
-import { toggleModule } from "../actions";
-import { ApiDown, Notice, params, type SearchParams } from "../ui";
+import { toggleModule } from "@/app/actions";
+import { ApiProblem, Notice, params, type SearchParams } from "@/app/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -12,7 +12,7 @@ export default async function Settings({ searchParams }: { searchParams: SearchP
   try {
     [studio, modules] = await Promise.all([api<StudioDto>("/studio"), api<ModuleDto[]>("/modules")]);
   } catch (err) {
-    if (err instanceof ApiRequestError) return <ApiDown message={err.message} />;
+    if (err instanceof ApiRequestError) return <ApiProblem error={err} />;
     throw err;
   }
   return (

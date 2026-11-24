@@ -2,8 +2,8 @@ import type { AvailabilityDto, CustomerDto, ServiceDto, StaffDto } from "@lume/a
 import Link from "next/link";
 import { api, ApiRequestError } from "@/lib/api";
 import { addDays, euro, longDate, time, today } from "@/lib/format";
-import { bookAppointment } from "../../actions";
-import { ApiDown, Notice, params, type SearchParams } from "../../ui";
+import { bookAppointment } from "@/app/actions";
+import { ApiProblem, Notice, params, type SearchParams } from "@/app/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -29,8 +29,7 @@ export default async function NewAppointment({ searchParams }: { searchParams: S
     }
     if (slot) customers = await api<CustomerDto[]>(`/customers?limit=200${get("q") ? `&q=${encodeURIComponent(get("q")!)}` : ""}`);
   } catch (err) {
-    if (err instanceof ApiRequestError && err.code === "api_unreachable") return <ApiDown message={err.message} />;
-    if (err instanceof ApiRequestError) return <Notice fehler={err.message} />;
+    if (err instanceof ApiRequestError) return <ApiProblem error={err} />;
     throw err;
   }
   const service = services.find((s) => s.id === serviceId);

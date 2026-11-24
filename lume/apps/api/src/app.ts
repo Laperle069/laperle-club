@@ -1,15 +1,18 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
 import type { Db } from "@lume/db";
 import { cors } from "hono/cors";
-import { requireApiKey } from "./auth.js";
+import { requireAuth } from "./auth.js";
 import type { AppEnv } from "./context.js";
 import { errorResponse } from "./errors.js";
+import { apiKeyRoutes } from "./routes/api-keys.js";
 import { appointmentRoutes } from "./routes/appointments.js";
+import { authRoutes, loginRoutes } from "./routes/auth.js";
 import { customerRoutes } from "./routes/customers.js";
 import { publicRoutes } from "./routes/public.js";
 import { serviceRoutes } from "./routes/services.js";
 import { staffRoutes } from "./routes/staff.js";
 import { studioRoutes } from "./routes/studio.js";
+import { teamRoutes } from "./routes/team.js";
 
 export { bookAppointment, getAvailability } from "./booking.js";
 
@@ -44,10 +47,14 @@ export function createApp({ db }: { db: Db }) {
   // Öffentlich (Buchungsseite, Kunden-App, Marktplatz)
   app.use("/v1/public/*", cors());
   app.route("/v1", publicRoutes);
+  app.route("/v1", loginRoutes);
 
   // Alles andere nur mit API-Schlüssel
   const privateApi = new OpenAPIHono<AppEnv>({ defaultHook: app.defaultHook });
-  privateApi.use("*", requireApiKey);
+  privateApi.use("*", requireAuth);
+  privateApi.route("/", authRoutes);
+  privateApi.route("/", teamRoutes);
+  privateApi.route("/", apiKeyRoutes);
   privateApi.route("/", studioRoutes);
   privateApi.route("/", staffRoutes);
   privateApi.route("/", serviceRoutes);
@@ -57,7 +64,7 @@ export function createApp({ db }: { db: Db }) {
   app.openAPIRegistry.registerComponent("securitySchemes", "apiKey", {
     type: "http",
     scheme: "bearer",
-    description: "API-Schlüssel des Studios, z. B. lume_live_…",
+    description: "API-Schlüssel (lume_live_…) oder Sitzungs-Token nach Anmeldung (lume_sess_…)",
   });
   app.doc31("/v1/openapi.json", {
     openapi: "3.1.0",

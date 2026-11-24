@@ -4,14 +4,25 @@ export function Notice({ fehler, ok }: { fehler?: string; ok?: string }) {
   return null;
 }
 
-export function ApiDown({ message }: { message: string }) {
+/** Verständliche Anzeige, wenn die API nicht antwortet oder etwas nicht erlaubt ist. */
+export function ApiProblem({ error }: { error: { status: number; message: string } }) {
+  if (error.status === 403) {
+    return (
+      <div className="card">
+        <h2>Keine Berechtigung</h2>
+        <p>Dieser Bereich ist für deine Rolle nicht freigegeben. Frag die Inhaberin des Studios.</p>
+      </div>
+    );
+  }
   return (
     <div className="card">
-      <h2>Keine Verbindung zur API</h2>
-      <p>{message}</p>
-      <p className="muted">
-        Läuft die API? Im Ordner <code>lume</code> mit <code>pnpm dev</code> starten.
-      </p>
+      <h2>{error.status === 0 ? "Keine Verbindung zur API" : "Etwas ist schiefgelaufen"}</h2>
+      <p>{error.message}</p>
+      {error.status === 0 ? (
+        <p className="muted">
+          Läuft die API? Im Ordner <code>lume</code> mit <code>pnpm dev</code> starten.
+        </p>
+      ) : null}
     </div>
   );
 }

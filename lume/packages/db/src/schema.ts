@@ -56,13 +56,37 @@ export const studios = pgTable("studios", {
   createdAt: createdAt(),
 });
 
-/** Menschen mit Login (Inhaber, Mitarbeiter). Anmeldung folgt in einem späteren Schritt. */
+/** Menschen mit Login (Inhaber, Mitarbeiter). E-Mail wird klein geschrieben gespeichert. */
 export const users = pgTable("users", {
   id: id(),
   email: text("email").notNull().unique(),
   name: text("name").notNull(),
+  /** scrypt-Hash; leer = kann sich (noch) nicht mit Passwort anmelden */
+  passwordHash: text("password_hash"),
   createdAt: createdAt(),
+  lastLoginAt: timestamp("last_login_at", { withTimezone: true }),
 });
+
+/**
+ * Anmelde-Sitzungen. Gespeichert wird nur der Hash des Tokens. Eine Sitzung gilt
+ * für genau ein Studio; die Rolle wird bei jeder Anfrage frisch aus `memberships`
+ * gelesen, damit entzogene Rechte sofort wirken.
+ */
+export const sessions = pgTable(
+  "sessions",
+  {
+    id: id(),
+    userId: uuid("user_id")
+      .notNull()
+      .references(() => users.id, { onDelete: "cascade" }),
+    studioId: studioRef(),
+    tokenHash: text("token_hash").notNull().unique(),
+    createdAt: createdAt(),
+    expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+    lastSeenAt: timestamp("last_seen_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [index("sessions_user").on(t.userId)],
+);
 
 export const memberships = pgTable(
   "memberships",
@@ -88,6 +112,7 @@ export const apiKeys = pgTable(
     prefix: text("prefix").notNull(),
     hash: text("hash").notNull().unique(),
     role: roleEnum("role").notNull(),
+    createdByUserId: uuid("created_by_user_id").references(() => users.id, { onDelete: "set null" }),
     createdAt: createdAt(),
     lastUsedAt: timestamp("last_used_at", { withTimezone: true }),
     revokedAt: timestamp("revoked_at", { withTimezone: true }),

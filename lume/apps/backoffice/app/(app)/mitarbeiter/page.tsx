@@ -1,8 +1,8 @@
 import type { ServiceDto, StaffDto } from "@lume/api/types";
 import { api, ApiRequestError } from "@/lib/api";
 import { WEEKDAYS } from "@/lib/format";
-import { createStaff } from "../actions";
-import { ApiDown, Notice, params, type SearchParams } from "../ui";
+import { createStaff } from "@/app/actions";
+import { ApiProblem, Notice, params, type SearchParams } from "@/app/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +18,7 @@ export default async function Staff({ searchParams }: { searchParams: SearchPara
   try {
     [staff, services] = await Promise.all([api<StaffDto[]>("/staff"), api<ServiceDto[]>("/services")]);
   } catch (err) {
-    if (err instanceof ApiRequestError) return <ApiDown message={err.message} />;
+    if (err instanceof ApiRequestError) return <ApiProblem error={err} />;
     throw err;
   }
   const serviceName = (id: string) => services.find((s) => s.id === id)?.name ?? "?";

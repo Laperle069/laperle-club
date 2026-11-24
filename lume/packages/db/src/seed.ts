@@ -1,8 +1,10 @@
-import { createHash } from "node:crypto";
 import { DateTime } from "luxon";
 import type { Db } from "./client.js";
+import { hashPassword, hashToken } from "./crypto.js";
 import {
   apiKeys,
+  memberships,
+  users,
   appointments,
   customers,
   services,
@@ -13,17 +15,25 @@ import {
   workingHours,
 } from "./schema.js";
 
-export function hashApiKey(key: string): string {
-  return createHash("sha256").update(key).digest("hex");
+export { hashToken as hashApiKey } from "./crypto.js";
+
+export interface DemoOwner {
+  email: string;
+  password: string;
 }
 
 /**
  * Legt ein Demo-Studio für die lokale Entwicklung an (nur wenn noch keins existiert).
  * Erfundene Daten, kein Bezug zu einem echten Studio.
  */
-export async function seedDemo(db: Db, apiKey: string): Promise<{ created: boolean }> {
+export async function seedDemo(db: Db, apiKey: string, owner?: DemoOwner): Promise<{ created: boolean }> {
   const existing = await db.select({ id: studios.id }).from(studios).limit(1);
-  if (existing.length > 0) return { created: false };
+  if (existing[0]) {
+    // Ältere Demo-Datenbank ohne Benutzer: Inhaber-Login nachrüsten
+    const anyUser = await db.select({ id: users.id }).from(users).limit(1);
+    if (owner && anyUser.length === 0) await createOwner(db, existing[0].id, owner);
+    return { created: false };
+  }
 
   await db.transaction(async (tx) => {
     const [studio] = await tx
@@ -37,9 +47,11 @@ export async function seedDemo(db: Db, apiKey: string): Promise<{ created: boole
       studioId,
       name: "Lokale Entwicklung",
       prefix: apiKey.slice(0, 12),
-      hash: hashApiKey(apiKey),
+      hash: hashToken(apiKey),
       role: "owner",
     });
+
+    if (owner) await createOwner(tx as unknown as Db, studioId, owner);
 
     await tx.insert(studioModules).values(
       ["booking", "marketplace", "pos", "memberships"].map((module) => ({
@@ -130,4 +142,17 @@ export async function seedDemo(db: Db, apiKey: string): Promise<{ created: boole
     ]);
   });
   return { created: true };
+}
+
+async function createOwner(db: Db, studioId: string, owner: DemoOwner) {
+  const [user] = await db
+    .insert(users)
+    .values({
+      email: owner.email.toLowerCase(),
+      name: "Demo Inhaberin",
+      passwordHash: await hashPassword(owner.password),
+    })
+    .returning({ id: users.id });
+  if (!user) throw new Error("Benutzer konnte nicht angelegt werden");
+  await db.insert(memberships).values({ studioId, userId: user.id, role: "owner" });
 }

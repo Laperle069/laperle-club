@@ -15,7 +15,9 @@ const euroToCents = (value: string | undefined) =>
   Math.round(Number((value ?? "0").replace(",", ".")) * 100);
 
 function fail(path: string, err: unknown): never {
-  const message = err instanceof ApiRequestError ? err.message : "Unbekannter Fehler";
+  // Weiterleitungen (z. B. zur Anmeldung) und echte Fehler unverändert durchreichen
+  if (!(err instanceof ApiRequestError)) throw err;
+  const message = err.message;
   const sep = path.includes("?") ? "&" : "?";
   redirect(`${path}${sep}fehler=${encodeURIComponent(message)}`);
 }

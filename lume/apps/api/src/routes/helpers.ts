@@ -17,6 +17,7 @@ export const errors = {
   404: json(ErrorSchema, "Nicht gefunden"),
   409: json(ErrorSchema, "Konflikt, z. B. Termin nicht mehr frei"),
   422: json(ErrorSchema, "Fachlich nicht möglich"),
+  429: json(ErrorSchema, "Zu viele Versuche"),
 } as const;
 
 export const security = [{ apiKey: [] }];

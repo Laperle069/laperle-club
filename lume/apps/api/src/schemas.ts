@@ -286,6 +286,74 @@ export const PublicBookingResultSchema = z
   })
   .openapi("PublicBookingResult");
 
+export const RoleSchema = z.enum(["owner", "manager", "reception", "staff"]);
+const Password = z.string().min(10, "Passwort braucht mindestens 10 Zeichen").max(200);
+
+export const LoginSchema = z
+  .object({
+    email: z.email(),
+    password: z.string().min(1).max(200),
+    studioSlug: z.string().optional().openapi({ description: "Bei mehreren Studios: welches" }),
+  })
+  .openapi("Login");
+
+export const MeSchema = z
+  .object({
+    user: z.object({ id: Uuid, email: z.string(), name: z.string() }),
+    studio: z.object({ id: Uuid, slug: z.string(), name: z.string() }),
+    role: RoleSchema,
+    studios: z.array(z.object({ slug: z.string(), name: z.string(), role: RoleSchema })),
+  })
+  .openapi("Me");
+
+export const LoginResultSchema = MeSchema.extend({
+  token: z.string().openapi({ description: "Sitzungs-Token, als Bearer senden" }),
+  expiresAt: DateTimeStr,
+}).openapi("LoginResult");
+
+export const PasswordChangeSchema = z
+  .object({ currentPassword: z.string().min(1).max(200), newPassword: Password })
+  .openapi("PasswordChange");
+
+export const TeamMemberSchema = z
+  .object({
+    userId: Uuid,
+    email: z.string(),
+    name: z.string(),
+    role: RoleSchema,
+    lastLoginAt: DateTimeStr.nullable(),
+  })
+  .openapi("TeamMember");
+
+export const TeamInviteSchema = z
+  .object({
+    email: z.email(),
+    name: z.string().min(1).max(80),
+    role: RoleSchema,
+    password: Password.openapi({ description: "Startpasswort; wird ignoriert, wenn die Person schon ein Konto hat" }),
+  })
+  .openapi("TeamInvite");
+
+export const ApiKeySchema = z
+  .object({
+    id: Uuid,
+    name: z.string(),
+    prefix: z.string().openapi({ description: "Anfang des Schlüssels zum Wiedererkennen" }),
+    role: RoleSchema,
+    createdAt: DateTimeStr,
+    lastUsedAt: DateTimeStr.nullable(),
+    revokedAt: DateTimeStr.nullable(),
+  })
+  .openapi("ApiKey");
+
+export const ApiKeyCreateSchema = z
+  .object({ name: z.string().min(1).max(80), role: RoleSchema.default("reception") })
+  .openapi("ApiKeyCreate");
+
+export const ApiKeyCreatedSchema = ApiKeySchema.extend({
+  key: z.string().openapi({ description: "Der vollständige Schlüssel – wird nur dieses eine Mal angezeigt" }),
+}).openapi("ApiKeyCreated");
+
 // Typen für Programme, die die API nutzen (Backoffice, Apps, MCP-Server)
 export type StudioDto = z.infer<typeof StudioSchema>;
 export type ModuleDto = z.infer<typeof ModuleSchema>;
@@ -295,3 +363,8 @@ export type CustomerDto = z.infer<typeof CustomerSchema>;
 export type AppointmentDto = z.infer<typeof AppointmentSchema>;
 export type AvailabilityDto = z.infer<typeof AvailabilitySchema>;
 export type ApiErrorDto = z.infer<typeof ErrorSchema>;
+export type MeDto = z.infer<typeof MeSchema>;
+export type LoginResultDto = z.infer<typeof LoginResultSchema>;
+export type TeamMemberDto = z.infer<typeof TeamMemberSchema>;
+export type ApiKeyDto = z.infer<typeof ApiKeySchema>;
+export type ApiKeyCreatedDto = z.infer<typeof ApiKeyCreatedSchema>;

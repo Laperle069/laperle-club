@@ -2,7 +2,7 @@ import type { AppointmentDto, StudioDto } from "@lume/api/types";
 import Link from "next/link";
 import { api, ApiRequestError } from "@/lib/api";
 import { addDays, dateInTz, dayBounds, euro, longDate, shortDateTime, STATUS_LABEL, today } from "@/lib/format";
-import { ApiDown } from "./ui";
+import { ApiProblem } from "@/app/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -21,7 +21,7 @@ export default async function Overview() {
       `/appointments?from=${new Date().toISOString()}&to=${addDays(date, 14)}T23:59:59Z`,
     );
   } catch (err) {
-    if (err instanceof ApiRequestError) return <ApiDown message={err.message} />;
+    if (err instanceof ApiRequestError) return <ApiProblem error={err} />;
     throw err;
   }
   const active = todays.filter((a) => a.status !== "no_show");

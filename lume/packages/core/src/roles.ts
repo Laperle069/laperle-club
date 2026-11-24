@@ -17,6 +17,9 @@ export const PERMISSIONS = [
   "appointments:read",
   "appointments:write",
   "modules:write",
+  "team:read",
+  "team:manage",
+  "api_keys:manage",
 ] as const;
 export type Permission = (typeof PERMISSIONS)[number];
 
@@ -26,6 +29,7 @@ const ROLE_PERMISSIONS: Record<Role, ReadonlySet<Permission>> = {
   owner: new Set(PERMISSIONS),
   manager: new Set<Permission>([
     ...READ_BASICS,
+    "team:read",
     "staff:write",
     "services:write",
     "customers:read",
@@ -46,3 +50,6 @@ const ROLE_PERMISSIONS: Record<Role, ReadonlySet<Permission>> = {
 export function can(role: Role, permission: Permission): boolean {
   return ROLE_PERMISSIONS[role].has(permission);
 }
+
+/** Rangfolge: wer darf wen verwalten? Höhere Zahl = mehr Rechte. */
+export const ROLE_RANK: Record<Role, number> = { owner: 4, manager: 3, reception: 2, staff: 1 };

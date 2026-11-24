@@ -14,7 +14,10 @@ await handle.migrate();
 
 if (!isProduction && process.env.LUME_DEMO_SEED !== "0") {
   const key = process.env.LUME_DEV_API_KEY ?? "lume_dev_nur_lokal_demo_schluessel";
-  const { created } = await seedDemo(handle.db, key);
+  const { created } = await seedDemo(handle.db, key, {
+    email: process.env.LUME_DEV_EMAIL ?? "demo@lume.local",
+    password: process.env.LUME_DEV_PASSWORD ?? "demo-passwort-lokal",
+  });
   if (created) console.log("Demo-Studio angelegt (nur lokal).");
 }
 

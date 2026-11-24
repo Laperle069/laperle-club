@@ -2,8 +2,8 @@ import type { AppointmentDto, StaffDto, StudioDto } from "@lume/api/types";
 import Link from "next/link";
 import { api, ApiRequestError } from "@/lib/api";
 import { addDays, dateInTz, dayBounds, euro, longDate, SOURCE_LABEL, STATUS_LABEL, time, today } from "@/lib/format";
-import { setAppointmentStatus } from "../actions";
-import { ApiDown, Notice, params, type SearchParams } from "../ui";
+import { setAppointmentStatus } from "@/app/actions";
+import { ApiProblem, Notice, params, type SearchParams } from "@/app/ui";
 
 export const dynamic = "force-dynamic";
 
@@ -33,7 +33,7 @@ export default async function Calendar({ searchParams }: { searchParams: SearchP
       (a) => dateInTz(a.startsAt, studio.timezone) === date,
     );
   } catch (err) {
-    if (err instanceof ApiRequestError) return <ApiDown message={err.message} />;
+    if (err instanceof ApiRequestError) return <ApiProblem error={err} />;
     throw err;
   }
   const hours = Array.from({ length: END_HOUR - START_HOUR }, (_, i) => START_HOUR + i);
