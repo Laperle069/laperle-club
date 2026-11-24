@@ -1,0 +1,11 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+# Nur Pakete installieren, die seit mindestens 14 Tagen veröffentlicht sind
+# (Schutz gegen frisch kompromittierte Pakete).
+minimumReleaseAge: 20160
+
+onlyBuiltDependencies:
+  - esbuild
+  - sharp

@@ -1,0 +1,22 @@
+{
+  "name": "lume",
+  "private": true,
+  "description": "Lumé – Buchungssystem für Beauty-Studios (Arbeitsname)",
+  "packageManager": "pnpm@10.28.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "pnpm -r --parallel --filter @lume/api --filter @lume/backoffice dev",
+    "dev:api": "pnpm --filter @lume/api dev",
+    "dev:backoffice": "pnpm --filter @lume/backoffice dev",
+    "test": "pnpm -r test",
+    "typecheck": "pnpm -r typecheck",
+    "build": "pnpm -r build",
+    "db:generate": "pnpm --filter @lume/db generate"
+  },
+  "devDependencies": {
+    "tsx": "^4.23.15",
+    "typescript": "5.9.3"
+  }
+}

@@ -1,0 +1,15 @@
+# Optional: echte PostgreSQL-Datenbank lokal (statt der eingebauten Test-Datenbank).
+# Start: docker compose up -d, danach in .env DATABASE_URL setzen.
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: lume
+      POSTGRES_PASSWORD: lume
+      POSTGRES_DB: lume
+    ports:
+      - "5432:5432"
+    volumes:
+      - lume-pg:/var/lib/postgresql/data
+volumes:
+  lume-pg:
